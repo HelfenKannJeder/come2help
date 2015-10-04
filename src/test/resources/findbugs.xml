@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FindBugsFilter>
+    <!-- The properties are read during jackson error response serialization only -->
+	<Match>
+		<Class name="de.helfenkannjeder.come2help.server.rest.exceptionhandling.ClientError"/>
+        <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+	</Match>
+    <!-- The properties are read during jackson error response serialization only -->
+    <Match>
+        <Class name="de.helfenkannjeder.come2help.server.rest.exceptionhandling.ErrorResponse"/>
+        <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+</FindBugsFilter>
