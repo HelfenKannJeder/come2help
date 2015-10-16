@@ -2,7 +2,11 @@ package de.helfenkannjeder.come2help.server.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
 @Entity
