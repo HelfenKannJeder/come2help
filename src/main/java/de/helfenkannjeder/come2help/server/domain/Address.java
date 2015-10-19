@@ -18,6 +18,7 @@ public class Address extends AbstractVersionedAuditable {
 
     private String streetNumber;
 
+    @NotNull
     private String zip;
 
     private String city;
