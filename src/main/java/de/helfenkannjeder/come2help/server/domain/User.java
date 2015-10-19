@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -30,7 +31,9 @@ public class User extends AbstractVersionedAuditable {
     @NotNull
     private String surname;
 
-    private String zipCode;
+    @OneToOne
+    @JoinColumn(name="id")
+    private Address address;
 
     private String phone;
 
@@ -86,12 +89,12 @@ public class User extends AbstractVersionedAuditable {
         this.surname = surname;
     }
 
-    public String getZipCode() {
-        return zipCode;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public String getPhone() {
@@ -172,7 +175,7 @@ public class User extends AbstractVersionedAuditable {
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (givenName != null ? !givenName.equals(user.givenName) : user.givenName != null) return false;
         if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
-        if (zipCode != null ? !zipCode.equals(user.zipCode) : user.zipCode != null) return false;
+        if (address != null ? !address.equals(user.address) : user.address != null) return false;
         if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
         if (dateOfBirth != null ? !dateOfBirth.equals(user.dateOfBirth) : user.dateOfBirth != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
@@ -187,7 +190,7 @@ public class User extends AbstractVersionedAuditable {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (givenName != null ? givenName.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
-        result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
         result = 31 * result + (isAdult ? 1 : 0);
@@ -206,7 +209,7 @@ public class User extends AbstractVersionedAuditable {
                 ", email='" + email + '\'' +
                 ", givenName='" + givenName + '\'' +
                 ", surname='" + surname + '\'' +
-                ", zipCode='" + zipCode + '\'' +
+                ", address=" + address +
                 ", phone='" + phone + '\'' +
                 ", dateOfBirth=" + dateOfBirth +
                 ", isAdult=" + isAdult +
