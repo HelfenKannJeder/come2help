@@ -6,7 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.Set;
 
 @Entity
@@ -20,8 +22,17 @@ public class Organisation extends AbstractVersionedAuditable {
     private String name;
 
     @OneToMany
-    @JoinColumn(name = "organisation_id")
+    @JoinTable
+    (
+            name="ORGANISATION_ADMIN",
+            joinColumns={ @JoinColumn(name="ORGANISATION_ID", referencedColumnName="ID") },
+            inverseJoinColumns={ @JoinColumn(name="USER_ID", referencedColumnName="ID", unique=true) }
+    )
     private Set<User> admins;
+
+    @OneToOne
+    @JoinColumn(name="ADDRESS_ID")
+    private Address address;
 
     public Long getId() {
         return id;
@@ -47,12 +58,12 @@ public class Organisation extends AbstractVersionedAuditable {
         this.admins = admins;
     }
 
-    @Override
-    public String toString() {
-        return "Organisation{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override
@@ -63,7 +74,9 @@ public class Organisation extends AbstractVersionedAuditable {
         Organisation that = (Organisation) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        return !(name != null ? !name.equals(that.name) : that.name != null);
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (admins != null ? !admins.equals(that.admins) : that.admins != null) return false;
+        return !(address != null ? !address.equals(that.address) : that.address != null);
 
     }
 
@@ -71,6 +84,18 @@ public class Organisation extends AbstractVersionedAuditable {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (admins != null ? admins.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Organisation{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", admins=" + admins +
+                ", address=" + address +
+                '}';
     }
 }

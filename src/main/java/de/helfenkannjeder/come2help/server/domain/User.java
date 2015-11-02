@@ -32,7 +32,7 @@ public class User extends AbstractVersionedAuditable {
     private String surname;
 
     @OneToOne
-    @JoinColumn(name="id")
+    @JoinColumn(name="ADDRESS_ID")
     private Address address;
 
     private String phone;

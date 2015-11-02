@@ -31,6 +31,9 @@ use the following curl command line:
 The result should be the user with the ID 1 (if there is no one, create it with PUT and the URI http://localhost:8080/users.
 Data can be transmitted as JSON.
 
+8. Check localhost:8080 and enter "http://localhost:8080/jsondoc" for the json api documentation. It gives an overview over
+the api. The playground is enabled to submit json objects easily.
+
 ## Contact
 
 For further contact mail valentin.zickner(at)helfenkannjeder(dot)de, visit http://come2.help/ or create a ticket.
