@@ -2,6 +2,7 @@ package de.helfenkannjeder.come2help.server.domain;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -30,7 +31,7 @@ public class Organisation extends AbstractVersionedAuditable {
     )
     private Set<User> admins;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="ADDRESS_ID")
     private Address address;
 
