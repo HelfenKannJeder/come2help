@@ -22,6 +22,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <jsondoc.path>http://localhost:8080/api/jsondoc</jsondoc.path>
     </properties>
 
     <dependencies>
@@ -112,8 +113,110 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- json doc documentation -->
+
+            <plugin>
+                <groupId>org.jsondoc</groupId>
+                <artifactId>jsondoc-maven-plugin</artifactId>
+                <version>1.2.9</version>
+                <executions>
+                    <execution>
+                        <id>generate-jsondoc</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <version>1.0</version>
+                            <basePath>http://localhost:8080</basePath>
+                            <packages>
+                                <package>de.helfenkannjeder.come2help.server.rest</package>
+                                <package>de.helfenkannjeder.come2help.server.domain</package>
+                            </packages>
+                            <outputFile>${project.build.directory}/jsondoc-ui/jsondoc.json</outputFile>
+                            <scanner>org.jsondoc.springmvc.scanner.Spring4JSONDocScanner</scanner>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.9</version>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.jsondoc</groupId>
+                                    <artifactId>jsondoc-ui</artifactId>
+                                    <version>1.2.9</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.directory}/jsondoc-ui</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <version>1.5.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>${project.build.directory}/jsondoc-ui/jsondoc-ui.html</include>
+                    </includes>
+                    <token>'_JSONDOC_OFFLINE_PLACEHOLDER_'</token> <!-- Do not change this value! -->
+                    <valueFile>${project.build.directory}/jsondoc-ui/jsondoc.json</valueFile>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-distribution</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>jsondoc</finalName>
+                            <descriptors>
+                                <descriptor>src/assembly/jsondoc-assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- /json doc documentation -->
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>distributable</id>
+            <properties>
+                <jsondoc.path>jsondoc.json</jsondoc.path>
+            </properties>
+        </profile>
+    </profiles>
 
 
 </project>
