@@ -2,6 +2,7 @@ package de.helfenkannjeder.come2help.server.domain;
 
 import org.hibernate.validator.constraints.Email;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -31,7 +32,7 @@ public class User extends AbstractVersionedAuditable {
     @NotNull
     private String surname;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="ADDRESS_ID")
     private Address address;
 

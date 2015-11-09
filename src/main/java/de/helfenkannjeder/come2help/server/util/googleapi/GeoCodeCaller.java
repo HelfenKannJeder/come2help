@@ -14,12 +14,12 @@ import java.util.List;
 public class GeoCodeCaller {
 
     /**
-     * calls the google geocode api and enrich the given adress with latitude and longitude information
+     * calls the google geocode api and enrich the given address with latitude and longitude information
      *
      * @param address
      * @return
      */
-    public static Address getLatAndLgnForAddress(Address address) {
+    public static Address enrichAddressWithLatAndLgn(Address address) {
         String requestAddress = address.getZip();
         if (address.getStreet() != null) {
             requestAddress += "," + address.getStreet();

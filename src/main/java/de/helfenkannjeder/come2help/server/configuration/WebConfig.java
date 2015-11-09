@@ -1,7 +1,10 @@
 package de.helfenkannjeder.come2help.server.configuration;
 
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
@@ -17,6 +20,12 @@ public class WebConfig extends WebMvcAutoConfiguration.WebMvcAutoConfigurationAd
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //for jsondoc
         registry.addResourceHandler("**/*.css", "**/*.js", "**/*.map", "*.html").addResourceLocations("classpath:META-INF/resources/").setCachePeriod(0);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

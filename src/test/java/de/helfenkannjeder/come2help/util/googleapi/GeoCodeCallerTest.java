@@ -15,7 +15,7 @@ public class GeoCodeCallerTest {
         address.setStreet("Kaiserstraße");
         address.setStreetNumber("1");
 
-        address = GeoCodeCaller.getLatAndLgnForAddress(address);
+        address = GeoCodeCaller.enrichAddressWithLatAndLgn(address);
         System.out.println(address.getLat() + " " + address.getLng());
         Assert.assertEquals(49.00869609999999, address.getLat(), 0);
         Assert.assertEquals(8.4163198, address.getLng(), 0);
