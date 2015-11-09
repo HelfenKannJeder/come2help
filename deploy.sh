@@ -1,8 +1,13 @@
 #!/bin/bash
 
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+	echo "We won't deploy because we're on a pull request."
+	exit 0
+fi
+
 # If GH_TOKEN is not set, we'll exit gracefully
 if [ -z ${GH_TOKEN:+1} ]; then
-	echo "The GH_TOKEN ENV is not set. Thus, we'll won't deploy to gh-pages"
+	echo "The GH_TOKEN ENV is not set. Thus, we'll won't deploy to gh-pages."
 	exit 0
 fi
 
