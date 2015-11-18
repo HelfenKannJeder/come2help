@@ -37,7 +37,7 @@ the api. The playground is enabled to submit json objects easily.
 
 <pre>mvn clean package -Pdistributable</pre> creates an offline api documentation in target/jsondoc-distribution.zip.
 
-If you are only interested in the JSONdoc documentation, you can download it [here](helfenkannjeder.github.io/come2help-server/jsondoc-distribution.zip).
+If you are only interested in the JSONdoc documentation, you can download it [here](http://helfenkannjeder.github.io/come2help-server/jsondoc-distribution.zip).
 
 ## Contact
 
