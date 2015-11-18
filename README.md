@@ -7,7 +7,7 @@ Possible scenarios are flooding or coordinating support for political refugees.
 
 This is only a REST API for the server. The frontend is not part of this repository. For usage please care about the
 LICENSE file.
- 
+
 ## Setup
 
 1. Fork the repository for development. Implementations can be submitted by a Pull-Request.
@@ -36,6 +36,8 @@ Check <a href="http://localhost:8080/jsondoc-ui.html">http://localhost:8080/json
 the api. The playground is enabled to submit json objects easily.
 
 <pre>mvn clean package -Pdistributable</pre> creates an offline api documentation in target/jsondoc-distribution.zip.
+
+If you are only interested in the JSONdoc documentation, you can download it [here](helfenkannjeder.github.io/come2help-server/jsondoc-distribution.zip).
 
 ## Contact
 
