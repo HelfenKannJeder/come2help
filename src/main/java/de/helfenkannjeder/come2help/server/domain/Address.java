@@ -1,7 +1,5 @@
 package de.helfenkannjeder.come2help.server.domain;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -19,7 +17,7 @@ public class Address extends AbstractVersionedAuditable {
     private String streetNumber;
 
     @NotNull
-    private String zip;
+    private String zipCode;
 
     private String city;
 
@@ -28,6 +26,25 @@ public class Address extends AbstractVersionedAuditable {
 
     @NotNull
     private double lng;
+
+    public Address() {
+    }
+
+    /**
+     *
+     * @param id
+     * @param zipCode
+     * @param city
+     * @param street
+     * @param streetNumber
+     */
+    public Address(Long id, String zipCode, String city, String street, String streetNumber) {
+        this.id = id;
+        this.zipCode = zipCode;
+        this.city = city;
+        this.street = street;
+        this.streetNumber = streetNumber;
+    }
 
     public Long getId() {
         return id;
@@ -53,12 +70,12 @@ public class Address extends AbstractVersionedAuditable {
         this.streetNumber = streetNumber;
     }
 
-    public String getZip() {
-        return zip;
+    public String getZipCode() {
+        return zipCode;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public String getCity() {

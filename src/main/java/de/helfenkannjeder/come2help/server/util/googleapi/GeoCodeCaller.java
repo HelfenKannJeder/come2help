@@ -2,7 +2,6 @@ package de.helfenkannjeder.come2help.server.util.googleapi;
 
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
-import com.google.code.geocoder.model.GeocodeResponse;
 import com.google.code.geocoder.model.GeocoderRequest;
 import com.google.code.geocoder.model.GeocoderResult;
 import com.google.code.geocoder.model.LatLng;
@@ -14,13 +13,14 @@ import java.util.List;
 public class GeoCodeCaller {
 
     /**
-     * calls the google geocode api and enrich the given address with latitude and longitude information
+     * calls the google geocode api and enrich the given address with latitude
+     * and longitude information
      *
      * @param address
      * @return
      */
     public static Address enrichAddressWithLatAndLgn(Address address) {
-        String requestAddress = address.getZip();
+        String requestAddress = address.getZipCode();
         if (address.getStreet() != null) {
             requestAddress += "," + address.getStreet();
             if (address.getStreetNumber() != null) {
@@ -46,6 +46,3 @@ public class GeoCodeCaller {
     }
 
 }
-
-
-
