@@ -1,9 +1,10 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
-import de.helfenkannjeder.come2help.server.domain.Address;
-import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
+
+import de.helfenkannjeder.come2help.server.domain.Address;
+import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import org.hibernate.validator.constraints.Email;
 
 public class VolunteerDto {
@@ -12,12 +13,17 @@ public class VolunteerDto {
 
     @Email
     private String email;
+
     @NotNull
     private String givenName;
+
     @NotNull
     private String surname;
+
     private AddressDto address;
+
     private String phone;
+
     @AssertTrue
     private boolean adult;
 
@@ -48,56 +54,62 @@ public class VolunteerDto {
         return id;
     }
 
-    public void setId(Long id) {
+    public VolunteerDto setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public VolunteerDto setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String getGivenName() {
         return givenName;
     }
 
-    public void setGivenName(String givenName) {
+    public VolunteerDto setGivenName(String givenName) {
         this.givenName = givenName;
+        return this;
     }
 
     public String getSurname() {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    public VolunteerDto setSurname(String surname) {
         this.surname = surname;
+        return this;
     }
 
     public AddressDto getAddress() {
         return address;
     }
 
-    public void setAddress(AddressDto address) {
+    public VolunteerDto setAddress(AddressDto address) {
         this.address = address;
+        return this;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public VolunteerDto setPhone(String phone) {
         this.phone = phone;
+        return this;
     }
 
     public boolean isAdult() {
         return adult;
     }
 
-    public void setAdult(boolean isAdult) {
+    public VolunteerDto setAdult(boolean isAdult) {
         this.adult = isAdult;
+        return this;
     }
-
 }
