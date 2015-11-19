@@ -18,10 +18,9 @@ public class AddressDtoTest {
     @Test
     public void testAddressToAddressDto() {
         Address address = new Address(42L, "2323", "Karlsruhe", "Kaiserstraße", "6217");
-
         AddressDto dto = AddressDto.createFullDto(address);
 
-        assertEquals(address, dto);
+        assertEqual(address, dto);
     }
 
     public static void assertEqual(Address address, AddressDto dto) {
@@ -35,7 +34,6 @@ public class AddressDtoTest {
     @Test
     public void testAddressDtoToAddress() {
         AddressDto dto = new AddressDto(42L, "2323", "Karlsruhe", "Kaiserstraße", "6217");
-
         Address address = AddressDto.createAddress(dto);
 
         assertEqual(dto, address);
