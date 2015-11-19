@@ -46,6 +46,13 @@ public class Address extends AbstractVersionedAuditable {
         this.streetNumber = streetNumber;
     }
 
+    public void update(Address o) {
+        this.zipCode = o.zipCode;
+        this.city = o.city;
+        this.street = o.street;
+        this.streetNumber = o.streetNumber;
+    }
+
     public Long getId() {
         return id;
     }
@@ -101,4 +108,5 @@ public class Address extends AbstractVersionedAuditable {
     public void setLng(double lng) {
         this.lng = lng;
     }
+
 }

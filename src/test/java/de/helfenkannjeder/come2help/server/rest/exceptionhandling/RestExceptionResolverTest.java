@@ -1,21 +1,22 @@
 package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.google.common.collect.Lists;
+import de.helfenkannjeder.come2help.server.service.exception.DataError;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
+import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
+import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class RestExceptionResolverTest {
 
@@ -65,6 +66,13 @@ public class RestExceptionResolverTest {
     }
 
     @Test
+    public void invalidDataExceptionShouldBeAnsweredWithBadRequest() {
+        ResponseEntity<ErrorResponse> response = getResponseEntityForInvalidDataException();
+
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
     public void methodArgumentNotValidExceptionResponseBodyShouldContainClientError() {
         ErrorResponse response = getResponseEntityForMethodArgumentNotValidException().getBody();
 
@@ -73,6 +81,13 @@ public class RestExceptionResolverTest {
         assertThat(response.clientErrors.get(0).path, is("fieldName"));
         assertThat(response.clientErrors.get(0).value, is("rejectedValue"));
         assertThat(response.clientErrors.get(0).code, is("invalid.value"));
+    }
+
+    @Test
+    public void resourceNotFoundExceptionShouldBeAnsweredWithNotFound() {
+        ResponseEntity<ErrorResponse> response = getResponseEntityForResourceNotFoundException("xy not found");
+
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     private ResponseEntity<ErrorResponse> getResponseEntityForMethodArgumentNotValidException() {
@@ -84,9 +99,21 @@ public class RestExceptionResolverTest {
         return restExceptionResolver.resolveMethodArgumentNotValidException(exception);
     }
 
+    private ResponseEntity<ErrorResponse> getResponseEntityForInvalidDataException() {
+        InvalidDataException exception = mock(InvalidDataException.class);
+        when(exception.getErrors()).thenReturn(Lists.newArrayList(new DataError("code", "rejectedValue")));
+
+        return restExceptionResolver.resolveInvalidDataException(exception);
+    }
+
     private ResponseEntity<ErrorResponse> getResponseEntityForDuplicateResourceException(String message) {
         HttpServletRequest request = mock(HttpServletRequest.class);
         return restExceptionResolver.resolveDuplicateResourceException(request, new DuplicateResourceException(message));
+    }
+
+    private ResponseEntity<ErrorResponse> getResponseEntityForResourceNotFoundException(String message) {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        return restExceptionResolver.resolveDuplicateResourceException(request, new ResourceNotFoundException(message));
     }
 
     private ResponseEntity<ErrorResponse> getResponseEntityForException() {

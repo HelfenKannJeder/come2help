@@ -1,5 +1,6 @@
 package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
+import de.helfenkannjeder.come2help.server.service.exception.DataError;
 import org.springframework.validation.FieldError;
 
 public class ClientError {
@@ -9,6 +10,14 @@ public class ClientError {
         clientError.path = fieldError.getField();
         clientError.code = fieldError.getDefaultMessage();
         clientError.value = fieldError.getRejectedValue().toString();
+
+        return clientError;
+    }
+
+    public static ClientError fromDataError(DataError dataError) {
+        ClientError clientError = new ClientError();
+        clientError.code = dataError.code;
+        clientError.value = dataError.value;
 
         return clientError;
     }

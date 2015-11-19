@@ -1,14 +1,38 @@
 package de.helfenkannjeder.come2help.server.domain;
 
-public class Volunteer {
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 
+@Entity
+public class Volunteer extends AbstractVersionedAuditable {
+
+    @Id
+    @GeneratedValue
     private Long id;
+
     private String email;
+
+    @NotNull
     private String givenName;
+
+    @NotNull
     private String surname;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ADDRESS_ID")
     private Address address;
+
     private String phone;
+
     private boolean adult;
+
+    public Volunteer() {
+    }
 
     public Volunteer(Long id, String email, String givenName, String surname, Address address, String phone, boolean adult) {
         this.id = id;
@@ -18,6 +42,15 @@ public class Volunteer {
         this.address = address;
         this.phone = phone;
         this.adult = adult;
+    }
+
+    public void update(Volunteer o) {
+        this.email = o.email;
+        this.givenName = o.givenName;
+        this.surname = o.surname;
+        this.address.update(o.address);
+        this.phone = o.phone;
+        this.adult = o.adult;
     }
 
     public Long getId() {
@@ -75,4 +108,5 @@ public class Volunteer {
     public void setAdult(boolean isAdult) {
         this.adult = isAdult;
     }
+
 }

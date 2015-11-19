@@ -5,7 +5,6 @@ import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import de.helfenkannjeder.come2help.server.service.VolunteersService;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
