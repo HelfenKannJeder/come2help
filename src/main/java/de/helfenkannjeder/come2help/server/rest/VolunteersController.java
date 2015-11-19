@@ -3,6 +3,9 @@ package de.helfenkannjeder.come2help.server.rest;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import de.helfenkannjeder.come2help.server.service.VolunteersService;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -22,27 +25,40 @@ public class VolunteersController {
         this.volunteersService = volunteersService;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public VolunteerDto getUserById(@PathVariable Long id) {
-        Volunteer volunteer = volunteersService.findById(id);
-        return VolunteerDto.createFullDto(volunteer);
+    public List<VolunteerDto> getVolunteers() {
+        List< Volunteer> volunteers = volunteersService.findAll();
+        return volunteers.stream().map(v -> VolunteerDto.createFullDto(v)).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public VolunteerDto createUser(@Valid @RequestBody VolunteerDto volunteerDto) {
+    public VolunteerDto createVolunteer(@Valid @RequestBody VolunteerDto volunteerDto) {
         Volunteer volunteer = VolunteerDto.createVolunteer(volunteerDto);
         Volunteer createdVolunteer = volunteersService.createVolunteer(volunteer);
         return VolunteerDto.createFullDto(createdVolunteer);
     }
 
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public VolunteerDto getVolunteerById(@PathVariable Long id) {
+        Volunteer volunteer = volunteersService.findById(id);
+        return VolunteerDto.createFullDto(volunteer);
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public VolunteerDto updateUser(@NotNull @PathVariable Long id, @Valid @RequestBody VolunteerDto volunteerDto) {
+    public VolunteerDto updateVolunteer(@NotNull @PathVariable Long id, @Valid @RequestBody VolunteerDto volunteerDto) {
         volunteerDto.setId(id);
         Volunteer volunteer = VolunteerDto.createVolunteer(volunteerDto);
         Volunteer updatedVolunteer = volunteersService.updateVolunteer(volunteer);
         return VolunteerDto.createFullDto(updatedVolunteer);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteVolunteer(@NotNull @PathVariable Long id) {
+        volunteersService.deleteVolunteer(id);
     }
 }
