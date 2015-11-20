@@ -6,7 +6,6 @@ import com.google.code.geocoder.model.GeocoderRequest;
 import com.google.code.geocoder.model.GeocoderResult;
 import com.google.code.geocoder.model.LatLng;
 import de.helfenkannjeder.come2help.server.domain.Address;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class GeoCodeCaller {
      * @param address
      * @return
      */
-    public static Address enrichAddressWithLatAndLgn(Address address) {
+    public static Address enrichAddressWithLatitudeAndLongitude(Address address) {
         String requestAddress = address.getZipCode();
         if (address.getStreet() != null) {
             requestAddress += "," + address.getStreet();
@@ -28,6 +27,7 @@ public class GeoCodeCaller {
             }
         }
         requestAddress += ", Deutschland";
+        System.out.println(requestAddress);
         try {
             final Geocoder geocoder = new Geocoder();
             GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(requestAddress).setLanguage("de").getGeocoderRequest();
@@ -37,8 +37,8 @@ public class GeoCodeCaller {
             }
             //use first result, hopefully it is the best
             LatLng location = geocoderResults.get(0).getGeometry().getLocation();
-            address.setLat(location.getLat().doubleValue());
-            address.setLng(location.getLng().doubleValue());
+            address.setLatitude(location.getLat().doubleValue());
+            address.setLongitude(location.getLng().doubleValue());
         } catch (IOException e) {
             throw new RuntimeException("Could not gather google geocode api for parameter: " + requestAddress); //TODO for testing purposes an exception is fine, how about in production?
         }

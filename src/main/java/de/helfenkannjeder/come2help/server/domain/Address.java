@@ -1,16 +1,11 @@
 package de.helfenkannjeder.come2help.server.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import de.helfenkannjeder.come2help.server.util.googleapi.GeoCodeCaller;
+import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
-@Entity
-public class Address extends AbstractVersionedAuditable {
-
-    @Id
-    @GeneratedValue
-    private Long id;
+@Embeddable
+public class Address {
 
     private String street;
 
@@ -22,24 +17,22 @@ public class Address extends AbstractVersionedAuditable {
     private String city;
 
     @NotNull
-    private double lat;
+    private double latitude;
 
     @NotNull
-    private double lng;
+    private double longitude;
 
     public Address() {
     }
 
     /**
      *
-     * @param id
      * @param zipCode
      * @param city
      * @param street
      * @param streetNumber
      */
-    public Address(Long id, String zipCode, String city, String street, String streetNumber) {
-        this.id = id;
+    public Address(String zipCode, String city, String street, String streetNumber) {
         this.zipCode = zipCode;
         this.city = city;
         this.street = street;
@@ -51,14 +44,6 @@ public class Address extends AbstractVersionedAuditable {
         this.city = o.city;
         this.street = o.street;
         this.streetNumber = o.streetNumber;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getStreet() {
@@ -93,20 +78,23 @@ public class Address extends AbstractVersionedAuditable {
         this.city = city;
     }
 
-    public double getLat() {
-        return lat;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public double getLng() {
-        return lng;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
+    public void updateCoordinates() {
+        GeoCodeCaller.enrichAddressWithLatitudeAndLongitude(this);
+    }
 }

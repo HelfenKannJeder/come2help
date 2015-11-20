@@ -1,13 +1,11 @@
 package de.helfenkannjeder.come2help.server.service;
 
 import com.google.common.collect.Lists;
-import de.helfenkannjeder.come2help.server.domain.Address;
 import de.helfenkannjeder.come2help.server.domain.Organisation;
 import de.helfenkannjeder.come2help.server.domain.repository.OrganisationRepository;
 import de.helfenkannjeder.come2help.server.service.exception.ConcurrentDeletedException;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
-import de.helfenkannjeder.come2help.server.util.googleapi.GeoCodeCaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +15,7 @@ import static java.lang.String.format;
 
 @Service
 public class OrganisationService {
+
     private final OrganisationRepository organisationRepository;
 
     @Autowired
@@ -42,8 +41,6 @@ public class OrganisationService {
             throw new DuplicateResourceException(format("An organisation with name %s already exists", organisation.getName()));
         }
 
-        organisation = enrichInformation(organisation);
-
         return organisationRepository.save(organisation);
     }
 
@@ -60,8 +57,6 @@ public class OrganisationService {
         if (tmp == null) {
             throw new ConcurrentDeletedException(organisation.getId());
         }
-
-        organisation = enrichInformation(organisation);
 
         return organisationRepository.save(organisation);
     }
@@ -82,17 +77,5 @@ public class OrganisationService {
         }
 
         deleteOrganisationById(organisation.getId());
-    }
-
-    /**
-     * enrich information which calculated ones (address: lat, lgn)
-     *
-     * @param organisation
-     * @return
-     */
-    private Organisation enrichInformation(Organisation organisation) {
-        Address enrichedAddress = GeoCodeCaller.enrichAddressWithLatAndLgn(organisation.getAddress());
-        organisation.setAddress(enrichedAddress);
-        return organisation;
     }
 }

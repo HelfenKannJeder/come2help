@@ -10,12 +10,12 @@ public class DistanceCalculatorTest {
     @Test
     public void testLanLngDistance() {
         Address stuttgart = new Address();
-        stuttgart.setLat(48.7758459);
-        stuttgart.setLng(9.1829321);
+        stuttgart.setLatitude(48.7758459);
+        stuttgart.setLongitude(9.1829321);
 
         Address karlsruhe = new Address();
-        karlsruhe.setLat(49.0068901);
-        karlsruhe.setLng(8.4036527);
+        karlsruhe.setLatitude(49.0068901);
+        karlsruhe.setLongitude(8.4036527);
 
         double distanceInKm = DistanceCalculator.getDistanceFor(stuttgart, karlsruhe) / 1000;
         Assert.assertEquals(62.5, distanceInKm, 0.1);

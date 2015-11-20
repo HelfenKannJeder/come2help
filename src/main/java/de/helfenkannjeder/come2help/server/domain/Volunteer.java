@@ -1,11 +1,11 @@
 package de.helfenkannjeder.come2help.server.domain;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -23,8 +23,8 @@ public class Volunteer extends AbstractVersionedAuditable {
     @NotNull
     private String surname;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ADDRESS_ID")
+    @Embedded
+    @NotNull
     private Address address;
 
     private String phone;
@@ -109,4 +109,11 @@ public class Volunteer extends AbstractVersionedAuditable {
         this.adult = isAdult;
     }
 
+    @PreUpdate
+    @PrePersist
+    protected void updateCoordinates() {
+        if (address != null) {
+            address.updateCoordinates();
+        }
+    }
 }

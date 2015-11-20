@@ -4,7 +4,6 @@ import de.helfenkannjeder.come2help.server.domain.Address;
 
 public class AddressDto {
 
-    private Long id;
     private String zipCode;
     private String city;
     private String street;
@@ -13,8 +12,7 @@ public class AddressDto {
     public AddressDto() {
     }
 
-    public AddressDto(Long id, String zipCode, String city, String street, String streetNumber) {
-        this.id = id;
+    public AddressDto(String zipCode, String city, String street, String streetNumber) {
         this.zipCode = zipCode;
         this.city = city;
         this.street = street;
@@ -22,19 +20,11 @@ public class AddressDto {
     }
 
     public static AddressDto createFullDto(Address address) {
-        return new AddressDto(address.getId(), address.getZipCode(), address.getCity(), address.getStreet(), address.getStreetNumber());
+        return new AddressDto(address.getZipCode(), address.getCity(), address.getStreet(), address.getStreetNumber());
     }
 
     public static Address createAddress(AddressDto dto) {
-        return new Address(dto.id, dto.zipCode, dto.city, dto.street, dto.streetNumber);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        return new Address(dto.zipCode, dto.city, dto.street, dto.streetNumber);
     }
 
     public String getZipCode() {

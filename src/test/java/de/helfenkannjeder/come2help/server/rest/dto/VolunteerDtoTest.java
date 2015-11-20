@@ -18,7 +18,7 @@ public class VolunteerDtoTest {
 
     @Test
     public void testVolunteerToVolunteerDto() {
-        Volunteer volunteer = new Volunteer(234L, "bla@bla.de", "Hans", "Maulwurf", new Address(42L, "2323", "Karlsruhe", "Kaiserstraße", "6217"), "+49 232", true);
+        Volunteer volunteer = new Volunteer(234L, "bla@bla.de", "Hans", "Maulwurf", new Address("2323", "Karlsruhe", "Kaiserstraße", "6217"), "+49 232", true);
         VolunteerDto dto = VolunteerDto.createFullDto(volunteer);
 
         assertEqual(volunteer, dto);
@@ -36,9 +36,13 @@ public class VolunteerDtoTest {
 
     @Test
     public void testVolunteerDtoToVolunteer() {
-        VolunteerDto dto = new VolunteerDto(234L, "bla@bla.de", "Hans", "Maulwurf", new AddressDto(42L, "2323", "Karlsruhe", "Kaiserstraße", "6217"), "+49 232", true);
+        VolunteerDto dto = new VolunteerDto(234L, "bla@bla.de", "Hans", "Maulwurf", new AddressDto("2323", "Karlsruhe", "Kaiserstraße", "6217"), "+49 232", true);
         Volunteer volunteer = VolunteerDto.createVolunteer(dto);
 
+        assertEqual(dto, volunteer);
+    }
+
+    private void assertEqual(VolunteerDto dto, Volunteer volunteer) {
         Assert.assertEquals(dto.getId(), volunteer.getId());
         Assert.assertEquals(dto.getEmail(), volunteer.getEmail());
         Assert.assertEquals(dto.getGivenName(), volunteer.getGivenName());
