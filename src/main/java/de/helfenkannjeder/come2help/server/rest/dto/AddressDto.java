@@ -31,31 +31,35 @@ public class AddressDto {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
+    public AddressDto setZipCode(String zipCode) {
         this.zipCode = zipCode;
+        return this;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public AddressDto setCity(String city) {
         this.city = city;
+        return this;
     }
 
     public String getStreet() {
         return street;
     }
 
-    public void setStreet(String street) {
+    public AddressDto setStreet(String street) {
         this.street = street;
+        return this;
     }
 
     public String getStreetNumber() {
         return streetNumber;
     }
 
-    public void setStreetNumber(String streetNumber) {
+    public AddressDto setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
+        return this;
     }
 }
