@@ -2,6 +2,7 @@ package de.helfenkannjeder.come2help.server.domain;
 
 import de.helfenkannjeder.come2help.server.util.googleapi.GeoCodeCaller;
 import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.validation.constraints.NotNull;
 
 @Embeddable
@@ -16,11 +17,8 @@ public class Address {
 
     private String city;
 
-    @NotNull
-    private double latitude;
-
-    @NotNull
-    private double longitude;
+    @Embedded
+    private Coordinate coordinate;
 
     public Address() {
     }
@@ -78,23 +76,15 @@ public class Address {
         this.city = city;
     }
 
-    public double getLatitude() {
-        return latitude;
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
     }
 
     public void updateCoordinates() {
-        GeoCodeCaller.enrichAddressWithLatitudeAndLongitude(this);
+        this.coordinate = GeoCodeCaller.calculateCoordinateForAddress(this);
     }
 }

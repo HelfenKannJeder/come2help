@@ -1,7 +1,7 @@
 package de.helfenkannjeder.come2help.util.googleapi;
 
 import de.helfenkannjeder.come2help.server.domain.Address;
-import de.helfenkannjeder.come2help.server.util.googleapi.GeoCodeCaller;
+import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,9 +14,10 @@ public class GeoCodeCallerTest {
         address.setStreet("Kaiserstraße");
         address.setStreetNumber("1");
 
-        address = GeoCodeCaller.enrichAddressWithLatitudeAndLongitude(address);
-        System.out.println(address.getLatitude() + " " + address.getLongitude());
-        Assert.assertEquals(49.00869609999999, address.getLatitude(), 0);
-        Assert.assertEquals(8.4163198, address.getLongitude(), 0);
+        address.updateCoordinates();
+        Coordinate coordinate = address.getCoordinate();
+        System.out.println(coordinate.getLatitude() + " " + coordinate.getLongitude());
+        Assert.assertEquals(49.00869609999999, coordinate.getLatitude(), 0);
+        Assert.assertEquals(8.4163198, coordinate.getLongitude(), 0);
     }
 }

@@ -1,5 +1,6 @@
 package de.helfenkannjeder.come2help.server.rest;
 
+import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import de.helfenkannjeder.come2help.server.service.VolunteersService;
@@ -26,8 +27,8 @@ public class VolunteersController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<VolunteerDto> getVolunteers() {
-        List< Volunteer> volunteers = volunteersService.findAll();
+    public List<VolunteerDto> getVolunteers(@RequestParam @NotNull Double latitude, @RequestParam @NotNull Double longitude, @RequestParam @NotNull Double distance) {
+        List<Volunteer> volunteers = volunteersService.findAllInDistance(new Coordinate(latitude, longitude), distance);
         return volunteers.stream().map(v -> VolunteerDto.createFullDto(v)).collect(Collectors.toList());
     }
 

@@ -1,12 +1,13 @@
 package de.helfenkannjeder.come2help.server.service;
 
-import de.helfenkannjeder.come2help.server.domain.Address;
+import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.domain.repository.VolunteerRepository;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
-import de.helfenkannjeder.come2help.server.util.googleapi.GeoCodeCaller;
+import de.helfenkannjeder.come2help.server.util.DistanceCalculator;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,12 @@ public class VolunteersService {
 
     public List<Volunteer> findAll() {
         return volunteerRepository.findAll();
+    }
+
+    public List<Volunteer> findAllInDistance(final Coordinate coordinate, Double distance) {
+        List<Volunteer> all = findAll();
+
+        return all.parallelStream().filter(v -> DistanceCalculator.getDistanceFor(v.getAddress().getCoordinate(), coordinate) <= distance).collect(Collectors.toList());
     }
 
     public Volunteer findById(Long id) {
@@ -67,17 +74,5 @@ public class VolunteersService {
 
         Volunteer volunteer = findById(id);
         volunteerRepository.delete(volunteer);
-    }
-
-    /**
-     * enrich information which calculated ones (address: lat, lgn)
-     *
-     * @param volunteer
-     * @return
-     */
-    private Volunteer enrichInformation(Volunteer volunteer) {
-        Address enrichedAddress = GeoCodeCaller.enrichAddressWithLatitudeAndLongitude(volunteer.getAddress());
-        volunteer.setAddress(enrichedAddress);
-        return volunteer;
     }
 }

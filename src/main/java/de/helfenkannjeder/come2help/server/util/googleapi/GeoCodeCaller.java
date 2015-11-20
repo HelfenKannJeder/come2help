@@ -6,6 +6,7 @@ import com.google.code.geocoder.model.GeocoderRequest;
 import com.google.code.geocoder.model.GeocoderResult;
 import com.google.code.geocoder.model.LatLng;
 import de.helfenkannjeder.come2help.server.domain.Address;
+import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import java.io.IOException;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class GeoCodeCaller {
      * @param address
      * @return
      */
-    public static Address enrichAddressWithLatitudeAndLongitude(Address address) {
+    public static Coordinate calculateCoordinateForAddress(Address address) {
         String requestAddress = address.getZipCode();
         if (address.getStreet() != null) {
             requestAddress += "," + address.getStreet();
@@ -27,7 +28,7 @@ public class GeoCodeCaller {
             }
         }
         requestAddress += ", Deutschland";
-        System.out.println(requestAddress);
+
         try {
             final Geocoder geocoder = new Geocoder();
             GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(requestAddress).setLanguage("de").getGeocoderRequest();
@@ -37,12 +38,11 @@ public class GeoCodeCaller {
             }
             //use first result, hopefully it is the best
             LatLng location = geocoderResults.get(0).getGeometry().getLocation();
-            address.setLatitude(location.getLat().doubleValue());
-            address.setLongitude(location.getLng().doubleValue());
+
+            return new Coordinate(location.getLat().doubleValue(), location.getLng().doubleValue());
         } catch (IOException e) {
             throw new RuntimeException("Could not gather google geocode api for parameter: " + requestAddress); //TODO for testing purposes an exception is fine, how about in production?
         }
-        return address;
     }
 
 }
