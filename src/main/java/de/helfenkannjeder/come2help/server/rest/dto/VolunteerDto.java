@@ -1,10 +1,13 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotNull;
-
+import de.helfenkannjeder.come2help.server.domain.Ability;
 import de.helfenkannjeder.come2help.server.domain.Address;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Email;
 
 public class VolunteerDto {
@@ -28,10 +31,13 @@ public class VolunteerDto {
     @AssertTrue(message = "adult.not.false")
     private boolean adult;
 
+    @NotNull
+    private List<AbilityDto> abilities = Collections.emptyList();
+
     public VolunteerDto() {
     }
 
-    public VolunteerDto(Long id, String email, String givenName, String surname, AddressDto address, String phone, boolean adult) {
+    public VolunteerDto(Long id, String email, String givenName, String surname, AddressDto address, String phone, boolean adult, List<AbilityDto> abilities) {
         this.id = id;
         this.email = email;
         this.givenName = givenName;
@@ -39,16 +45,20 @@ public class VolunteerDto {
         this.address = address;
         this.phone = phone;
         this.adult = adult;
+        this.abilities = abilities;
     }
 
     public static VolunteerDto createFullDto(Volunteer volunteer) {
         AddressDto addressDto = AddressDto.createFullDto(volunteer.getAddress());
-        return new VolunteerDto(volunteer.getId(), volunteer.getEmail(), volunteer.getGivenName(), volunteer.getSurname(), addressDto, volunteer.getPhone(), volunteer.isAdult());
+        List<AbilityDto> abilityDtos = volunteer.getAbilities().stream().map(a -> AbilityDto.createFullDto(a)).collect(Collectors.toList());
+        return new VolunteerDto(volunteer.getId(), volunteer.getEmail(), volunteer.getGivenName(), volunteer.getSurname(),
+                addressDto, volunteer.getPhone(), volunteer.isAdult(), abilityDtos);
     }
 
     public static Volunteer createVolunteer(VolunteerDto dto) {
         Address address = AddressDto.createAddress(dto.getAddress());
-        return new Volunteer(dto.id, dto.email, dto.givenName, dto.surname, address, dto.phone, dto.adult);
+        List<Ability> abilities = dto.abilities.stream().map(a -> AbilityDto.createAbility(a)).collect(Collectors.toList());
+        return new Volunteer(dto.id, dto.email, dto.givenName, dto.surname, address, dto.phone, dto.adult, abilities);
     }
 
     public Long getId() {
@@ -111,6 +121,15 @@ public class VolunteerDto {
 
     public VolunteerDto setAdult(boolean isAdult) {
         this.adult = isAdult;
+        return this;
+    }
+
+    public List<AbilityDto> getAbilities() {
+        return abilities;
+    }
+
+    public VolunteerDto setAbilities(List<AbilityDto> abilities) {
+        this.abilities = abilities;
         return this;
     }
 }

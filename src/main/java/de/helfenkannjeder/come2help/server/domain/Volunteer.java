@@ -1,9 +1,12 @@
 package de.helfenkannjeder.come2help.server.domain;
 
+import java.util.Collections;
+import java.util.List;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotNull;
@@ -29,12 +32,15 @@ public class Volunteer extends AbstractVersionedAuditable {
 
     private String phone;
 
-    private boolean adult;
+    private Boolean adult;
+
+    @ManyToMany
+    private List<Ability> abilities = Collections.emptyList();
 
     public Volunteer() {
     }
 
-    public Volunteer(Long id, String email, String givenName, String surname, Address address, String phone, boolean adult) {
+    public Volunteer(Long id, String email, String givenName, String surname, Address address, String phone, boolean adult, List<Ability> abilities) {
         this.id = id;
         this.email = email;
         this.givenName = givenName;
@@ -42,15 +48,17 @@ public class Volunteer extends AbstractVersionedAuditable {
         this.address = address;
         this.phone = phone;
         this.adult = adult;
+        this.abilities = abilities;
     }
 
-    public void update(Volunteer o) {
-        this.email = o.email;
-        this.givenName = o.givenName;
-        this.surname = o.surname;
-        this.address.update(o.address);
-        this.phone = o.phone;
-        this.adult = o.adult;
+    public void update(Volunteer v) {
+        this.email = v.email;
+        this.givenName = v.givenName;
+        this.surname = v.surname;
+        this.address.update(v.address);
+        this.phone = v.phone;
+        this.adult = v.adult;
+        this.abilities = v.abilities;
     }
 
     public Long getId() {
@@ -101,12 +109,20 @@ public class Volunteer extends AbstractVersionedAuditable {
         this.phone = phone;
     }
 
-    public boolean isAdult() {
+    public Boolean isAdult() {
         return adult;
     }
 
-    public void setAdult(boolean isAdult) {
+    public void setAdult(Boolean isAdult) {
         this.adult = isAdult;
+    }
+
+    public List<Ability> getAbilities() {
+        return abilities;
+    }
+
+    public void setAbilities(List<Ability> abilities) {
+        this.abilities = abilities;
     }
 
     @PreUpdate

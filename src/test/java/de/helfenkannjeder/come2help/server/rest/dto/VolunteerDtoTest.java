@@ -7,6 +7,7 @@ package de.helfenkannjeder.come2help.server.rest.dto;
 
 import de.helfenkannjeder.come2help.server.domain.Address;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
+import java.util.Collections;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +19,9 @@ public class VolunteerDtoTest {
 
     @Test
     public void testVolunteerToVolunteerDto() {
-        Volunteer volunteer = new Volunteer(234L, "bla@bla.de", "Hans", "Maulwurf", new Address("2323", "Karlsruhe", "Kaiserstraße", "6217"), "+49 232", true);
+        Volunteer volunteer = new Volunteer(234L, "bla@bla.de", "Hans", "Maulwurf",
+                new Address("2323", "Karlsruhe", "Kaiserstraße", "6217"), "+49 232", true,
+                Collections.emptyList());
         VolunteerDto dto = VolunteerDto.createFullDto(volunteer);
 
         assertEqual(volunteer, dto);
@@ -36,7 +39,9 @@ public class VolunteerDtoTest {
 
     @Test
     public void testVolunteerDtoToVolunteer() {
-        VolunteerDto dto = new VolunteerDto(234L, "bla@bla.de", "Hans", "Maulwurf", new AddressDto("2323", "Karlsruhe", "Kaiserstraße", "6217"), "+49 232", true);
+        VolunteerDto dto = new VolunteerDto(234L, "bla@bla.de", "Hans", "Maulwurf",
+                new AddressDto("2323", "Karlsruhe", "Kaiserstraße", "6217"), "+49 232", true,
+                Collections.emptyList());
         Volunteer volunteer = VolunteerDto.createVolunteer(dto);
 
         assertEqual(dto, volunteer);
