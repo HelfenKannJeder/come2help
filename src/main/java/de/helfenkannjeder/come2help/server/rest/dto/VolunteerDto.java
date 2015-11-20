@@ -20,6 +20,7 @@ public class VolunteerDto {
     @NotNull
     private String surname;
 
+    @NotNull
     private AddressDto address;
 
     private String phone;

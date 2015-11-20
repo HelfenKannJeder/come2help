@@ -1,9 +1,12 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
+import javax.validation.constraints.NotNull;
+
 import de.helfenkannjeder.come2help.server.domain.Address;
 
 public class AddressDto {
 
+    @NotNull
     private String zipCode;
     private String city;
     private String street;
