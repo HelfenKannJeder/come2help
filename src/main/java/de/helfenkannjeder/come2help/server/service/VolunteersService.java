@@ -1,13 +1,14 @@
 package de.helfenkannjeder.come2help.server.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.domain.repository.VolunteerRepository;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
 import de.helfenkannjeder.come2help.server.util.DistanceCalculator;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class VolunteersService {
             throw InvalidDataException.forSingleError("volunteer.not.null", null);
         }
         if (volunteer.getId() != null) {
-            throw InvalidDataException.forSingleError("volunteer.id.null", null);
+            throw InvalidDataException.forSingleError("volunteer.id.null", volunteer.getId().toString());
         }
 
         return volunteerRepository.save(volunteer);

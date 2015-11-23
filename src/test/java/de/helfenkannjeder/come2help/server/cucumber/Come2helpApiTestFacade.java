@@ -60,6 +60,11 @@ public class Come2helpApiTestFacade {
         return volunteerApiRestClient.getVolunteer(id);
     }
 
+    public HttpStatus deleteVolunteer(Long id) {
+        latestRelevantStatusCode = volunteerApiRestClient.deleteVolunteer(id);
+        return latestRelevantStatusCode;
+    }
+
     public HttpStatus getLatestHttpStatusCode() {
         return latestRelevantStatusCode;
     }

@@ -31,3 +31,8 @@ Feature: Crud operations for an volunteer
     And the user modifies the volunteer with invalid data
     When the volunteer is updated
     Then the returned status code is HTTP 400 Bad Request
+
+  Scenario: Delete a non existing volunteer
+    Given a non existing volunteer
+    When the volunteer is deleted
+    Then the returned status code is HTTP 404 Not Found

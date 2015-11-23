@@ -79,6 +79,11 @@ public class VolunteerSteps {
         updateVolunteerResponseEntity = facade.updateVolunteer(volunteerDto);
     }
 
+    @When("^the volunteer is deleted")
+    public void the_volunteer_is_deleted() throws Throwable {
+        facade.deleteVolunteer(volunteerDto.getId());
+    }
+
     @Then("^the updated volunteer is returned$")
     public void the_updated_volunteer_is_returned() throws Throwable {
         assertThat(updateVolunteerResponseEntity.getBody(), CoreMatchers.is(VolunteerDtoMatcher.matchesVolunteer(volunteerDto)));
