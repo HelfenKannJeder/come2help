@@ -9,7 +9,7 @@ public class ClientError {
         ClientError clientError = new ClientError();
         clientError.path = fieldError.getField();
         clientError.code = fieldError.getDefaultMessage();
-        clientError.value = fieldError.getRejectedValue().toString();
+        clientError.value = fieldError.getRejectedValue();
 
         return clientError;
     }
@@ -24,5 +24,5 @@ public class ClientError {
 
     public String path;
     public String code;
-    public String value;
+    public Object value;
 }
