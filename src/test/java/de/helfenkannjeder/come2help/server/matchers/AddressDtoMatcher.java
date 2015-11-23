@@ -10,8 +10,6 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class AddressDtoMatcher extends TypeSafeDiagnosingMatcher<AddressDto> {
 
-    private Matcher<? super Long> id = Matchers.anything();
-
     private Matcher<? super String> zipCode = Matchers.anything();
 
     private Matcher<? super String> city = Matchers.anything();
@@ -25,16 +23,10 @@ public class AddressDtoMatcher extends TypeSafeDiagnosingMatcher<AddressDto> {
     }
 
     public static AddressDtoMatcher matchesAddress(AddressDto addressDto) {
-        return new AddressDtoMatcher().withId(addressDto.getId())
-                .withZipCode(addressDto.getZipCode())
+        return new AddressDtoMatcher().withZipCode(addressDto.getZipCode())
                 .withCity(addressDto.getCity())
                 .withStreet(addressDto.getStreet())
                 .withStreetNumber(addressDto.getStreetNumber());
-    }
-
-    public AddressDtoMatcher withId(Long id) {
-        this.id = equalTo(id);
-        return this;
     }
 
     public AddressDtoMatcher withZipCode(String zipCode) {
@@ -62,10 +54,6 @@ public class AddressDtoMatcher extends TypeSafeDiagnosingMatcher<AddressDto> {
         boolean matches = true;
         mismatchDescription.appendText("was AddressDto");
 
-        if (!id.matches(item.getId())) {
-            mismatchDescription.appendText(" with id=").appendValue(item.getId());
-            matches = false;
-        }
         if (!zipCode.matches(item.getZipCode())) {
             mismatchDescription.appendText(" with zipCode=").appendValue(item.getZipCode());
             matches = false;
@@ -88,7 +76,6 @@ public class AddressDtoMatcher extends TypeSafeDiagnosingMatcher<AddressDto> {
     @Override
     public void describeTo(Description description) {
         description
-                .appendText(", with id=").appendDescriptionOf(id)
                 .appendText(", with zipCode=").appendDescriptionOf(zipCode)
                 .appendText(", with city=").appendDescriptionOf(city)
                 .appendText(", with street=").appendDescriptionOf(street)

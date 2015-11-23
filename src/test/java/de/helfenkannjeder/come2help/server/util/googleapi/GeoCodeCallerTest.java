@@ -1,4 +1,4 @@
-package de.helfenkannjeder.come2help.util.googleapi;
+package de.helfenkannjeder.come2help.server.util.googleapi;
 
 import de.helfenkannjeder.come2help.server.domain.Address;
 import de.helfenkannjeder.come2help.server.domain.Coordinate;

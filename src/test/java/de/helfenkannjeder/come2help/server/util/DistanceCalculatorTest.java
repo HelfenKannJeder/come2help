@@ -1,7 +1,6 @@
-package de.helfenkannjeder.come2help.util;
+package de.helfenkannjeder.come2help.server.util;
 
 import de.helfenkannjeder.come2help.server.domain.Coordinate;
-import de.helfenkannjeder.come2help.server.util.DistanceCalculator;
 import org.junit.Assert;
 import org.junit.Test;
 

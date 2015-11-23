@@ -1,6 +1,5 @@
 package de.helfenkannjeder.come2help.server.matchers;
 
-import de.helfenkannjeder.come2help.server.domain.Address;
 import de.helfenkannjeder.come2help.server.rest.dto.AddressDto;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import org.hamcrest.Description;
@@ -8,7 +7,6 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.equalTo;
 
 public class VolunteerDtoMatcher extends TypeSafeDiagnosingMatcher<VolunteerDto> {
@@ -21,7 +19,7 @@ public class VolunteerDtoMatcher extends TypeSafeDiagnosingMatcher<VolunteerDto>
 
     private Matcher<? super String> surname = Matchers.anything();
 
-    private Matcher<? super Address> address = Matchers.anything();
+    private Matcher<? super AddressDto> address = Matchers.anything();
 
     private Matcher<? super String> phone = Matchers.anything();
 
@@ -62,7 +60,7 @@ public class VolunteerDtoMatcher extends TypeSafeDiagnosingMatcher<VolunteerDto>
     }
 
     public VolunteerDtoMatcher withAddress(AddressDto address) {
-        this.address = is(address);
+        this.address = AddressDtoMatcher.matchesAddress(address);
         return this;
     }
 
