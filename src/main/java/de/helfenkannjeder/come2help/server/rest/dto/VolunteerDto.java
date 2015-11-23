@@ -11,21 +11,21 @@ public class VolunteerDto {
 
     private Long id;
 
-    @Email
+    @Email(message = "email.not.invalid")
     private String email;
 
-    @NotNull
+    @NotNull(message = "givenName.not.null")
     private String givenName;
 
-    @NotNull
+    @NotNull(message = "surname.not.null")
     private String surname;
 
-    @NotNull
+    @NotNull(message = "address.not.null")
     private AddressDto address;
 
     private String phone;
 
-    @AssertTrue
+    @AssertTrue(message = "adult.not.false")
     private boolean adult;
 
     public VolunteerDto() {

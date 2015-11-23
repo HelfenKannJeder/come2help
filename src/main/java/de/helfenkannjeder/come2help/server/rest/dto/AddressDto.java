@@ -6,7 +6,7 @@ import de.helfenkannjeder.come2help.server.domain.Address;
 
 public class AddressDto {
 
-    @NotNull
+    @NotNull(message = "zipCode.not.null")
     private String zipCode;
     private String city;
     private String street;
