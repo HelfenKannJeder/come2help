@@ -160,6 +160,9 @@
                             <includes>
                                 <include>**/*Test.java</include>
                             </includes>
+                            <excludes>
+                                <exclude>**/cucumber/*</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
@@ -170,7 +173,7 @@
                 <version>2.19</version>
                 <configuration>
                     <includes>
-                        <include>**/cucumber/*</include>
+                        <include>**/cucumber/*Test.java</include>
                     </includes>
                 </configuration>
                 <executions>
