@@ -1,5 +1,6 @@
 package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
@@ -66,9 +67,14 @@ public class RestExceptionResolver {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> resolveHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException ex) {
-        return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
-                .withDescription(ex.getMessage())
-                .createErrorResponse();
+        StringBuilder description = new StringBuilder();
+        description.append("Could not read document.");
+        if (ex.getRootCause() instanceof JsonParseException) {
+            description.append(" Json parse not possible.").append(ex.getRootCause().getMessage());
+        } else if (ex.getMessage().startsWith("Required request body is missing")) {
+            description.append(" Missing request body.");
+        }
+        return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST).withDescription(description.toString()).createErrorResponse();
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
