@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -65,6 +66,13 @@ public class RestExceptionResolver {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> resolveHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException ex) {
+        return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
+                .withDescription(ex.getMessage())
+                .createErrorResponse();
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponse> resolveHttpMessageNotReadableException(HttpServletRequest request, MissingServletRequestParameterException ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
                 .withDescription(ex.getMessage())
                 .createErrorResponse();
