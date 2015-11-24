@@ -28,8 +28,9 @@ public class VolunteerDto {
 
     private String phone;
 
+    @NotNull(message = "adult.not.null")
     @AssertTrue(message = "adult.not.false")
-    private boolean adult;
+    private Boolean adult;
 
     @NotNull
     private List<AbilityDto> abilities = Collections.emptyList();
@@ -37,7 +38,7 @@ public class VolunteerDto {
     public VolunteerDto() {
     }
 
-    public VolunteerDto(Long id, String email, String givenName, String surname, AddressDto address, String phone, boolean adult, List<AbilityDto> abilities) {
+    public VolunteerDto(Long id, String email, String givenName, String surname, AddressDto address, String phone, Boolean adult, List<AbilityDto> abilities) {
         this.id = id;
         this.email = email;
         this.givenName = givenName;
@@ -115,11 +116,11 @@ public class VolunteerDto {
         return this;
     }
 
-    public boolean isAdult() {
+    public Boolean isAdult() {
         return adult;
     }
 
-    public VolunteerDto setAdult(boolean isAdult) {
+    public VolunteerDto setAdult(Boolean isAdult) {
         this.adult = isAdult;
         return this;
     }
