@@ -2,6 +2,7 @@ package de.helfenkannjeder.come2help.server.domain;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -40,7 +41,7 @@ public class Volunteer extends AbstractVersionedAuditable {
     public Volunteer() {
     }
 
-    public Volunteer(Long id, String email, String givenName, String surname, Address address, String phone, boolean adult, List<Ability> abilities) {
+    public Volunteer(Long id, String email, String givenName, String surname, Address address, String phone, Boolean adult, List<Ability> abilities) {
         this.id = id;
         this.email = email;
         this.givenName = givenName;
@@ -131,5 +132,63 @@ public class Volunteer extends AbstractVersionedAuditable {
         if (address != null) {
             address.updateCoordinates();
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 23 * hash + Objects.hashCode(this.id);
+        hash = 23 * hash + Objects.hashCode(this.email);
+        hash = 23 * hash + Objects.hashCode(this.givenName);
+        hash = 23 * hash + Objects.hashCode(this.surname);
+        hash = 23 * hash + Objects.hashCode(this.address);
+        hash = 23 * hash + Objects.hashCode(this.phone);
+        hash = 23 * hash + Objects.hashCode(this.adult);
+        hash = 23 * hash + Objects.hashCode(this.abilities);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Volunteer other = (Volunteer) obj;
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        if (!Objects.equals(this.givenName, other.givenName)) {
+            return false;
+        }
+        if (!Objects.equals(this.surname, other.surname)) {
+            return false;
+        }
+        if (!Objects.equals(this.phone, other.phone)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.address, other.address)) {
+            return false;
+        }
+        if (!Objects.equals(this.adult, other.adult)) {
+            return false;
+        }
+        if (!Objects.equals(this.abilities, other.abilities)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Volunteer{" + "id=" + id + ", email=" + email + ", givenName=" + givenName + ", surname=" + surname + ", address=" + address + ", phone=" + phone + ", adult=" + adult + ", abilities=" + abilities + '}';
     }
 }

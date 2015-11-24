@@ -5,6 +5,7 @@
  */
 package de.helfenkannjeder.come2help.server.domain;
 
+import java.util.Objects;
 import javax.persistence.Embeddable;
 
 /**
@@ -41,4 +42,37 @@ public class Coordinate {
         this.longitude = longitude;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + Objects.hashCode(this.latitude);
+        hash = 97 * hash + Objects.hashCode(this.longitude);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Coordinate other = (Coordinate) obj;
+        if (!Objects.equals(this.latitude, other.latitude)) {
+            return false;
+        }
+        if (!Objects.equals(this.longitude, other.longitude)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Coordinate{" + "latitude=" + latitude + ", longitude=" + longitude + '}';
+    }
 }

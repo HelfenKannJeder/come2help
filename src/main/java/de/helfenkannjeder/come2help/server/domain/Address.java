@@ -1,6 +1,7 @@
 package de.helfenkannjeder.come2help.server.domain;
 
 import de.helfenkannjeder.come2help.server.util.googleapi.GeoCodeCaller;
+import java.util.Objects;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.validation.constraints.NotNull;
@@ -86,5 +87,51 @@ public class Address {
 
     public void updateCoordinates() {
         this.coordinate = GeoCodeCaller.calculateCoordinateForAddress(this);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 59 * hash + Objects.hashCode(this.street);
+        hash = 59 * hash + Objects.hashCode(this.streetNumber);
+        hash = 59 * hash + Objects.hashCode(this.zipCode);
+        hash = 59 * hash + Objects.hashCode(this.city);
+        hash = 59 * hash + Objects.hashCode(this.coordinate);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Address other = (Address) obj;
+        if (!Objects.equals(this.street, other.street)) {
+            return false;
+        }
+        if (!Objects.equals(this.streetNumber, other.streetNumber)) {
+            return false;
+        }
+        if (!Objects.equals(this.zipCode, other.zipCode)) {
+            return false;
+        }
+        if (!Objects.equals(this.city, other.city)) {
+            return false;
+        }
+        if (!Objects.equals(this.coordinate, other.coordinate)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" + "street=" + street + ", streetNumber=" + streetNumber + ", zipCode=" + zipCode + ", city=" + city + ", coordinate=" + coordinate + '}';
     }
 }
