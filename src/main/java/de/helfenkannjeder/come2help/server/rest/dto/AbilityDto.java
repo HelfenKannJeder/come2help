@@ -1,10 +1,12 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
 import de.helfenkannjeder.come2help.server.domain.Ability;
+import javax.validation.constraints.NotNull;
 
 public class AbilityDto {
 
     private Long id;
+    @NotNull
     private String name;
     private String description;
 

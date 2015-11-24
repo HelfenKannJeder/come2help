@@ -33,6 +33,11 @@ public class Ability extends AbstractVersionedAuditable {
         this.description = description;
     }
 
+    public void update(Ability ability) {
+        this.name = ability.name;
+        this.description = ability.description;
+    }
+
     public Long getId() {
         return id;
     }
@@ -106,4 +111,5 @@ public class Ability extends AbstractVersionedAuditable {
     public String toString() {
         return "Ability{" + "id=" + id + ", name=" + name + ", description=" + description + ", volunteers=" + volunteers + '}';
     }
+
 }
