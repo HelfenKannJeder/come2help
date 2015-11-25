@@ -53,7 +53,7 @@ public class RestExceptionResolver {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> resolveDuplicateResourceException(HttpServletRequest request, ResourceNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> resolveResourceNotFoundException(HttpServletRequest request, ResourceNotFoundException ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.NOT_FOUND)
                 .withDescription(ex.getMessage())
                 .createErrorResponse();
