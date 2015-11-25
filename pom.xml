@@ -173,7 +173,7 @@
                 <version>2.19</version>
                 <configuration>
                     <includes>
-                        <include>**/cucumber/*Test.java</include>
+                        <include>**/cucumber/IntegrationTests.java</include>
                     </includes>
                 </configuration>
                 <executions>
