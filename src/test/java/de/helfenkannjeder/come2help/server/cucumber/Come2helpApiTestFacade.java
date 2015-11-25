@@ -49,10 +49,13 @@ public class Come2helpApiTestFacade {
 
     public ResponseEntity<VolunteerDto> createVolunteer(VolunteerDto volunteer) {
         ResponseEntity<VolunteerDto> responseEntity = volunteerApiRestClient.createVolunteer(volunteer);
-        if (responseEntity.hasBody()) {
-            createdVolunteers.add(responseEntity.getBody());
-            latestRelevantStatusCode = responseEntity.getStatusCode();
+        if (responseEntity.hasBody() && responseEntity.getStatusCode().is2xxSuccessful()) {
+            VolunteerDto createdVolunteer = responseEntity.getBody();
+            if(createdVolunteer != null && createdVolunteer.getId() != null) {
+                createdVolunteers.add(createdVolunteer);
+            }
         }
+        latestRelevantStatusCode = responseEntity.getStatusCode();
         return responseEntity;
     }
 
