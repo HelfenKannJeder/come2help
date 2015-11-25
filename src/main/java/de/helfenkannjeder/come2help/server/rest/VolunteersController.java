@@ -4,6 +4,7 @@ import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import de.helfenkannjeder.come2help.server.service.VolunteersService;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -42,7 +43,8 @@ public class VolunteersController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public VolunteerDto getVolunteerById(@PathVariable Long id) {
+    public VolunteerDto getVolunteerById(Principal principal, @PathVariable Long id) {
+        System.out.println("principal: " + principal);
         Volunteer volunteer = volunteersService.findById(id);
         return VolunteerDto.createFullDto(volunteer);
     }
