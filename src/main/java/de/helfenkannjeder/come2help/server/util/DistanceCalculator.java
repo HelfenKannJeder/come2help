@@ -4,8 +4,10 @@ import de.helfenkannjeder.come2help.server.domain.Coordinate;
 
 public class DistanceCalculator {
 
+    private final static int R = 6371000; //metres
+
     /**
-     * Calculates the distance between two adresses based on latitude and
+     * Calculates the distance between two addresses based on latitude and
      * longitude.
      *
      * @param coordinate1
@@ -19,7 +21,6 @@ public class DistanceCalculator {
         double lng2 = coordinate2.getLongitude();
 
         //formula based on http://www.movable-type.co.uk/scripts/latlong.html
-        int R = 6371000; // metres
         double latitude1 = Math.toRadians(lat1);
         double latitude2 = Math.toRadians(lat2);
         double diffLatitude = Math.toRadians(lat2 - lat1);
