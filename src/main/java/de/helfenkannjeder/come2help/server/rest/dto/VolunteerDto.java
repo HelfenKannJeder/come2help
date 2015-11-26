@@ -1,38 +1,44 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
-import de.helfenkannjeder.come2help.server.domain.Ability;
-import de.helfenkannjeder.come2help.server.domain.Address;
-import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
+
+import de.helfenkannjeder.come2help.server.domain.Ability;
+import de.helfenkannjeder.come2help.server.domain.Address;
+import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class VolunteerDto {
 
     private Long id;
 
-    @Email(message = "email.not.invalid")
+    @Email(message = "not.invalid")
     private String email;
 
-    @NotNull(message = "givenName.not.null")
+    @NotEmpty(message = "not.empty")
     private String givenName;
 
-    @NotNull(message = "surname.not.null")
+    @NotEmpty(message = "not.empty")
     private String surname;
 
-    @NotNull(message = "address.not.null")
+    @Valid
+    @NotNull(message = "not.null")
     private AddressDto address;
 
     private String phone;
 
-    @NotNull(message = "adult.not.null")
-    @AssertTrue(message = "adult.not.false")
+    @NotNull(message = "not.null")
+    @AssertTrue(message = "not.false")
     private Boolean adult;
 
-    @NotNull
+    @Valid
+    @NotNull(message = "not.null")
     private List<AbilityDto> abilities = Collections.emptyList();
 
     public VolunteerDto() {
@@ -51,14 +57,14 @@ public class VolunteerDto {
 
     public static VolunteerDto createFullDto(Volunteer volunteer) {
         AddressDto addressDto = AddressDto.createFullDto(volunteer.getAddress());
-        List<AbilityDto> abilityDtos = volunteer.getAbilities().stream().map(a -> AbilityDto.createFullDto(a)).collect(Collectors.toList());
+        List<AbilityDto> abilityDtos = volunteer.getAbilities().stream().map(AbilityDto::createFullDto).collect(Collectors.toList());
         return new VolunteerDto(volunteer.getId(), volunteer.getEmail(), volunteer.getGivenName(), volunteer.getSurname(),
                 addressDto, volunteer.getPhone(), volunteer.isAdult(), abilityDtos);
     }
 
     public static Volunteer createVolunteer(VolunteerDto dto) {
         Address address = AddressDto.createAddress(dto.getAddress());
-        List<Ability> abilities = dto.abilities.stream().map(a -> AbilityDto.createAbility(a)).collect(Collectors.toList());
+        List<Ability> abilities = dto.abilities.stream().map(AbilityDto::createAbility).collect(Collectors.toList());
         return new Volunteer(dto.id, dto.email, dto.givenName, dto.surname, address, dto.phone, dto.adult, abilities);
     }
 

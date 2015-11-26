@@ -1,13 +1,15 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
 import de.helfenkannjeder.come2help.server.domain.Ability;
-import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class AbilityDto {
 
     private Long id;
-    @NotNull
+
+    @NotEmpty(message = "not.empty")
     private String name;
+
     private String description;
 
     public AbilityDto() {
