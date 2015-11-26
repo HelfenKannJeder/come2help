@@ -1,4 +1,4 @@
-Feature: Crud operations for an volunteer
+Feature: Crud operations for a volunteer
 
   Scenario: Create a volunteer
     Given any valid volunteer
