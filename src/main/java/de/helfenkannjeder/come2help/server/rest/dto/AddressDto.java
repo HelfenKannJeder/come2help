@@ -1,12 +1,11 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
-import javax.validation.constraints.NotNull;
-
 import de.helfenkannjeder.come2help.server.domain.Address;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class AddressDto {
 
-    @NotNull(message = "zipCode.not.null")
+    @NotEmpty(message = "not.empty")
     private String zipCode;
     private String city;
     private String street;
