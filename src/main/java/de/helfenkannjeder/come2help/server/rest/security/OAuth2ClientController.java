@@ -2,6 +2,7 @@ package de.helfenkannjeder.come2help.server.rest.security;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.Arrays;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -35,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.filter.CompositeFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
@@ -80,23 +82,28 @@ public class OAuth2ClientController extends WebSecurityConfigurerAdapter {
     }
 
     private Filter ssoFilter() {
+        CompositeFilter filter = new CompositeFilter();
+        filter.setFilters(Arrays.asList(
+                createFacebookFilter(),
+                createGithubFilter())
+        );
+        return filter;
+    }
+
+    private OAuth2ClientAuthenticationProcessingFilter createGithubFilter() {
+        OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/google");
+        OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oAuth2ClientContext);
+        googleFilter.setRestTemplate(googleTemplate);
+        googleFilter.setTokenServices(new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId()));
+        return googleFilter;
+    }
+
+    private OAuth2ClientAuthenticationProcessingFilter createFacebookFilter() {
         OAuth2ClientAuthenticationProcessingFilter facebookFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/facebook");
         OAuth2RestTemplate facebookTemplate = new OAuth2RestTemplate(facebook(), oAuth2ClientContext);
         facebookFilter.setRestTemplate(facebookTemplate);
         facebookFilter.setTokenServices(new UserInfoTokenServices(facebookResource().getUserInfoUri(), facebook().getClientId()));
         return facebookFilter;
-    }
-
-    @Bean
-    @ConfigurationProperties("facebook.client")
-    public OAuth2ProtectedResourceDetails facebook() {
-        return new AuthorizationCodeResourceDetails();
-    }
-
-    @Bean
-    @ConfigurationProperties("facebook.resource")
-    public ResourceServerProperties facebookResource() {
-        return new ResourceServerProperties();
     }
 
     /**
@@ -142,5 +149,30 @@ public class OAuth2ClientController extends WebSecurityConfigurerAdapter {
         HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
         repository.setHeaderName("X-XSRF-TOKEN");
         return repository;
+    }
+
+//    Config Beans
+    @Bean
+    @ConfigurationProperties("facebook.client")
+    public OAuth2ProtectedResourceDetails facebook() {
+        return new AuthorizationCodeResourceDetails();
+    }
+
+    @Bean
+    @ConfigurationProperties("facebook.resource")
+    public ResourceServerProperties facebookResource() {
+        return new ResourceServerProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties("google.client")
+    public OAuth2ProtectedResourceDetails google() {
+        return new AuthorizationCodeResourceDetails();
+    }
+
+    @Bean
+    @ConfigurationProperties("google.resource")
+    public ResourceServerProperties googleResource() {
+        return new ResourceServerProperties();
     }
 }

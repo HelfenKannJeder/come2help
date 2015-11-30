@@ -50,3 +50,16 @@ facebook:
     resource:
         userInfoUri: https://graph.facebook.com/me
         
+
+
+google:
+    client:
+        clientId: XXXXXXXXXXXXXXXXXXXX
+        clientSecret: YYYYYYYYYYYYYYYYYYYYYY
+        accessTokenUri: https://accounts.google.com/o/oauth2/token
+        userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+        clientAuthenticationScheme: query
+        scope: profile email
+    resource:
+        userInfoUri: https://www.googleapis.com/oauth2/v2/userinfo
+        preferTokenInfo: false
