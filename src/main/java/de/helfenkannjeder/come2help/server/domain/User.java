@@ -11,8 +11,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Email;
 
 @Entity
 public class User extends AbstractVersionedAuditable {
@@ -21,13 +19,10 @@ public class User extends AbstractVersionedAuditable {
     @GeneratedValue
     private Long id = null;
 
-    @Email
     private String email;
 
-    @NotNull
     private String givenName;
 
-    @NotNull
     private String surname;
 
     private String phone;
@@ -39,7 +34,6 @@ public class User extends AbstractVersionedAuditable {
 
     private boolean isBonusProgramAccepted = false;
 
-    @NotNull
     private String password;
 
     private String insurance;

@@ -1,10 +1,10 @@
 package de.helfenkannjeder.come2help.server.domain;
 
-import de.helfenkannjeder.come2help.server.util.googleapi.GeoCodeCaller;
 import java.util.Objects;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
-import javax.validation.constraints.NotNull;
+
+import de.helfenkannjeder.come2help.server.util.googleapi.GeoCodeCaller;
 
 @Embeddable
 public class Address {
@@ -13,7 +13,6 @@ public class Address {
 
     private String streetNumber;
 
-    @NotNull
     private String zipCode;
 
     private String city;

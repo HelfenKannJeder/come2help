@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 public class Organisation extends AbstractVersionedAuditable {
@@ -17,7 +16,6 @@ public class Organisation extends AbstractVersionedAuditable {
     @GeneratedValue
     private Long id;
 
-    @NotEmpty
     private String name;
 
     @OneToMany
