@@ -32,7 +32,7 @@ The result should be the user with the ID 1 (if there is no one, create it with 
 Data can be transmitted as JSON.
 
 ## Api documentation
-Check <a href="http://localhost:8080/jsondoc-ui.html">http://localhost:8080/jsondoc-ui.html</a> and enter "http://localhost:8080/jsondoc" for the json api documentation. It gives an overview over
+Check <a href="http://localhost:8080/jsondoc-ui.html?url=http://localhost:8080/jsondoc">http://localhost:8080/jsondoc-ui.html?url=http://localhost:8080/jsondoc</a> and enter "http://localhost:8080/jsondoc" for the json api documentation. It gives an overview over
 the api. The playground is enabled to submit json objects easily.
 
 <pre>mvn clean package -Pdistributable</pre> creates an offline api documentation in target/jsondoc-distribution.zip.
