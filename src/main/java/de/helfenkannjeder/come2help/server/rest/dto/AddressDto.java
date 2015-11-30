@@ -1,11 +1,14 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
+import javax.validation.constraints.Digits;
+
 import de.helfenkannjeder.come2help.server.domain.Address;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class AddressDto {
 
     @NotEmpty(message = "not.empty")
+    @Digits(integer = 5, fraction = 0, message = "{not.valid}")
     private String zipCode;
     private String city;
     private String street;
