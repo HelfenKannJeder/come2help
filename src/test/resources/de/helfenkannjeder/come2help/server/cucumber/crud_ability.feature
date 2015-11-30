@@ -36,3 +36,8 @@ Feature: Crud operations for an ability
     Given a non existing ability
     When the ability is deleted
     Then the returned status code for the ability is HTTP 404 Not Found
+
+  Scenario: Delete an existing ability
+    Given an existing ability
+    When the ability is deleted
+    Then the returned status code for the ability is HTTP 204 No Content

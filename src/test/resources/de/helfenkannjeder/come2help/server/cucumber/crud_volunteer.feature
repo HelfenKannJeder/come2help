@@ -36,3 +36,8 @@ Feature: Crud operations for a volunteer
     Given a non existing volunteer
     When the volunteer is deleted
     Then the returned status code is HTTP 404 Not Found
+
+  Scenario: Delete an existing volunteer
+    Given an existing volunteer
+    When the volunteer is deleted
+    Then the returned status code is HTTP 204 No Content

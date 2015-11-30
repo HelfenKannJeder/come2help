@@ -53,6 +53,7 @@ public class AbilitySteps {
     @When("^the ability create request is send$")
     public void the_ability_creation_request_is_send() throws Throwable {
         createAbilityResponseEntity = facade.createAbility(abilityDto);
+        abilityDto = createAbilityResponseEntity.getBody();
     }
 
     @Then("^the response contains the created ability$")
@@ -75,6 +76,7 @@ public class AbilitySteps {
     @When("^the ability is updated$")
     public void the_ability_is_updated() throws Throwable {
         updateAbilityResponseEntity = facade.updateAbility(abilityDto);
+        abilityDto = updateAbilityResponseEntity.getBody();
     }
 
     @When("^the ability is deleted")
