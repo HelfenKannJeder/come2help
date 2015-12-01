@@ -23,7 +23,7 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticat
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -91,7 +91,9 @@ public class OAuth2ClientController extends WebSecurityConfigurerAdapter {
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientDetails.getClient(), oAuth2ClientContext);
         ssoFilter.setRestTemplate(restTemplate);
         ssoFilter.setTokenServices(new UserInfoTokenServices(clientDetails.getResource().getUserInfoUri(), clientDetails.getClient().getClientId()));
-        ssoFilter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/user"));
+        SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        authenticationSuccessHandler.setDefaultTargetUrl("/user");
+        ssoFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
         return ssoFilter;
     }
 
