@@ -1,7 +1,6 @@
 package de.helfenkannjeder.come2help.server.rest.security;
 
 import java.io.IOException;
-import java.security.Principal;
 import java.util.Arrays;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -10,7 +9,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -23,10 +21,9 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
-import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -48,16 +45,15 @@ public class OAuth2ClientController extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2ClientContext oAuth2ClientContext;
 
-    @RequestMapping("/user")
-    public Principal user(Principal principal) {
-        return principal;
-    }
-
     @RequestMapping(value = "/logoutWorked", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logoutWorked() {
     }
 
+//    @RequestMapping(value = "/login/facebook", method = RequestMethod.GET)
+//    public void facebookLogin() {
+//
+//    }
     /**
      * Configure HttpSecurity. This includes:<br>
      * - resources requiring authorized <br>
@@ -84,26 +80,19 @@ public class OAuth2ClientController extends WebSecurityConfigurerAdapter {
     private Filter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
         filter.setFilters(Arrays.asList(
-                createFacebookFilter(),
-                createGithubFilter())
+                createSsoFilter(facebook(), "/login/facebook"),
+                createSsoFilter(google(), "/login/google"))
         );
         return filter;
     }
 
-    private OAuth2ClientAuthenticationProcessingFilter createGithubFilter() {
-        OAuth2ClientAuthenticationProcessingFilter googleFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/google");
-        OAuth2RestTemplate googleTemplate = new OAuth2RestTemplate(google(), oAuth2ClientContext);
-        googleFilter.setRestTemplate(googleTemplate);
-        googleFilter.setTokenServices(new UserInfoTokenServices(googleResource().getUserInfoUri(), google().getClientId()));
-        return googleFilter;
-    }
-
-    private OAuth2ClientAuthenticationProcessingFilter createFacebookFilter() {
-        OAuth2ClientAuthenticationProcessingFilter facebookFilter = new OAuth2ClientAuthenticationProcessingFilter("/login/facebook");
-        OAuth2RestTemplate facebookTemplate = new OAuth2RestTemplate(facebook(), oAuth2ClientContext);
-        facebookFilter.setRestTemplate(facebookTemplate);
-        facebookFilter.setTokenServices(new UserInfoTokenServices(facebookResource().getUserInfoUri(), facebook().getClientId()));
-        return facebookFilter;
+    private OAuth2ClientAuthenticationProcessingFilter createSsoFilter(ClientResourceDetails clientDetails, String path) {
+        OAuth2ClientAuthenticationProcessingFilter ssoFilter = new OAuth2ClientAuthenticationProcessingFilter(path);
+        OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientDetails.getClient(), oAuth2ClientContext);
+        ssoFilter.setRestTemplate(restTemplate);
+        ssoFilter.setTokenServices(new UserInfoTokenServices(clientDetails.getResource().getUserInfoUri(), clientDetails.getClient().getClientId()));
+        ssoFilter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/user"));
+        return ssoFilter;
     }
 
     /**
@@ -153,26 +142,14 @@ public class OAuth2ClientController extends WebSecurityConfigurerAdapter {
 
 //    Config Beans
     @Bean
-    @ConfigurationProperties("facebook.client")
-    public OAuth2ProtectedResourceDetails facebook() {
-        return new AuthorizationCodeResourceDetails();
+    @ConfigurationProperties("facebook")
+    public ClientResourceDetails facebook() {
+        return new ClientResourceDetails();
     }
 
     @Bean
-    @ConfigurationProperties("facebook.resource")
-    public ResourceServerProperties facebookResource() {
-        return new ResourceServerProperties();
-    }
-
-    @Bean
-    @ConfigurationProperties("google.client")
-    public OAuth2ProtectedResourceDetails google() {
-        return new AuthorizationCodeResourceDetails();
-    }
-
-    @Bean
-    @ConfigurationProperties("google.resource")
-    public ResourceServerProperties googleResource() {
-        return new ResourceServerProperties();
+    @ConfigurationProperties("google")
+    public ClientResourceDetails google() {
+        return new ClientResourceDetails();
     }
 }
