@@ -1,20 +1,16 @@
 package de.helfenkannjeder.come2help.server.domain;
 
-import org.hibernate.validator.constraints.Email;
-
-import javax.persistence.CascadeType;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 public class User extends AbstractVersionedAuditable {
@@ -23,18 +19,11 @@ public class User extends AbstractVersionedAuditable {
     @GeneratedValue
     private Long id = null;
 
-    @Email
     private String email;
 
-    @NotNull
     private String givenName;
 
-    @NotNull
     private String surname;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="ADDRESS_ID")
-    private Address address;
 
     private String phone;
 
@@ -45,15 +34,16 @@ public class User extends AbstractVersionedAuditable {
 
     private boolean isBonusProgramAccepted = false;
 
-    @NotNull
     private String password;
 
     private String insurance;
 
     @ManyToMany
-    @JoinTable( name="USER_ABILITY",
-            joinColumns={@JoinColumn(name="ABILITY_ID", referencedColumnName="ID")},
-            inverseJoinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")})
+    @JoinTable(name = "USER_ABILITY",
+            joinColumns = {
+                @JoinColumn(name = "ABILITY_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "USER_ID", referencedColumnName = "ID")})
     private List<Ability> abilities;
 
     private int maxRadiusOfAction;
@@ -88,14 +78,6 @@ public class User extends AbstractVersionedAuditable {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 
     public String getPhone() {
@@ -163,62 +145,76 @@ public class User extends AbstractVersionedAuditable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        if (isAdult != user.isAdult) return false;
-        if (isBonusProgramAccepted != user.isBonusProgramAccepted) return false;
-        if (maxRadiusOfAction != user.maxRadiusOfAction) return false;
-        if (id != null ? !id.equals(user.id) : user.id != null) return false;
-        if (email != null ? !email.equals(user.email) : user.email != null) return false;
-        if (givenName != null ? !givenName.equals(user.givenName) : user.givenName != null) return false;
-        if (surname != null ? !surname.equals(user.surname) : user.surname != null) return false;
-        if (address != null ? !address.equals(user.address) : user.address != null) return false;
-        if (phone != null ? !phone.equals(user.phone) : user.phone != null) return false;
-        if (dateOfBirth != null ? !dateOfBirth.equals(user.dateOfBirth) : user.dateOfBirth != null) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        if (insurance != null ? !insurance.equals(user.insurance) : user.insurance != null) return false;
-        return !(abilities != null ? !abilities.equals(user.abilities) : user.abilities != null);
-
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.id);
+        hash = 97 * hash + Objects.hashCode(this.email);
+        hash = 97 * hash + Objects.hashCode(this.givenName);
+        hash = 97 * hash + Objects.hashCode(this.surname);
+        hash = 97 * hash + Objects.hashCode(this.phone);
+        hash = 97 * hash + Objects.hashCode(this.dateOfBirth);
+        hash = 97 * hash + (this.isAdult ? 1 : 0);
+        hash = 97 * hash + (this.isBonusProgramAccepted ? 1 : 0);
+        hash = 97 * hash + Objects.hashCode(this.password);
+        hash = 97 * hash + Objects.hashCode(this.insurance);
+        hash = 97 * hash + Objects.hashCode(this.abilities);
+        hash = 97 * hash + this.maxRadiusOfAction;
+        return hash;
     }
 
     @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (givenName != null ? givenName.hashCode() : 0);
-        result = 31 * result + (surname != null ? surname.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
-        result = 31 * result + (isAdult ? 1 : 0);
-        result = 31 * result + (isBonusProgramAccepted ? 1 : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (insurance != null ? insurance.hashCode() : 0);
-        result = 31 * result + (abilities != null ? abilities.hashCode() : 0);
-        result = 31 * result + maxRadiusOfAction;
-        return result;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (this.isAdult != other.isAdult) {
+            return false;
+        }
+        if (this.isBonusProgramAccepted != other.isBonusProgramAccepted) {
+            return false;
+        }
+        if (this.maxRadiusOfAction != other.maxRadiusOfAction) {
+            return false;
+        }
+        if (!Objects.equals(this.email, other.email)) {
+            return false;
+        }
+        if (!Objects.equals(this.givenName, other.givenName)) {
+            return false;
+        }
+        if (!Objects.equals(this.surname, other.surname)) {
+            return false;
+        }
+        if (!Objects.equals(this.phone, other.phone)) {
+            return false;
+        }
+        if (!Objects.equals(this.password, other.password)) {
+            return false;
+        }
+        if (!Objects.equals(this.insurance, other.insurance)) {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.dateOfBirth, other.dateOfBirth)) {
+            return false;
+        }
+        if (!Objects.equals(this.abilities, other.abilities)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", givenName='" + givenName + '\'' +
-                ", surname='" + surname + '\'' +
-                ", address=" + address +
-                ", phone='" + phone + '\'' +
-                ", dateOfBirth=" + dateOfBirth +
-                ", isAdult=" + isAdult +
-                ", isBonusProgramAccepted=" + isBonusProgramAccepted +
-                ", password='" + password + '\'' +
-                ", insurance='" + insurance + '\'' +
-                ", abilities=" + abilities +
-                ", maxRadiusOfAction=" + maxRadiusOfAction +
-                '}';
+        return "User{" + "id=" + id + ", email=" + email + ", givenName=" + givenName + ", surname=" + surname + ", phone=" + phone + ", dateOfBirth=" + dateOfBirth + ", isAdult=" + isAdult + ", isBonusProgramAccepted=" + isBonusProgramAccepted + ", password=" + password + ", insurance=" + insurance + ", abilities=" + abilities + ", maxRadiusOfAction=" + maxRadiusOfAction + '}';
     }
 }

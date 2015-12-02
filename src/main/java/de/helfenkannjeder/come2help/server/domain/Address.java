@@ -1,40 +1,47 @@
 package de.helfenkannjeder.come2help.server.domain;
 
-import org.hibernate.validator.constraints.NotBlank;
+import java.util.Objects;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
+import de.helfenkannjeder.come2help.server.util.googleapi.GeoCodeCaller;
 
-@Entity
-public class Address extends AbstractVersionedAuditable {
-
-    @Id
-    @GeneratedValue
-    private Long id;
+@Embeddable
+public class Address {
 
     private String street;
 
     private String streetNumber;
 
-    @NotNull
-    private String zip;
+    private String zipCode;
 
     private String city;
 
-    @NotNull
-    private double lat;
+    @Embedded
+    private Coordinate coordinate;
 
-    @NotNull
-    private double lng;
-
-    public Long getId() {
-        return id;
+    public Address() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    /**
+     *
+     * @param zipCode
+     * @param city
+     * @param street
+     * @param streetNumber
+     */
+    public Address(String zipCode, String city, String street, String streetNumber) {
+        this.zipCode = zipCode;
+        this.city = city;
+        this.street = street;
+        this.streetNumber = streetNumber;
+    }
+
+    public void update(Address o) {
+        this.zipCode = o.zipCode;
+        this.city = o.city;
+        this.street = o.street;
+        this.streetNumber = o.streetNumber;
     }
 
     public String getStreet() {
@@ -53,12 +60,12 @@ public class Address extends AbstractVersionedAuditable {
         this.streetNumber = streetNumber;
     }
 
-    public String getZip() {
-        return zip;
+    public String getZipCode() {
+        return zipCode;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setZipCode(String zipCode) {
+        this.zipCode = zipCode;
     }
 
     public String getCity() {
@@ -69,19 +76,61 @@ public class Address extends AbstractVersionedAuditable {
         this.city = city;
     }
 
-    public double getLat() {
-        return lat;
+    public Coordinate getCoordinate() {
+        return coordinate;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
     }
 
-    public double getLng() {
-        return lng;
+    public void updateCoordinates() {
+        this.coordinate = GeoCodeCaller.calculateCoordinateForAddress(this);
     }
 
-    public void setLng(double lng) {
-        this.lng = lng;
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 59 * hash + Objects.hashCode(this.street);
+        hash = 59 * hash + Objects.hashCode(this.streetNumber);
+        hash = 59 * hash + Objects.hashCode(this.zipCode);
+        hash = 59 * hash + Objects.hashCode(this.city);
+        hash = 59 * hash + Objects.hashCode(this.coordinate);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Address other = (Address) obj;
+        if (!Objects.equals(this.street, other.street)) {
+            return false;
+        }
+        if (!Objects.equals(this.streetNumber, other.streetNumber)) {
+            return false;
+        }
+        if (!Objects.equals(this.zipCode, other.zipCode)) {
+            return false;
+        }
+        if (!Objects.equals(this.city, other.city)) {
+            return false;
+        }
+        if (!Objects.equals(this.coordinate, other.coordinate)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" + "street=" + street + ", streetNumber=" + streetNumber + ", zipCode=" + zipCode + ", city=" + city + ", coordinate=" + coordinate + '}';
     }
 }

@@ -2,25 +2,25 @@ package de.helfenkannjeder.come2help.server.util.googleapi;
 
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
-import com.google.code.geocoder.model.GeocodeResponse;
 import com.google.code.geocoder.model.GeocoderRequest;
 import com.google.code.geocoder.model.GeocoderResult;
 import com.google.code.geocoder.model.LatLng;
 import de.helfenkannjeder.come2help.server.domain.Address;
-
+import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import java.io.IOException;
 import java.util.List;
 
 public class GeoCodeCaller {
 
     /**
-     * calls the google geocode api and enrich the given address with latitude and longitude information
+     * calls the google geocode api and enrich the given address with latitude
+     * and longitude information
      *
      * @param address
      * @return
      */
-    public static Address enrichAddressWithLatAndLgn(Address address) {
-        String requestAddress = address.getZip();
+    public static Coordinate calculateCoordinateForAddress(Address address) {
+        String requestAddress = address.getZipCode();
         if (address.getStreet() != null) {
             requestAddress += "," + address.getStreet();
             if (address.getStreetNumber() != null) {
@@ -28,6 +28,7 @@ public class GeoCodeCaller {
             }
         }
         requestAddress += ", Deutschland";
+
         try {
             final Geocoder geocoder = new Geocoder();
             GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(requestAddress).setLanguage("de").getGeocoderRequest();
@@ -37,15 +38,11 @@ public class GeoCodeCaller {
             }
             //use first result, hopefully it is the best
             LatLng location = geocoderResults.get(0).getGeometry().getLocation();
-            address.setLat(location.getLat().doubleValue());
-            address.setLng(location.getLng().doubleValue());
+
+            return new Coordinate(location.getLat().doubleValue(), location.getLng().doubleValue());
         } catch (IOException e) {
             throw new RuntimeException("Could not gather google geocode api for parameter: " + requestAddress); //TODO for testing purposes an exception is fine, how about in production?
         }
-        return address;
     }
 
 }
-
-
-
