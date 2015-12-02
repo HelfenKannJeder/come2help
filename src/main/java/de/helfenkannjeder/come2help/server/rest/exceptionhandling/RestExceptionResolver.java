@@ -1,11 +1,12 @@
 package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -52,7 +53,7 @@ public class RestExceptionResolver {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> resolveDuplicateResourceException(HttpServletRequest request, ResourceNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> resolveResourceNotFoundException(HttpServletRequest request, ResourceNotFoundException ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.NOT_FOUND)
                 .withDescription(ex.getMessage())
                 .createErrorResponse();
@@ -74,11 +75,13 @@ public class RestExceptionResolver {
         } else if (ex.getMessage().startsWith("Required request body is missing")) {
             description.append(" Missing request body.");
         }
-        return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST).withDescription(description.toString()).createErrorResponse();
+        return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
+                .withDescription(description.toString())
+                .createErrorResponse();
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ErrorResponse> resolveHttpMessageNotReadableException(HttpServletRequest request, MissingServletRequestParameterException ex) {
+    public ResponseEntity<ErrorResponse> resolveMissingServletRequestParameterException(HttpServletRequest request, MissingServletRequestParameterException ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
                 .withDescription(ex.getMessage())
                 .createErrorResponse();

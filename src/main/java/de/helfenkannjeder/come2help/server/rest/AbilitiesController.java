@@ -27,31 +27,31 @@ public class AbilitiesController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<AbilityDto> getAbilities() {
-        List<Ability> volunteers = abilitiesService.findAll();
-        return volunteers.stream().map(v -> AbilityDto.createFullDto(v)).collect(Collectors.toList());
+        List<Ability> abilities = abilitiesService.findAll();
+        return abilities.stream().map(v -> AbilityDto.createFullDto(v)).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public AbilityDto createAbility(@Valid @RequestBody AbilityDto volunteerDto) {
-        Ability volunteer = AbilityDto.createAbility(volunteerDto);
-        Ability createdAbility = abilitiesService.createAbility(volunteer);
+    public AbilityDto createAbility(@Valid @RequestBody AbilityDto abilityDto) {
+        Ability ability = AbilityDto.createAbility(abilityDto);
+        Ability createdAbility = abilitiesService.createAbility(ability);
         return AbilityDto.createFullDto(createdAbility);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public AbilityDto getAbilityById(@PathVariable Long id) {
-        Ability volunteer = abilitiesService.findById(id);
-        return AbilityDto.createFullDto(volunteer);
+        Ability ability = abilitiesService.findById(id);
+        return AbilityDto.createFullDto(ability);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public AbilityDto updateAbility(@NotNull @PathVariable Long id, @Valid @RequestBody AbilityDto volunteerDto) {
-        volunteerDto.setId(id);
-        Ability volunteer = AbilityDto.createAbility(volunteerDto);
-        Ability updatedAbility = abilitiesService.updateAbility(volunteer);
+    public AbilityDto updateAbility(@NotNull @PathVariable Long id, @Valid @RequestBody AbilityDto abilityDto) {
+        abilityDto.setId(id);
+        Ability ability = AbilityDto.createAbility(abilityDto);
+        Ability updatedAbility = abilitiesService.updateAbility(ability);
         return AbilityDto.createFullDto(updatedAbility);
     }
 

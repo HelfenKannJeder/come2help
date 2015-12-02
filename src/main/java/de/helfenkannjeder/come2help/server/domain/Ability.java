@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class Ability extends AbstractVersionedAuditable {
@@ -16,7 +15,6 @@ public class Ability extends AbstractVersionedAuditable {
     @GeneratedValue
     private Long id = null;
 
-    @NotNull
     private String name;
 
     private String description;

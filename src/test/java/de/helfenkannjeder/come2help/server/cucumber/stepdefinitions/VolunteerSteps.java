@@ -55,6 +55,7 @@ public class VolunteerSteps {
     @When("^the volunteer create request is send$")
     public void the_volunteer_creation_request_is_send() throws Throwable {
         createVolunteerResponseEntity = facade.createVolunteer(volunteerDto);
+        volunteerDto = createVolunteerResponseEntity.getBody();
     }
 
     @Then("^the response contains the created volunteer$")
@@ -77,6 +78,7 @@ public class VolunteerSteps {
     @When("^the volunteer is updated$")
     public void the_volunteer_is_updated() throws Throwable {
         updateVolunteerResponseEntity = facade.updateVolunteer(volunteerDto);
+        volunteerDto = updateVolunteerResponseEntity.getBody();
     }
 
     @When("^the volunteer is deleted")

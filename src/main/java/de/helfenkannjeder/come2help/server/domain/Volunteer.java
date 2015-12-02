@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class Volunteer extends AbstractVersionedAuditable {
@@ -21,14 +20,11 @@ public class Volunteer extends AbstractVersionedAuditable {
 
     private String email;
 
-    @NotNull
     private String givenName;
 
-    @NotNull
     private String surname;
 
     @Embedded
-    @NotNull
     private Address address;
 
     private String phone;

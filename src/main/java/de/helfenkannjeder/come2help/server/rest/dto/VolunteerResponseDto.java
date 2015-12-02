@@ -3,7 +3,6 @@ package de.helfenkannjeder.come2help.server.rest.dto;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
@@ -14,7 +13,7 @@ import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
-public class VolunteerDto {
+public class VolunteerResponseDto {
 
     private Long id;
 
@@ -39,12 +38,12 @@ public class VolunteerDto {
 
     @Valid
     @NotNull(message = "not.null")
-    private List<AbilityLinkDto> abilities = Collections.emptyList();
+    private List<AbilityDto> abilities = Collections.emptyList();
 
-    public VolunteerDto() {
+    public VolunteerResponseDto() {
     }
 
-    public VolunteerDto(Long id, String email, String givenName, String surname, AddressDto address, String phone, Boolean adult, List<AbilityLinkDto> abilities) {
+    public VolunteerResponseDto(Long id, String email, String givenName, String surname, AddressDto address, String phone, Boolean adult, List<AbilityDto> abilities) {
         this.id = id;
         this.email = email;
         this.givenName = givenName;
@@ -55,16 +54,16 @@ public class VolunteerDto {
         this.abilities = abilities;
     }
 
-    public static VolunteerDto createFullDto(Volunteer volunteer) {
+    public static VolunteerResponseDto createFullDto(Volunteer volunteer) {
         AddressDto addressDto = AddressDto.createFullDto(volunteer.getAddress());
-        List<AbilityLinkDto> abilityDtos = volunteer.getAbilities().stream().map(AbilityLinkDto::createFullDto).collect(Collectors.toList());
-        return new VolunteerDto(volunteer.getId(), volunteer.getEmail(), volunteer.getGivenName(), volunteer.getSurname(),
+        List<AbilityDto> abilityDtos = volunteer.getAbilities().stream().map(AbilityDto::createFullDto).collect(Collectors.toList());
+        return new VolunteerResponseDto(volunteer.getId(), volunteer.getEmail(), volunteer.getGivenName(), volunteer.getSurname(),
                 addressDto, volunteer.getPhone(), volunteer.isAdult(), abilityDtos);
     }
 
-    public static Volunteer createVolunteer(VolunteerDto dto) {
+    public static Volunteer createVolunteer(VolunteerResponseDto dto) {
         Address address = AddressDto.createAddress(dto.getAddress());
-        List<Ability> abilities = dto.abilities.stream().map(AbilityLinkDto::createAbility).collect(Collectors.toList());
+        List<Ability> abilities = dto.abilities.stream().map(AbilityDto::createAbility).collect(Collectors.toList());
         return new Volunteer(dto.id, dto.email, dto.givenName, dto.surname, address, dto.phone, dto.adult, abilities);
     }
 
@@ -72,7 +71,7 @@ public class VolunteerDto {
         return id;
     }
 
-    public VolunteerDto setId(Long id) {
+    public VolunteerResponseDto setId(Long id) {
         this.id = id;
         return this;
     }
@@ -81,7 +80,7 @@ public class VolunteerDto {
         return email;
     }
 
-    public VolunteerDto setEmail(String email) {
+    public VolunteerResponseDto setEmail(String email) {
         this.email = email;
         return this;
     }
@@ -90,7 +89,7 @@ public class VolunteerDto {
         return givenName;
     }
 
-    public VolunteerDto setGivenName(String givenName) {
+    public VolunteerResponseDto setGivenName(String givenName) {
         this.givenName = givenName;
         return this;
     }
@@ -99,7 +98,7 @@ public class VolunteerDto {
         return surname;
     }
 
-    public VolunteerDto setSurname(String surname) {
+    public VolunteerResponseDto setSurname(String surname) {
         this.surname = surname;
         return this;
     }
@@ -108,7 +107,7 @@ public class VolunteerDto {
         return address;
     }
 
-    public VolunteerDto setAddress(AddressDto address) {
+    public VolunteerResponseDto setAddress(AddressDto address) {
         this.address = address;
         return this;
     }
@@ -117,7 +116,7 @@ public class VolunteerDto {
         return phone;
     }
 
-    public VolunteerDto setPhone(String phone) {
+    public VolunteerResponseDto setPhone(String phone) {
         this.phone = phone;
         return this;
     }
@@ -126,16 +125,16 @@ public class VolunteerDto {
         return adult;
     }
 
-    public VolunteerDto setAdult(Boolean isAdult) {
+    public VolunteerResponseDto setAdult(Boolean isAdult) {
         this.adult = isAdult;
         return this;
     }
 
-    public List<AbilityLinkDto> getAbilities() {
+    public List<AbilityDto> getAbilities() {
         return abilities;
     }
 
-    public VolunteerDto setAbilities(List<AbilityLinkDto> abilities) {
+    public VolunteerResponseDto setAbilities(List<AbilityDto> abilities) {
         this.abilities = abilities;
         return this;
     }
