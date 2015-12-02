@@ -1,4 +1,4 @@
-package de.helfenkannjeder.come2help.server.rest.security;
+package de.helfenkannjeder.come2help.server.configuration.security;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -14,7 +14,6 @@ import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
@@ -23,37 +22,23 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticat
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.CompositeFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
-@RestController
 @EnableOAuth2Client
 @Configuration
-public class OAuth2ClientController extends WebSecurityConfigurerAdapter {
+public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private OAuth2ClientContext oAuth2ClientContext;
 
-    @RequestMapping(value = "/logoutWorked", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logoutWorked() {
-    }
-
-//    @RequestMapping(value = "/login/facebook", method = RequestMethod.GET)
-//    public void facebookLogin() {
-//
-//    }
     /**
      * Configure HttpSecurity. This includes:<br>
      * - resources requiring authorized <br>
@@ -71,7 +56,7 @@ public class OAuth2ClientController extends WebSecurityConfigurerAdapter {
                 /**/.antMatchers("/abilities", "/login/**", "/logoutWorked").permitAll()
                 /**/.anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
-                .and().logout().logoutSuccessUrl("/logoutWorked").permitAll()
+                .and().logout().logoutSuccessUrl("/user/logout?successful=true").permitAll()
                 .and().csrf().csrfTokenRepository(csrfTokenRepository())
                 .and().addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
@@ -91,9 +76,7 @@ public class OAuth2ClientController extends WebSecurityConfigurerAdapter {
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientDetails.getClient(), oAuth2ClientContext);
         ssoFilter.setRestTemplate(restTemplate);
         ssoFilter.setTokenServices(new UserInfoTokenServices(clientDetails.getResource().getUserInfoUri(), clientDetails.getClient().getClientId()));
-        SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler = new SavedRequestAwareAuthenticationSuccessHandler();
-        authenticationSuccessHandler.setDefaultTargetUrl("/user");
-        ssoFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+        ssoFilter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/user"));
         return ssoFilter;
     }
 

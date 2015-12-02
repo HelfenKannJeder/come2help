@@ -1,4 +1,4 @@
-package de.helfenkannjeder.come2help.server.rest.security;
+package de.helfenkannjeder.come2help.server.configuration.security;
 
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
