@@ -9,6 +9,7 @@ import de.helfenkannjeder.come2help.server.domain.Address;
 import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class GeoCodeCaller {
 
@@ -16,17 +17,19 @@ public class GeoCodeCaller {
      * calls the google geocode api and enrich the given address with latitude
      * and longitude information
      *
+     * It expects a valid german address. There is not check if the address is correct.
+     *
      * @param address
      * @return
      */
     public static Coordinate calculateCoordinateForAddress(Address address) {
-        String requestAddress = address.getZipCode();
+        String requestAddress = "";
         if (address.getStreet() != null) {
-            requestAddress += "," + address.getStreet();
-            if (address.getStreetNumber() != null) {
-                requestAddress += "," + address.getStreetNumber();
-            }
+            requestAddress += address.getStreet() + " ";
+            requestAddress += address.getStreetNumber()  != null ? address.getStreetNumber()  + " " : "";
         }
+        requestAddress += address.getZipCode()  != null ? address.getZipCode()  + " " : "";
+        requestAddress += address.getCity()     != null ? address.getCity()     + " " : "";
         requestAddress += ", Deutschland";
 
         try {
