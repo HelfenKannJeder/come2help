@@ -24,12 +24,10 @@ public class GeoCodeCaller {
      */
     public static Coordinate calculateCoordinateForAddress(Address address) {
         String requestAddress = "";
-        if (address.getStreet() != null) {
-            requestAddress += address.getStreet() + " ";
-            requestAddress += address.getStreetNumber()  != null ? address.getStreetNumber()  + " " : "";
-        }
-        requestAddress += address.getZipCode()  != null ? address.getZipCode()  + " " : "";
-        requestAddress += address.getCity()     != null ? address.getCity()     + " " : "";
+        requestAddress += address.getStreet() != null ? address.getStreet()  + " " : "";
+        requestAddress += (address.getStreet() != null && address.getStreetNumber()  != null) ? address.getStreetNumber()  + " " : "";
+        requestAddress += address.getZipCode() != null ? address.getZipCode()  + " " : "";
+        requestAddress += address.getCity()!= null ? address.getCity()     + " " : "";
         requestAddress += ", Deutschland";
 
         try {
