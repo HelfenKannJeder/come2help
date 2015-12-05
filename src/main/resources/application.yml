@@ -64,3 +64,10 @@ google:
     resource:
         userInfoUri: https://www.googleapis.com/oauth2/v2/userinfo
         preferTokenInfo: false
+        
+        
+        
+        
+api:
+    jwt:
+        secretKey: secretKey

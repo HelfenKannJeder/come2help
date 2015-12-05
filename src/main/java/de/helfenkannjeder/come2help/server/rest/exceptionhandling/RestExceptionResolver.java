@@ -1,12 +1,13 @@
 package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -82,6 +83,20 @@ public class RestExceptionResolver {
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ErrorResponse> resolveMissingServletRequestParameterException(HttpServletRequest request, MissingServletRequestParameterException ex) {
+        return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
+                .withDescription(ex.getMessage())
+                .createErrorResponse();
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ResponseEntity<ErrorResponse> resolveJwtSignatureException(HttpServletRequest request, SignatureException ex) {
+        return LoggableErrorResponseCreator.create(HttpStatus.UNAUTHORIZED)
+                .withDescription(ex.getMessage())
+                .createErrorResponse();
+    }
+
+    @ExceptionHandler(MalformedJwtException.class)
+    public ResponseEntity<ErrorResponse> resolveMalformedJwtException(HttpServletRequest request, MalformedJwtException ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
                 .withDescription(ex.getMessage())
                 .createErrorResponse();

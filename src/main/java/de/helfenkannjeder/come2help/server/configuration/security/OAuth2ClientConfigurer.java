@@ -1,13 +1,9 @@
 package de.helfenkannjeder.come2help.server.configuration.security;
 
-import java.io.IOException;
+import de.helfenkannjeder.come2help.server.configuration.security.jwt.JwtCreatingAuthenticationSuccessHandler;
+import de.helfenkannjeder.come2help.server.configuration.security.jwt.StatelessJwtAuthenticationFilter;
 import java.util.Arrays;
 import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
@@ -16,21 +12,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CsrfFilter;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.CsrfTokenRepository;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.filter.CompositeFilter;
-import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.WebUtils;
 
 @EnableOAuth2Client
 @Configuration
@@ -51,14 +43,14 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.antMatcher("/**")
-                .authorizeRequests()
+        httpSecurity
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .csrf().disable().headers().frameOptions().disable().and()
+                .antMatcher("/**").authorizeRequests()
                 /**/.antMatchers("/abilities", "/login/**", "/logoutWorked").permitAll()
-                /**/.anyRequest().authenticated()
-                .and().exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
-                .and().logout().logoutSuccessUrl("/user/logout?successful=true").permitAll()
-                .and().csrf().csrfTokenRepository(csrfTokenRepository())
-                .and().addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
+                /**/.anyRequest().authenticated().and()
+                .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and()
+                .addFilterBefore(statelessJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 
@@ -76,18 +68,20 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientDetails.getClient(), oAuth2ClientContext);
         ssoFilter.setRestTemplate(restTemplate);
         ssoFilter.setTokenServices(new UserInfoTokenServices(clientDetails.getResource().getUserInfoUri(), clientDetails.getClient().getClientId()));
-        ssoFilter.setAuthenticationSuccessHandler(new SimpleUrlAuthenticationSuccessHandler("/user"));
+        ssoFilter.setAuthenticationSuccessHandler(getJwtCreatingAuthenticationSuccessHandler());
         return ssoFilter;
     }
 
-    /**
-     * Configure the redirection filter for authentication with OAuth2
-     * providers.
-     *
-     * @param filter
-     * @return
-     */
     @Bean
+    protected StatelessJwtAuthenticationFilter statelessJwtAuthenticationFilter() {
+        return new StatelessJwtAuthenticationFilter();
+    }
+
+//    @Bean
+//    protected JwtFilter jwtFilter() {
+//        return new JwtFilter();
+//    }
+    @Bean // handles the redirect to facebook
     public FilterRegistrationBean oAuth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(filter);
@@ -95,46 +89,20 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
         return registration;
     }
 
-    /**
-     * Handles some header mapping required for Angular to make logout work.
-     *
-     * @return
-     */
-    private Filter csrfHeaderFilter() {
-        return new OncePerRequestFilter() {
-            @Override
-            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-                CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-                if (csrf != null) {
-                    Cookie cookie = WebUtils.getCookie(request, "XSRF-TOKEN");
-                    String token = csrf.getToken();
-                    if (cookie == null || token != null && !token.equals(cookie.getValue())) {
-                        cookie = new Cookie("XSRF-TOKEN", token);
-                        cookie.setPath("/");
-                        response.addCookie(cookie);
-                    }
-                }
-                filterChain.doFilter(request, response);
-            }
-        };
-    }
-
-    private CsrfTokenRepository csrfTokenRepository() {
-        HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();
-        repository.setHeaderName("X-XSRF-TOKEN");
-        return repository;
-    }
-
-//    Config Beans
     @Bean
     @ConfigurationProperties("facebook")
-    public ClientResourceDetails facebook() {
+    protected ClientResourceDetails facebook() {
         return new ClientResourceDetails();
     }
 
     @Bean
     @ConfigurationProperties("google")
-    public ClientResourceDetails google() {
+    protected ClientResourceDetails google() {
         return new ClientResourceDetails();
+    }
+
+    @Bean
+    protected AuthenticationSuccessHandler getJwtCreatingAuthenticationSuccessHandler() {
+        return new JwtCreatingAuthenticationSuccessHandler();
     }
 }
