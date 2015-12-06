@@ -9,6 +9,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import de.helfenkannjeder.come2help.server.service.AbilityCategoriesService;
 import org.jsondoc.core.annotation.ApiError;
 import org.jsondoc.core.annotation.ApiErrors;
 import org.springframework.beans.factory.annotation.Autowired;

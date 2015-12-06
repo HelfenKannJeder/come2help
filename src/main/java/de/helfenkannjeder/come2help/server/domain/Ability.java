@@ -6,7 +6,9 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Ability extends AbstractVersionedAuditable {
@@ -22,18 +24,24 @@ public class Ability extends AbstractVersionedAuditable {
     @ManyToMany(mappedBy = "abilities")
     private List<Volunteer> volunteers = Collections.emptyList();
 
+    @ManyToOne
+    @JoinColumn(name = "ABILITY_CATEGORY_ID")
+    private AbilityCategory abilityCategory;
+
     public Ability() {
     }
 
-    public Ability(Long id, String name, String description) {
+    public Ability(Long id, String name, String description, AbilityCategory abilityCategory) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.abilityCategory = abilityCategory;
     }
 
     public void update(Ability ability) {
         this.name = ability.name;
         this.description = ability.description;
+        this.abilityCategory = ability.abilityCategory;
     }
 
     public Long getId() {
@@ -68,6 +76,14 @@ public class Ability extends AbstractVersionedAuditable {
         this.volunteers = volunteers;
     }
 
+    public AbilityCategory getAbilityCategory() {
+        return abilityCategory;
+    }
+
+    public void setAbilityCategory(AbilityCategory abilityCategory) {
+        this.abilityCategory = abilityCategory;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -75,6 +91,7 @@ public class Ability extends AbstractVersionedAuditable {
         hash = 31 * hash + Objects.hashCode(this.name);
         hash = 31 * hash + Objects.hashCode(this.description);
         hash = 31 * hash + Objects.hashCode(this.volunteers);
+        hash = 31 * hash + Objects.hashCode(this.abilityCategory);
         return hash;
     }
 
@@ -102,12 +119,15 @@ public class Ability extends AbstractVersionedAuditable {
         if (!Objects.equals(this.volunteers, other.volunteers)) {
             return false;
         }
+        if (!Objects.equals(this.abilityCategory, other.abilityCategory)) {
+            return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Ability{" + "id=" + id + ", name=" + name + ", description=" + description + ", volunteers=" + volunteers + '}';
+        return "Ability{" + "id=" + id + ", name=" + name + ", description=" + description + ", volunteers=" + volunteers + ", abilityCategory=" + abilityCategory + '}';
     }
 
 }

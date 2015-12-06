@@ -3,6 +3,7 @@ package de.helfenkannjeder.come2help.server.rest.dto;
 import javax.validation.constraints.NotNull;
 
 import de.helfenkannjeder.come2help.server.domain.Ability;
+import de.helfenkannjeder.come2help.server.domain.AbilityCategory;
 
 public class AbilityLinkDto {
 
@@ -12,6 +13,8 @@ public class AbilityLinkDto {
     private String name;
 
     private String description;
+
+    private AbilityCategory abilityCategory;
 
     public AbilityLinkDto() {
     }
@@ -25,7 +28,7 @@ public class AbilityLinkDto {
     }
 
     public static Ability createAbility(AbilityLinkDto dto) {
-        return new Ability(dto.getId(), dto.getName(), dto.getDescription());
+        return new Ability(dto.getId(), dto.getName(), dto.getDescription(), dto.getAbilityCategory());
     }
 
     public Long getId() {
@@ -52,6 +55,15 @@ public class AbilityLinkDto {
 
     public AbilityLinkDto setDescription(String description) {
         this.description = description;
+        return this;
+    }
+
+    public AbilityCategory getAbilityCategory() {
+        return abilityCategory;
+    }
+
+    public AbilityLinkDto setAbilityCategory(AbilityCategory abilityCategory) {
+        this.abilityCategory = abilityCategory;
         return this;
     }
 }
