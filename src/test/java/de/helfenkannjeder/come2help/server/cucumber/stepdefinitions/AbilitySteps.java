@@ -67,7 +67,7 @@ public class AbilitySteps {
         the_ability_is_created();
     }
 
-    @Given("^the user changes a property of the ability")
+    @Given("^the user changes a property of the ability$")
     public void the_user_changes_a_property_of_the_ability() throws Throwable {
         abilityDto = createAbilityResponseEntity.getBody();
         abilityDto.setDescription("ChangedDescription");

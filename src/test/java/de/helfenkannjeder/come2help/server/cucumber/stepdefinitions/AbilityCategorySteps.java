@@ -34,80 +34,80 @@ public class AbilityCategorySteps {
         this.facade = facade;
     }
 
-    @Given("^any valid abilitycategory$")
-    public void any_valid_abilitycategory() throws Throwable {
+    @Given("^any valid ability category$")
+    public void any_valid_ability_category() throws Throwable {
         abilityCategoryDto = AbilityCategoryObjectMother.anyValidAbilityCategory();
     }
 
-    @Given("^any invalid abilitycategory$")
-    public void any_invalid_abilitycategory() throws Throwable {
+    @Given("^any invalid ability category$")
+    public void any_invalid_ability_category() throws Throwable {
         abilityCategoryDto = AbilityCategoryObjectMother.anyInvalidAbilityCategory();
     }
 
-    @When("^the abilitycategory is created$")
-    public void the_abilitycategory_is_created() throws Throwable {
-        the_abilitycategory_creation_request_is_send();
+    @When("^the ability category is created$")
+    public void the_ability_category_is_created() throws Throwable {
+        the_ability_category_creation_request_is_send();
         assertThat("could not create the abilityCategory", facade.getLatestHttpStatusCode().is2xxSuccessful());
     }
 
-    @When("^the abilitycategory create request is send$")
-    public void the_abilitycategory_creation_request_is_send() throws Throwable {
+    @When("^the ability category create request is send$")
+    public void the_ability_category_creation_request_is_send() throws Throwable {
         createAbilityCategoryResponseEntity = facade.createAbilityCategory(abilityCategoryDto);
         abilityCategoryDto = createAbilityCategoryResponseEntity.getBody();
     }
 
-    @Then("^the response contains the created abilitycategory$")
-    public void the_response_contains_the_created_abilitycategory() throws Throwable {
+    @Then("^the response contains the created ability category$")
+    public void the_response_contains_the_created_ability_category() throws Throwable {
         assertThat(createAbilityCategoryResponseEntity.getBody(), CoreMatchers.is(AbilityCategoryDtoMatcher.matchesAbilityCategory(facade.getLastCreatedAbilityCategory())));
     }
 
-    @Given("^an existing abilitycategory$")
-    public void an_existing_abilitycategory() throws Throwable {
-        any_valid_abilitycategory();
-        the_abilitycategory_is_created();
+    @Given("^an existing ability category$")
+    public void an_existing_ability_category() throws Throwable {
+        any_valid_ability_category();
+        the_ability_category_is_created();
     }
 
-    @Given("^the user changes a property of the abilitycategory")
-    public void the_user_changes_a_property_of_the_abilitycategory() throws Throwable {
+    @Given("^the user changes a property of the ability category")
+    public void the_user_changes_a_property_of_the_ability_category() throws Throwable {
         abilityCategoryDto = createAbilityCategoryResponseEntity.getBody();
         abilityCategoryDto.setParentAbilityCategory(new AbilityCategory(1L, "abc", null));
     }
 
-    @When("^the abilitycategory is updated$")
-    public void the_abilitycategory_is_updated() throws Throwable {
+    @When("^the ability category is updated$")
+    public void the_ability_category_is_updated() throws Throwable {
         updateAbilityCategoryResponseEntity = facade.updateAbilityCategory(abilityCategoryDto);
         abilityCategoryDto = updateAbilityCategoryResponseEntity.getBody();
     }
 
-    @When("^the abilitycategory is deleted")
-    public void the_abilitycategory_is_deleted() throws Throwable {
+    @When("^the ability category is deleted")
+    public void the_ability_category_is_deleted() throws Throwable {
         facade.deleteAbilityCategory(abilityCategoryDto.getId());
     }
 
-    @Then("^the updated abilitycategory is returned$")
-    public void the_updated_abilitycategory_is_returned() throws Throwable {
+    @Then("^the updated ability category is returned$")
+    public void the_updated_ability_category_is_returned() throws Throwable {
         assertThat(updateAbilityCategoryResponseEntity.getBody(), CoreMatchers.is(AbilityCategoryDtoMatcher.matchesAbilityCategory(abilityCategoryDto)));
     }
 
-    @Given("^a non existing abilitycategory$")
-    public void a_non_existing_abilitycategory() throws Throwable {
-        any_valid_abilitycategory();
+    @Given("^a non existing ability category$")
+    public void a_non_existing_ability_category() throws Throwable {
+        any_valid_ability_category();
         abilityCategoryDto.setId(-5L);
     }
 
-    @Then("^the returned status code for the abilitycategory is (.+)$")
+    @Then("^the returned status code for the ability category is (.+)$")
     public void theReturnedStatusCodeIs(@Transform(HTTPStatusTransformer.class) HttpStatus httpStatus) throws Throwable {
         assertThat(facade.getLatestHttpStatusCode(), is(httpStatus));
     }
 
-    @When("^the abilitycategory id is re-used$")
+    @When("^the ability category id is re-used$")
     public void theAbilityCategoryIdIsReUsed() throws Throwable {
         abilityCategoryDto = createAbilityCategoryResponseEntity.getBody();
         abilityCategoryDto.setName("abc");
-        the_abilitycategory_creation_request_is_send();
+        the_ability_category_creation_request_is_send();
     }
 
-    @And("^the user modifies the abilitycategory with invalid data$")
+    @And("^the user modifies the ability category with invalid data$")
     public void theUserModifiesTheAbilityCategoryWithInvalidData() throws Throwable {
         abilityCategoryDto = createAbilityCategoryResponseEntity.getBody();
         abilityCategoryDto.setName(null);
