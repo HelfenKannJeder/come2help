@@ -55,7 +55,6 @@ public class Ability extends AbstractVersionedAuditable {
         this.childAbilities = ability.childAbilities;
         this.isCategory = ability.isCategory();
         this.isSelectable = ability.isSelectable();
-        checkCategoryAndChildrenConsistency();
     }
 
     public Long getId() {
@@ -124,9 +123,12 @@ public class Ability extends AbstractVersionedAuditable {
         checkCategoryAndChildrenConsistency();
     }
 
+    /**
+     * it should not be possible to have children abilities when this ability is not a category
+     */
     private void checkCategoryAndChildrenConsistency() {
         if (isCategory == false && childAbilities.size() > 0 ) {
-            throw new RuntimeException("An ability has childAbilites but is not a category");
+            throw new RuntimeException("An ability has childAbilities but is not a category");
         }
     }
 
