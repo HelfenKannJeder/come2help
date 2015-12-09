@@ -1,6 +1,5 @@
 package de.helfenkannjeder.come2help.server.cucumber.util;
 
-import de.helfenkannjeder.come2help.server.rest.dto.AbilityCategoryDto;
 import de.helfenkannjeder.come2help.server.rest.dto.AbilityDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -17,7 +17,7 @@ public class VolunteerTest {
         final Address testAddress1 = new Address("78393", "Hanshausen", "Meierstreet", "76c");
         final String testPhone1 = "872382394";
         final Boolean testAdult1 = false;
-        final List<Ability> testAbilities1 = Arrays.asList(new Ability(1L, null, null, null));
+        final List<Ability> testAbilities1 = Arrays.asList(new Ability(1L, null, null, null, true, true));
 
         Volunteer volunteer1 = new Volunteer(testId1, testEmail1, testGivenName1, testSurname1, testAddress1, testPhone1, testAdult1, testAbilities1);
 
@@ -28,7 +28,7 @@ public class VolunteerTest {
         final Address testAddress2 = new Address("12323", "Ganshausen", "Gustavstreet", "3a");
         final String testPhone2 = "56756745";
         final Boolean testAdult2 = true;
-        final List<Ability> testAbilities2 = Arrays.asList(new Ability(5L, null, null, null));
+        final List<Ability> testAbilities2 = Arrays.asList(new Ability(5L, null, null, null, true, true));
 
         Volunteer volunteer2 = new Volunteer(testId2, testEmail2, testGivenName2, testSurname2, testAddress2, testPhone2, testAdult2, testAbilities2);
 

@@ -3,14 +3,13 @@ package de.helfenkannjeder.come2help.server.rest.dto;
 import de.helfenkannjeder.come2help.server.domain.Ability;
 import static org.junit.Assert.assertEquals;
 
-import de.helfenkannjeder.come2help.server.domain.AbilityCategory;
 import org.junit.Test;
 
 public class AbilityDtoTest {
 
     @Test
     public void testAbilityToAbilityDto() {
-        Ability ability = new Ability(1233L, "name", "description", new AbilityCategory(1L, "test", null));
+        Ability ability = new Ability(1233L, "name", "description", new Ability(1L, "test", "desc", null, true, true), true, true);
         AbilityDto dto = AbilityDto.createFullDto(ability);
 
         assertEqual(ability, dto);
@@ -24,7 +23,7 @@ public class AbilityDtoTest {
 
     @Test
     public void testAddressDtoToAddress() {
-        AbilityDto dto = new AbilityDto(1234L, "name", "description", new AbilityCategory(2L, "test", null));
+        AbilityDto dto = new AbilityDto(1234L, "name", "description", new Ability(2L, "test", "desc", null, true, true), true, true);
         Ability ability = AbilityDto.createAbility(dto);
 
         assertEqual(dto, ability);

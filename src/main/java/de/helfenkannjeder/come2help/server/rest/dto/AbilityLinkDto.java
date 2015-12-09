@@ -3,7 +3,6 @@ package de.helfenkannjeder.come2help.server.rest.dto;
 import javax.validation.constraints.NotNull;
 
 import de.helfenkannjeder.come2help.server.domain.Ability;
-import de.helfenkannjeder.come2help.server.domain.AbilityCategory;
 
 public class AbilityLinkDto {
 
@@ -14,7 +13,11 @@ public class AbilityLinkDto {
 
     private String description;
 
-    private AbilityCategory abilityCategory;
+    private Ability parentAbility;
+
+    private boolean isSelectable = true;
+
+    private boolean isCategory = false;
 
     public AbilityLinkDto() {
     }
@@ -28,7 +31,7 @@ public class AbilityLinkDto {
     }
 
     public static Ability createAbility(AbilityLinkDto dto) {
-        return new Ability(dto.getId(), dto.getName(), dto.getDescription(), dto.getAbilityCategory());
+        return new Ability(dto.getId(), dto.getName(), dto.getDescription(), dto.getParentAbility(), dto.isSelectable(), dto.isCategory());
     }
 
     public Long getId() {
@@ -58,12 +61,28 @@ public class AbilityLinkDto {
         return this;
     }
 
-    public AbilityCategory getAbilityCategory() {
-        return abilityCategory;
+    public Ability getParentAbility() {
+        return parentAbility;
     }
 
-    public AbilityLinkDto setAbilityCategory(AbilityCategory abilityCategory) {
-        this.abilityCategory = abilityCategory;
+    public AbilityLinkDto setParentAbility(Ability parentAbility) {
+        this.parentAbility = parentAbility;
         return this;
+    }
+
+    public boolean isSelectable() {
+        return isSelectable;
+    }
+
+    public void setSelectable(boolean selectable) {
+        isSelectable = selectable;
+    }
+
+    public boolean isCategory() {
+        return isCategory;
+    }
+
+    public void setCategory(boolean category) {
+        isCategory = category;
     }
 }

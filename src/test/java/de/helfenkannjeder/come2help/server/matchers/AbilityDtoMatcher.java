@@ -1,5 +1,6 @@
 package de.helfenkannjeder.come2help.server.matchers;
 
+import de.helfenkannjeder.come2help.server.domain.Ability;
 import de.helfenkannjeder.come2help.server.rest.dto.AbilityDto;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -16,6 +17,12 @@ public class AbilityDtoMatcher extends TypeSafeDiagnosingMatcher<AbilityDto> {
 
     private Matcher<? super String> description = Matchers.anything();
 
+    private Matcher<? super Ability> parentAbility = Matchers.anything();
+
+    private Matcher<? super Boolean> isSelectable = Matchers.anything();
+
+    private Matcher<? super Boolean> isCategory = Matchers.anything();
+
     public static AbilityDtoMatcher matchesAbility() {
         return new AbilityDtoMatcher();
     }
@@ -23,7 +30,10 @@ public class AbilityDtoMatcher extends TypeSafeDiagnosingMatcher<AbilityDto> {
     public static AbilityDtoMatcher matchesAbility(AbilityDto abilityDto) {
         return new AbilityDtoMatcher().withId(abilityDto.getId())
                 .withName(abilityDto.getName())
-                .withDescription(abilityDto.getDescription());
+                .withDescription(abilityDto.getDescription())
+                .withParentAbility(abilityDto.getParentAbility())
+                .withIsSelectable(abilityDto.isSelectable())
+                .withIsCategory(abilityDto.isCategory());
     }
 
     public AbilityDtoMatcher withId(Long id) {
@@ -38,6 +48,22 @@ public class AbilityDtoMatcher extends TypeSafeDiagnosingMatcher<AbilityDto> {
 
     public AbilityDtoMatcher withDescription(String description) {
         this.description = equalTo(description);
+        return this;
+    }
+
+    public AbilityDtoMatcher withParentAbility(Ability parentAbility) {
+        this.parentAbility = equalTo(parentAbility);
+        return this;
+    }
+
+    public AbilityDtoMatcher withIsSelectable(boolean isSelectable) {
+        this.isSelectable = equalTo(isSelectable);
+        return this;
+    }
+
+
+    public AbilityDtoMatcher withIsCategory(boolean isCategory) {
+        this.isCategory = equalTo(isCategory);
         return this;
     }
 
@@ -66,6 +92,9 @@ public class AbilityDtoMatcher extends TypeSafeDiagnosingMatcher<AbilityDto> {
         descriptionHam
                 .appendText(", with id=").appendDescriptionOf(id)
                 .appendText(", with name=").appendDescriptionOf(name)
-                .appendText(", with description=").appendDescriptionOf(description);
+                .appendText(", with description=").appendDescriptionOf(description)
+                .appendText(", with parentAbility=").appendDescriptionOf(parentAbility)
+                .appendText(", with isSelectable=").appendDescriptionOf(isSelectable)
+                .appendText(", with isCategory=").appendDescriptionOf(isCategory);
     }
 }
