@@ -7,6 +7,7 @@ import de.helfenkannjeder.come2help.server.domain.repository.AbilityRepository;
 import de.helfenkannjeder.come2help.server.domain.repository.VolunteerRepository;
 import de.helfenkannjeder.come2help.server.security.AuthenticationFacade;
 import de.helfenkannjeder.come2help.server.security.UserAuthentication;
+import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
 import de.helfenkannjeder.come2help.server.util.DistanceCalculator;
@@ -20,13 +21,16 @@ public class VolunteersService {
 
     private final VolunteerRepository volunteerRepository;
     private final AbilityRepository abilityRepository;
+    private final UserService userService;
+
     private final AuthenticationFacade authenticationFacade;
 
     @Autowired
-    public VolunteersService(VolunteerRepository volunteerRepository, AbilityRepository abilityRepository, AuthenticationFacade authenticationFacade) {
+    public VolunteersService(VolunteerRepository volunteerRepository, AbilityRepository abilityRepository, AuthenticationFacade authenticationFacade, UserService userService) {
         this.volunteerRepository = volunteerRepository;
         this.abilityRepository = abilityRepository;
         this.authenticationFacade = authenticationFacade;
+        this.userService = userService;
     }
 
     public List<Volunteer> findAll() {
@@ -57,9 +61,24 @@ public class VolunteersService {
         if (volunteer.getUser().getId() != null) {
             throw InvalidDataException.forSingleError("volunteer.user.id.null", volunteer.getUser().getId().toString());
         }
-        loadAbilities(volunteer);
 
         UserAuthentication authentication = authenticationFacade.getAuthentication();
+        User dbUser = userService.getUserIfExists(authentication);
+        if (dbUser != null) {
+            if (dbUser.getVolunteer() != null) {
+                throw new DuplicateResourceException("user already has a volunteer"); // TODO supply better error message
+            } else {
+                dbUser.update(volunteer.getUser());
+                volunteer.setUser(dbUser);
+            }
+        }
+
+        if (userService.existsEmail(volunteer.getUser().getEmail())) {
+            throw new DuplicateResourceException("email already exists"); // TODO supply better error message
+        }
+
+        loadAbilities(volunteer);
+
         User user = volunteer.getUser();
         user.setAuthProvider(authentication.getAuthProvider());
         user.setExternalId(authentication.getExternalId());

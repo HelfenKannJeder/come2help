@@ -1,13 +1,19 @@
 package de.helfenkannjeder.come2help.server.domain;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"authProvider", "externalId"})
+)
 public class User extends AbstractVersionedAuditable {
 
     @Id
@@ -17,6 +23,7 @@ public class User extends AbstractVersionedAuditable {
     private String authProvider;
     private String externalId;
 
+    @Column(unique = true)
     private String email;
     private Boolean emailVerified;
 
@@ -38,6 +45,15 @@ public class User extends AbstractVersionedAuditable {
         this.surname = surname;
         this.phone = phone;
         this.address = address;
+    }
+
+    public void update(User user) {
+        this.email = user.getEmail();
+        this.givenName = user.getGivenName();
+        this.surname = user.getSurname();
+        this.phone = user.getPhone();
+        this.address = user.getAddress();
+        this.volunteer = user.getVolunteer();
     }
 
     public Long getId() {
@@ -120,4 +136,8 @@ public class User extends AbstractVersionedAuditable {
         this.volunteer = volunteer;
     }
 
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", authProvider=" + authProvider + ", externalId=" + externalId + ", email=" + email + ", emailVerified=" + emailVerified + ", givenName=" + givenName + ", surname=" + surname + ", phone=" + phone + ", address=" + address + ", volunteer=" + volunteer + '}';
+    }
 }

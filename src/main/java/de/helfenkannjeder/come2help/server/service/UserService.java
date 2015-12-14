@@ -2,8 +2,8 @@ package de.helfenkannjeder.come2help.server.service;
 
 import com.google.common.collect.Lists;
 import de.helfenkannjeder.come2help.server.domain.User;
-import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import de.helfenkannjeder.come2help.server.domain.repository.UserRepository;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import de.helfenkannjeder.come2help.server.service.exception.ConcurrentDeletedException;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
@@ -84,10 +84,18 @@ public class UserService {
     }
 
     public User findUser(UserAuthentication authentication) {
-        User user = userRepository.findByAuthProviderAndExternalId(authentication.getAuthProvider(), authentication.getExternalId());
+        User user = getUserIfExists(authentication);
         if (user == null) {
             throw new ResourceNotFoundException(authentication.getAuthProvider() + "-" + authentication.getExternalId());
         }
         return user;
+    }
+
+    public User getUserIfExists(UserAuthentication authentication) {
+        return userRepository.findByAuthProviderAndExternalId(authentication.getAuthProvider(), authentication.getExternalId());
+    }
+
+    boolean existsEmail(String email) {
+        return userRepository.findByEmail(email) != null;
     }
 }
