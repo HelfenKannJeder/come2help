@@ -1,7 +1,7 @@
 package de.helfenkannjeder.come2help.server.configuration.security;
 
-import de.helfenkannjeder.come2help.server.configuration.security.jwt.JwtCreatingAuthenticationSuccessHandler;
-import de.helfenkannjeder.come2help.server.configuration.security.jwt.StatelessJwtAuthenticationFilter;
+import de.helfenkannjeder.come2help.server.security.jwt.FacebookSuccessHandler;
+import de.helfenkannjeder.come2help.server.security.jwt.StatelessJwtAuthenticationFilter;
 import java.util.Arrays;
 import javax.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientDetails.getClient(), oAuth2ClientContext);
         ssoFilter.setRestTemplate(restTemplate);
         ssoFilter.setTokenServices(new UserInfoTokenServices(clientDetails.getResource().getUserInfoUri(), clientDetails.getClient().getClientId()));
-        ssoFilter.setAuthenticationSuccessHandler(getJwtCreatingAuthenticationSuccessHandler());
+        ssoFilter.setAuthenticationSuccessHandler(facebookSuccessHandler());
         return ssoFilter;
     }
 
@@ -77,10 +77,6 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
         return new StatelessJwtAuthenticationFilter();
     }
 
-//    @Bean
-//    protected JwtFilter jwtFilter() {
-//        return new JwtFilter();
-//    }
     @Bean // handles the redirect to facebook
     public FilterRegistrationBean oAuth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
@@ -102,7 +98,7 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    protected AuthenticationSuccessHandler getJwtCreatingAuthenticationSuccessHandler() {
-        return new JwtCreatingAuthenticationSuccessHandler();
+    protected AuthenticationSuccessHandler facebookSuccessHandler() {
+        return new FacebookSuccessHandler();
     }
 }

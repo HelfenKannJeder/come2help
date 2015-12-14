@@ -1,4 +1,4 @@
-package de.helfenkannjeder.come2help.server.configuration.security.jwt;
+package de.helfenkannjeder.come2help.server.security.jwt;
 
 import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import io.jsonwebtoken.Claims;
@@ -35,12 +35,12 @@ public class JwtTokenHandler {
         String surname = (String) claims.get(CLAIM_SURNAME);
         String email = (String) claims.get(CLAIM_EMAIL);
 
-        return new UserAuthentication(internalId, authProvider, externalId, givenName, surname, email);
+        return new UserAuthentication(internalId != null ? Long.valueOf(internalId) : null, authProvider, externalId, givenName, surname, email);
     }
 
     public String createTokenForUser(UserAuthentication user) {
         return Jwts.builder()
-                .setSubject(user.getInternalId())
+                .setSubject(user.getInternalId() != null ? user.getInternalId() + "" : null)
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .claim(CLAIM_AUTH_PROVIDER, user.getAuthProvider())
                 .claim(CLAIM_EXTERNAL_ID, user.getExternalId())

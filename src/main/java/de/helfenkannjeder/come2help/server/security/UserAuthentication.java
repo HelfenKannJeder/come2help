@@ -9,7 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 public class UserAuthentication implements Authentication {
 
-    private String internalId;
+    private Long internalId;
     private String authProvider;
     private String externalId;
     private String givenName;
@@ -20,7 +20,7 @@ public class UserAuthentication implements Authentication {
     public UserAuthentication() {
     }
 
-    public UserAuthentication(String internalId, String authProvider, String externalId, String givenName, String surname, String email) {
+    public UserAuthentication(Long internalId, String authProvider, String externalId, String givenName, String surname, String email) {
         this.internalId = internalId;
         this.authProvider = authProvider;
         this.externalId = externalId;
@@ -69,14 +69,14 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public String getName() {
+        return internalId + "";
+    }
+
+    public Long getInternalId() {
         return internalId;
     }
 
-    public String getInternalId() {
-        return internalId;
-    }
-
-    public void setInternalId(String internalId) {
+    public void setInternalId(Long internalId) {
         this.internalId = internalId;
     }
 
@@ -171,7 +171,7 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public String toString() {
-        return "ApiUserInfo{" + "internalId=" + internalId + ", externalId=" + externalId + ", givenName=" + givenName + ", surname=" + surname + ", email=" + email + '}';
+        return "UserAuthentication{" + "internalId=" + internalId + ", externalId=" + externalId + ", givenName=" + givenName + ", surname=" + surname + ", email=" + email + '}';
     }
 
 }

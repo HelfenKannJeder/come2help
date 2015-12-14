@@ -91,8 +91,12 @@ public class UserService {
         return user;
     }
 
+    public User getUserIfExists(String authProvider, String externalId) {
+        return userRepository.findByAuthProviderAndExternalId(authProvider, externalId);
+    }
+
     public User getUserIfExists(UserAuthentication authentication) {
-        return userRepository.findByAuthProviderAndExternalId(authentication.getAuthProvider(), authentication.getExternalId());
+        return getUserIfExists(authentication.getAuthProvider(), authentication.getExternalId());
     }
 
     boolean existsEmail(String email) {

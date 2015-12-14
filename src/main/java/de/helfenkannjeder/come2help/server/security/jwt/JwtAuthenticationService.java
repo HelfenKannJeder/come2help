@@ -1,4 +1,4 @@
-package de.helfenkannjeder.come2help.server.configuration.security.jwt;
+package de.helfenkannjeder.come2help.server.security.jwt;
 
 import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import javax.servlet.http.HttpServletRequest;
