@@ -1,16 +1,11 @@
 package de.helfenkannjeder.come2help.server.domain;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.OneToOne;
 
 @Entity
 public class User extends AbstractVersionedAuditable {
@@ -19,34 +14,31 @@ public class User extends AbstractVersionedAuditable {
     @GeneratedValue
     private Long id = null;
 
+    private String authProvider;
+    private String externalId;
+
     private String email;
+    private Boolean emailVerified;
 
     private String givenName;
-
     private String surname;
-
     private String phone;
+    @Embedded
+    private Address address;
 
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", optional = true)
+    private Volunteer volunteer;
 
-    private boolean isAdult = false;
+    public User() {
+    }
 
-    private boolean isBonusProgramAccepted = false;
-
-    private String password;
-
-    private String insurance;
-
-    @ManyToMany
-    @JoinTable(name = "USER_ABILITY",
-            joinColumns = {
-                @JoinColumn(name = "ABILITY_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "USER_ID", referencedColumnName = "ID")})
-    private List<Ability> abilities;
-
-    private int maxRadiusOfAction;
+    public User(String email, String givenName, String surname, String phone, Address address) {
+        this.email = email;
+        this.givenName = givenName;
+        this.surname = surname;
+        this.phone = phone;
+        this.address = address;
+    }
 
     public Long getId() {
         return id;
@@ -62,6 +54,14 @@ public class User extends AbstractVersionedAuditable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 
     public String getGivenName() {
@@ -88,133 +88,36 @@ public class User extends AbstractVersionedAuditable {
         this.phone = phone;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public String getAuthProvider() {
+        return authProvider;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
     }
 
-    public boolean isAdult() {
-        return isAdult;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setIsAdult(boolean isAdult) {
-        this.isAdult = isAdult;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
-    public boolean isBonusProgramAccepted() {
-        return isBonusProgramAccepted;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setIsBonusProgramAccepted(boolean isBonusProgramAccepted) {
-        this.isBonusProgramAccepted = isBonusProgramAccepted;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
-    public String getPassword() {
-        return password;
+    public Volunteer getVolunteer() {
+        return volunteer;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setVolunteer(Volunteer volunteer) {
+        this.volunteer = volunteer;
     }
 
-    public String getInsurance() {
-        return insurance;
-    }
-
-    public void setInsurance(String insurance) {
-        this.insurance = insurance;
-    }
-
-    public int getMaxRadiusOfAction() {
-        return maxRadiusOfAction;
-    }
-
-    public void setMaxRadiusOfAction(int maxRadiusOfAction) {
-        this.maxRadiusOfAction = maxRadiusOfAction;
-    }
-
-    public List<Ability> getAbilities() {
-        return abilities;
-    }
-
-    public void setAbilities(List<Ability> abilities) {
-        this.abilities = abilities;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.id);
-        hash = 97 * hash + Objects.hashCode(this.email);
-        hash = 97 * hash + Objects.hashCode(this.givenName);
-        hash = 97 * hash + Objects.hashCode(this.surname);
-        hash = 97 * hash + Objects.hashCode(this.phone);
-        hash = 97 * hash + Objects.hashCode(this.dateOfBirth);
-        hash = 97 * hash + (this.isAdult ? 1 : 0);
-        hash = 97 * hash + (this.isBonusProgramAccepted ? 1 : 0);
-        hash = 97 * hash + Objects.hashCode(this.password);
-        hash = 97 * hash + Objects.hashCode(this.insurance);
-        hash = 97 * hash + Objects.hashCode(this.abilities);
-        hash = 97 * hash + this.maxRadiusOfAction;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final User other = (User) obj;
-        if (this.isAdult != other.isAdult) {
-            return false;
-        }
-        if (this.isBonusProgramAccepted != other.isBonusProgramAccepted) {
-            return false;
-        }
-        if (this.maxRadiusOfAction != other.maxRadiusOfAction) {
-            return false;
-        }
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
-        if (!Objects.equals(this.givenName, other.givenName)) {
-            return false;
-        }
-        if (!Objects.equals(this.surname, other.surname)) {
-            return false;
-        }
-        if (!Objects.equals(this.phone, other.phone)) {
-            return false;
-        }
-        if (!Objects.equals(this.password, other.password)) {
-            return false;
-        }
-        if (!Objects.equals(this.insurance, other.insurance)) {
-            return false;
-        }
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.dateOfBirth, other.dateOfBirth)) {
-            return false;
-        }
-        if (!Objects.equals(this.abilities, other.abilities)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", email=" + email + ", givenName=" + givenName + ", surname=" + surname + ", phone=" + phone + ", dateOfBirth=" + dateOfBirth + ", isAdult=" + isAdult + ", isBonusProgramAccepted=" + isBonusProgramAccepted + ", password=" + password + ", insurance=" + insurance + ", abilities=" + abilities + ", maxRadiusOfAction=" + maxRadiusOfAction + '}';
-    }
 }

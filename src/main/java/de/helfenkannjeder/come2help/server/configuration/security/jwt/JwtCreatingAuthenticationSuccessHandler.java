@@ -1,6 +1,6 @@
 package de.helfenkannjeder.come2help.server.configuration.security.jwt;
 
-import de.helfenkannjeder.come2help.server.domain.UserAuthentication;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import java.io.IOException;
 import java.util.HashMap;
 import javax.servlet.ServletException;
@@ -29,11 +29,11 @@ public class JwtCreatingAuthenticationSuccessHandler implements AuthenticationSu
     }
 
     private UserAuthentication getApiUserInfo(HashMap<String, String> userDetailsMap) {
-        String id = userDetailsMap.get("id");
+        String externalId = userDetailsMap.get("id");
         String email = userDetailsMap.get("email");
         String givenName = userDetailsMap.get("first_name");
         String surname = userDetailsMap.get("last_name");
 
-        return new UserAuthentication(id, givenName, surname, email);
+        return new UserAuthentication("facebook", externalId, givenName, surname, email);
     }
 }

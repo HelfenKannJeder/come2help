@@ -2,23 +2,21 @@ package de.helfenkannjeder.come2help.server.service;
 
 import com.google.common.collect.Lists;
 import de.helfenkannjeder.come2help.server.domain.User;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import de.helfenkannjeder.come2help.server.domain.repository.UserRepository;
 import de.helfenkannjeder.come2help.server.service.exception.ConcurrentDeletedException;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
+import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
 import static java.lang.String.format;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -46,8 +44,6 @@ public class UserService {
         if (tmp != null) {
             throw new DuplicateResourceException(format("An user with email %s already exists", user.getEmail()));
         }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return userRepository.save(user);
     }
@@ -85,5 +81,13 @@ public class UserService {
         }
 
         deleteUserById(user.getId());
+    }
+
+    public User findUser(UserAuthentication authentication) {
+        User user = userRepository.findByAuthProviderAndExternalId(authentication.getAuthProvider(), authentication.getExternalId());
+        if (user == null) {
+            throw new ResourceNotFoundException(authentication.getAuthProvider() + "-" + authentication.getExternalId());
+        }
+        return user;
     }
 }

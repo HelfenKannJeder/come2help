@@ -1,17 +1,15 @@
 package de.helfenkannjeder.come2help.server.rest;
 
-import java.security.Principal;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerResponseDto;
 import de.helfenkannjeder.come2help.server.service.VolunteersService;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,8 +49,7 @@ public class VolunteersController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public VolunteerResponseDto getVolunteerById(Principal principal, @PathVariable Long id) {
-        System.out.println("principal: " + principal);
+    public VolunteerResponseDto getVolunteerById(@PathVariable Long id) {
         Volunteer volunteer = volunteersService.findById(id);
         return VolunteerResponseDto.createFullDto(volunteer);
     }

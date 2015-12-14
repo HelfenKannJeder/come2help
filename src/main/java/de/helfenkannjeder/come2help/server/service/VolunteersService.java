@@ -1,15 +1,17 @@
 package de.helfenkannjeder.come2help.server.service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import de.helfenkannjeder.come2help.server.domain.Coordinate;
+import de.helfenkannjeder.come2help.server.domain.User;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.domain.repository.AbilityRepository;
 import de.helfenkannjeder.come2help.server.domain.repository.VolunteerRepository;
+import de.helfenkannjeder.come2help.server.security.AuthenticationFacade;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
 import de.helfenkannjeder.come2help.server.util.DistanceCalculator;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +20,13 @@ public class VolunteersService {
 
     private final VolunteerRepository volunteerRepository;
     private final AbilityRepository abilityRepository;
+    private final AuthenticationFacade authenticationFacade;
 
     @Autowired
-    public VolunteersService(VolunteerRepository volunteerRepository, AbilityRepository abilityRepository) {
+    public VolunteersService(VolunteerRepository volunteerRepository, AbilityRepository abilityRepository, AuthenticationFacade authenticationFacade) {
         this.volunteerRepository = volunteerRepository;
         this.abilityRepository = abilityRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public List<Volunteer> findAll() {
@@ -32,7 +36,7 @@ public class VolunteersService {
     public List<Volunteer> findAllInDistance(final Coordinate coordinate, Double distance) {
         List<Volunteer> all = findAll();
 
-        return all.parallelStream().filter(v -> DistanceCalculator.getDistanceFor(v.getAddress().getCoordinate(), coordinate) <= distance).collect(Collectors.toList());
+        return all.parallelStream().filter(v -> DistanceCalculator.getDistanceFor(v.getUser().getAddress().getCoordinate(), coordinate) <= distance).collect(Collectors.toList());
     }
 
     public Volunteer findById(Long id) {
@@ -50,7 +54,16 @@ public class VolunteersService {
         if (volunteer.getId() != null) {
             throw InvalidDataException.forSingleError("volunteer.id.null", volunteer.getId().toString());
         }
+        if (volunteer.getUser().getId() != null) {
+            throw InvalidDataException.forSingleError("volunteer.user.id.null", volunteer.getUser().getId().toString());
+        }
         loadAbilities(volunteer);
+
+        UserAuthentication authentication = authenticationFacade.getAuthentication();
+        User user = volunteer.getUser();
+        user.setAuthProvider(authentication.getAuthProvider());
+        user.setExternalId(authentication.getExternalId());
+        user.setVolunteer(volunteer);
 
         return volunteerRepository.save(volunteer);
     }

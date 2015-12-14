@@ -1,4 +1,4 @@
-package de.helfenkannjeder.come2help.server.domain;
+package de.helfenkannjeder.come2help.server.security;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 public class UserAuthentication implements Authentication {
 
     private String internalId;
+    private String authProvider;
     private String externalId;
     private String givenName;
     private String surname;
@@ -19,15 +20,17 @@ public class UserAuthentication implements Authentication {
     public UserAuthentication() {
     }
 
-    public UserAuthentication(String internalId, String externalId, String givenName, String surname, String email) {
+    public UserAuthentication(String internalId, String authProvider, String externalId, String givenName, String surname, String email) {
         this.internalId = internalId;
+        this.authProvider = authProvider;
         this.externalId = externalId;
         this.givenName = givenName;
         this.surname = surname;
         this.email = email;
     }
 
-    public UserAuthentication(String externalId, String givenName, String surname, String email) {
+    public UserAuthentication(String authProvider, String externalId, String givenName, String surname, String email) {
+        this.authProvider = authProvider;
         this.externalId = externalId;
         this.givenName = givenName;
         this.surname = surname;
@@ -109,6 +112,22 @@ public class UserAuthentication implements Authentication {
         this.email = email;
     }
 
+    public String getAuthProvider() {
+        return authProvider;
+    }
+
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
+    }
+
+    public List<GrantedAuthority> getGrantedAuthorities() {
+        return grantedAuthorities;
+    }
+
+    public void setGrantedAuthorities(List<GrantedAuthority> grantedAuthorities) {
+        this.grantedAuthorities = grantedAuthorities;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -154,4 +173,5 @@ public class UserAuthentication implements Authentication {
     public String toString() {
         return "ApiUserInfo{" + "internalId=" + internalId + ", externalId=" + externalId + ", givenName=" + givenName + ", surname=" + surname + ", email=" + email + '}';
     }
+
 }

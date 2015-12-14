@@ -1,6 +1,6 @@
 package de.helfenkannjeder.come2help.server.configuration.security.jwt;
 
-import de.helfenkannjeder.come2help.server.domain.UserAuthentication;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

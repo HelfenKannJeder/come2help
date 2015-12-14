@@ -1,6 +1,6 @@
 package de.helfenkannjeder.come2help.server.configuration.security.jwt;
 
-import de.helfenkannjeder.come2help.server.domain.UserAuthentication;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class JwtTokenHandler {
 
     private static final int DAY_DURATION = 1000 * 60 * 60;
+    private static final String CLAIM_AUTH_PROVIDER = "provider";
     private static final String CLAIM_EXTERNAL_ID = "ext-id";
     private static final String CLAIM_GIVEN_NAME = "name";
     private static final String CLAIM_SURNAME = "surname";
@@ -28,18 +29,20 @@ public class JwtTokenHandler {
                 .getBody();
 
         String internalId = claims.getSubject();
+        String authProvider = (String) claims.get(CLAIM_AUTH_PROVIDER);
         String externalId = (String) claims.get(CLAIM_EXTERNAL_ID);
         String givenName = (String) claims.get(CLAIM_GIVEN_NAME);
         String surname = (String) claims.get(CLAIM_SURNAME);
         String email = (String) claims.get(CLAIM_EMAIL);
 
-        return new UserAuthentication(internalId, externalId, givenName, surname, email);
+        return new UserAuthentication(internalId, authProvider, externalId, givenName, surname, email);
     }
 
     public String createTokenForUser(UserAuthentication user) {
         return Jwts.builder()
                 .setSubject(user.getInternalId())
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .claim(CLAIM_AUTH_PROVIDER, user.getAuthProvider())
                 .claim(CLAIM_EXTERNAL_ID, user.getExternalId())
                 .claim(CLAIM_GIVEN_NAME, user.getGivenName())
                 .claim(CLAIM_SURNAME, user.getSurname())
