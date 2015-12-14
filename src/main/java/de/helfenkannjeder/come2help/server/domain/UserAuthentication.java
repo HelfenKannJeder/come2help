@@ -7,7 +7,7 @@ import java.util.Objects;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-public class ApiUserInfo implements Authentication {
+public class UserAuthentication implements Authentication {
 
     private String internalId;
     private String externalId;
@@ -16,10 +16,10 @@ public class ApiUserInfo implements Authentication {
     private String email;
     private List<GrantedAuthority> grantedAuthorities = new LinkedList<>();
 
-    public ApiUserInfo() {
+    public UserAuthentication() {
     }
 
-    public ApiUserInfo(String internalId, String externalId, String givenName, String surname, String email) {
+    public UserAuthentication(String internalId, String externalId, String givenName, String surname, String email) {
         this.internalId = internalId;
         this.externalId = externalId;
         this.givenName = givenName;
@@ -27,7 +27,7 @@ public class ApiUserInfo implements Authentication {
         this.email = email;
     }
 
-    public ApiUserInfo(String externalId, String givenName, String surname, String email) {
+    public UserAuthentication(String externalId, String givenName, String surname, String email) {
         this.externalId = externalId;
         this.givenName = givenName;
         this.surname = surname;
@@ -131,7 +131,7 @@ public class ApiUserInfo implements Authentication {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final ApiUserInfo other = (ApiUserInfo) obj;
+        final UserAuthentication other = (UserAuthentication) obj;
         if (!Objects.equals(this.internalId, other.internalId)) {
             return false;
         }

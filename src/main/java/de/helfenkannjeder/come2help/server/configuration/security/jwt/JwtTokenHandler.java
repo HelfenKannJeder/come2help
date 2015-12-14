@@ -1,6 +1,6 @@
 package de.helfenkannjeder.come2help.server.configuration.security.jwt;
 
-import de.helfenkannjeder.come2help.server.domain.ApiUserInfo;
+import de.helfenkannjeder.come2help.server.domain.UserAuthentication;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
@@ -21,7 +21,7 @@ public class JwtTokenHandler {
     @Value("${api.jwt.secretKey}")
     private String secretKey;
 
-    public ApiUserInfo parseUserFromToken(String token) {
+    public UserAuthentication parseUserFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
@@ -33,10 +33,10 @@ public class JwtTokenHandler {
         String surname = (String) claims.get(CLAIM_SURNAME);
         String email = (String) claims.get(CLAIM_EMAIL);
 
-        return new ApiUserInfo(internalId, externalId, givenName, surname, email);
+        return new UserAuthentication(internalId, externalId, givenName, surname, email);
     }
 
-    public String createTokenForUser(ApiUserInfo user) {
+    public String createTokenForUser(UserAuthentication user) {
         return Jwts.builder()
                 .setSubject(user.getInternalId())
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)

@@ -1,6 +1,6 @@
 package de.helfenkannjeder.come2help.server.configuration.security.jwt;
 
-import de.helfenkannjeder.come2help.server.domain.ApiUserInfo;
+import de.helfenkannjeder.come2help.server.domain.UserAuthentication;
 import java.io.IOException;
 import java.util.HashMap;
 import javax.servlet.ServletException;
@@ -21,19 +21,19 @@ public class JwtCreatingAuthenticationSuccessHandler implements AuthenticationSu
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        ApiUserInfo user = getApiUserInfo((HashMap<String, String>) ((OAuth2Authentication) authentication).getUserAuthentication().getDetails());
+        UserAuthentication user = getApiUserInfo((HashMap<String, String>) ((OAuth2Authentication) authentication).getUserAuthentication().getDetails());
         String jwtToken = tokenService.getAuthenticationToken(user);
 
         response.setHeader("Authorization", jwtToken);
         response.setStatus(HttpStatus.OK.value());
     }
 
-    private ApiUserInfo getApiUserInfo(HashMap<String, String> userDetailsMap) {
+    private UserAuthentication getApiUserInfo(HashMap<String, String> userDetailsMap) {
         String id = userDetailsMap.get("id");
         String email = userDetailsMap.get("email");
         String givenName = userDetailsMap.get("first_name");
         String surname = userDetailsMap.get("last_name");
 
-        return new ApiUserInfo(id, givenName, surname, email);
+        return new UserAuthentication(id, givenName, surname, email);
     }
 }

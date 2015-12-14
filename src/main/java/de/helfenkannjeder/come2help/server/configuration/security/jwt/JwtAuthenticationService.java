@@ -1,6 +1,6 @@
 package de.helfenkannjeder.come2help.server.configuration.security.jwt;
 
-import de.helfenkannjeder.come2help.server.domain.ApiUserInfo;
+import de.helfenkannjeder.come2help.server.domain.UserAuthentication;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,7 +17,7 @@ public class JwtAuthenticationService {
         this.tokenHandler = tokenHandler;
     }
 
-    public String getAuthenticationToken(final ApiUserInfo user) {
+    public String getAuthenticationToken(final UserAuthentication user) {
         return tokenHandler.createTokenForUser(user);
     }
 
@@ -26,7 +26,7 @@ public class JwtAuthenticationService {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             final String token = authHeader.substring(7);
-            final ApiUserInfo user = tokenHandler.parseUserFromToken(token);
+            final UserAuthentication user = tokenHandler.parseUserFromToken(token);
             if (user != null) {
                 return user;
             }
