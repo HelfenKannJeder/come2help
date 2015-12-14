@@ -25,7 +25,7 @@ public class JwtCreatingAuthenticationSuccessHandler implements AuthenticationSu
         String jwtToken = tokenService.getAuthenticationToken(user);
 
         response.setHeader("Authorization", jwtToken);
-        response.setStatus(HttpStatus.OK.value());
+        response.setStatus(HttpStatus.NO_CONTENT.value());
     }
 
     private UserAuthentication getApiUserInfo(HashMap<String, String> userDetailsMap) {
