@@ -60,80 +60,90 @@ public class User extends AbstractVersionedAuditable {
         return id;
     }
 
-    public void setId(Long id) {
+    public User setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public boolean isEmailVerified() {
         return emailVerified;
     }
 
-    public void setEmailVerified(boolean emailVerified) {
+    public User setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
+        return this;
     }
 
     public String getGivenName() {
         return givenName;
     }
 
-    public void setGivenName(String givenName) {
+    public User setGivenName(String givenName) {
         this.givenName = givenName;
+        return this;
     }
 
     public String getSurname() {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    public User setSurname(String surname) {
         this.surname = surname;
+        return this;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public User setPhone(String phone) {
         this.phone = phone;
+        return this;
     }
 
     public String getAuthProvider() {
         return authProvider;
     }
 
-    public void setAuthProvider(String authProvider) {
+    public User setAuthProvider(String authProvider) {
         this.authProvider = authProvider;
+        return this;
     }
 
     public String getExternalId() {
         return externalId;
     }
 
-    public void setExternalId(String externalId) {
+    public User setExternalId(String externalId) {
         this.externalId = externalId;
+        return this;
     }
 
     public Address getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public User setAddress(Address address) {
         this.address = address;
+        return this;
     }
 
     public Volunteer getVolunteer() {
         return volunteer;
     }
 
-    public void setVolunteer(Volunteer volunteer) {
+    public User setVolunteer(Volunteer volunteer) {
         this.volunteer = volunteer;
+        return this;
     }
 
     @Override
