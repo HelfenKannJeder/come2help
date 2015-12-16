@@ -17,6 +17,7 @@ import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
@@ -66,6 +67,7 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
     private OAuth2ClientAuthenticationProcessingFilter createSsoFilter(ClientResourceDetails clientDetails, String path) {
         OAuth2ClientAuthenticationProcessingFilter ssoFilter = new OAuth2ClientAuthenticationProcessingFilter(path);
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientDetails.getClient(), oAuth2ClientContext);
+        restTemplate.setAccessTokenProvider(authorizationCodeAccessTokenProvider());
         ssoFilter.setRestTemplate(restTemplate);
         ssoFilter.setTokenServices(new UserInfoTokenServices(clientDetails.getResource().getUserInfoUri(), clientDetails.getClient().getClientId()));
         ssoFilter.setAuthenticationSuccessHandler(facebookSuccessHandler());
@@ -101,4 +103,12 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
     protected AuthenticationSuccessHandler facebookSuccessHandler() {
         return new FacebookSuccessHandler();
     }
+
+    @Bean
+    public AuthorizationCodeAccessTokenProvider authorizationCodeAccessTokenProvider() {
+        AuthorizationCodeAccessTokenProvider authorizationCodeAccessTokenProvider = new AuthorizationCodeAccessTokenProvider();
+        authorizationCodeAccessTokenProvider.setStateMandatory(false);
+        return authorizationCodeAccessTokenProvider;
+    }
+
 }
