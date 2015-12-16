@@ -1,6 +1,7 @@
 package de.helfenkannjeder.come2help.server.configuration.security;
 
 import de.helfenkannjeder.come2help.server.security.jwt.FacebookSuccessHandler;
+import de.helfenkannjeder.come2help.server.security.jwt.GoogleSuccessHandler;
 import de.helfenkannjeder.come2help.server.security.jwt.StatelessJwtAuthenticationFilter;
 import java.util.Arrays;
 import javax.servlet.Filter;
@@ -58,19 +59,19 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
     private Filter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
         filter.setFilters(Arrays.asList(
-                createSsoFilter(facebook(), "/login/facebook"),
-                createSsoFilter(google(), "/login/google"))
+                createSsoFilter(facebook(), facebookSuccessHandler(), "/login/facebook"),
+                createSsoFilter(google(), googleSuccessHandler(), "/login/google"))
         );
         return filter;
     }
 
-    private OAuth2ClientAuthenticationProcessingFilter createSsoFilter(ClientResourceDetails clientDetails, String path) {
+    private OAuth2ClientAuthenticationProcessingFilter createSsoFilter(ClientResourceDetails clientDetails, AuthenticationSuccessHandler successHandler, String path) {
         OAuth2ClientAuthenticationProcessingFilter ssoFilter = new OAuth2ClientAuthenticationProcessingFilter(path);
         OAuth2RestTemplate restTemplate = new OAuth2RestTemplate(clientDetails.getClient(), oAuth2ClientContext);
         restTemplate.setAccessTokenProvider(authorizationCodeAccessTokenProvider());
         ssoFilter.setRestTemplate(restTemplate);
         ssoFilter.setTokenServices(new UserInfoTokenServices(clientDetails.getResource().getUserInfoUri(), clientDetails.getClient().getClientId()));
-        ssoFilter.setAuthenticationSuccessHandler(facebookSuccessHandler());
+        ssoFilter.setAuthenticationSuccessHandler(successHandler);
         return ssoFilter;
     }
 
@@ -105,10 +106,14 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    protected AuthenticationSuccessHandler googleSuccessHandler() {
+        return new GoogleSuccessHandler();
+    }
+
+    @Bean
     public AuthorizationCodeAccessTokenProvider authorizationCodeAccessTokenProvider() {
         AuthorizationCodeAccessTokenProvider authorizationCodeAccessTokenProvider = new AuthorizationCodeAccessTokenProvider();
         authorizationCodeAccessTokenProvider.setStateMandatory(false);
         return authorizationCodeAccessTokenProvider;
     }
-
 }

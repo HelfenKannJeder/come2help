@@ -66,5 +66,4 @@ public abstract class JwtCreatingAuthenticationSuccessHandler implements Authent
     protected abstract String emailField();
 
     protected abstract String idField();
-
 }
