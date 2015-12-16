@@ -42,24 +42,27 @@ public class Volunteer extends AbstractVersionedAuditable {
         return id;
     }
 
-    public void setId(Long id) {
+    public Volunteer setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public Volunteer setUser(User user) {
         this.user = user;
+        return this;
     }
 
     public List<Ability> getAbilities() {
         return abilities;
     }
 
-    public void setAbilities(List<Ability> abilities) {
+    public Volunteer setAbilities(List<Ability> abilities) {
         this.abilities = abilities;
+        return this;
     }
 
     @Override
