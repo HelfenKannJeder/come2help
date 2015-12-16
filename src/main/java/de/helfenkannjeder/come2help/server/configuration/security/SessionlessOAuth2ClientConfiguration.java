@@ -38,7 +38,7 @@ public class SessionlessOAuth2ClientConfiguration {
         private AccessTokenRequest accessTokenRequest;
 
         @Bean
-//        @Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
+        @Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
         public OAuth2ClientContext oauth2ClientContext() {
             return new DefaultOAuth2ClientContext(accessTokenRequest);
         }
