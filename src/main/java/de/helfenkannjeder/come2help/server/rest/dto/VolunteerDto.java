@@ -1,13 +1,14 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
-import de.helfenkannjeder.come2help.server.domain.Ability;
-import de.helfenkannjeder.come2help.server.domain.User;
-import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import de.helfenkannjeder.come2help.server.domain.Ability;
+import de.helfenkannjeder.come2help.server.domain.User;
+import de.helfenkannjeder.come2help.server.domain.Volunteer;
 
 public class VolunteerDto {
 
@@ -18,7 +19,6 @@ public class VolunteerDto {
     private UserDto user;
 
     @Valid
-    @NotNull(message = "not.null")
     private List<AbilityLinkDto> abilities = Collections.emptyList();
 
     public VolunteerDto() {

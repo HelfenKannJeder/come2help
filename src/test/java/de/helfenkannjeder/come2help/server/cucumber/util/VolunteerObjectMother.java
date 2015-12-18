@@ -1,18 +1,14 @@
 package de.helfenkannjeder.come2help.server.cucumber.util;
 
-import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
+import de.helfenkannjeder.come2help.server.domain.Volunteer;
 
 public class VolunteerObjectMother {
 
-    public static VolunteerDto anyValidVolunteer() {
-        return new VolunteerDto()
-                .setGivenName("Max")
-                .setSurname("Muster")
-                .setAdult(true)
-                .setAddress(AdressObjectMother.anyValidAddress());
+    public static Volunteer anyValidVolunteer() {
+        return new Volunteer().setUser(UserObjectMother.anyValidUser());
     }
 
-    public static VolunteerDto anyInvalidVolunteer() {
-        return anyValidVolunteer().setEmail("invalidEmail");
+    public static Volunteer anyInvalidVolunteer() {
+        return anyValidVolunteer().setUser(UserObjectMother.anyInvalidUser());
     }
 }

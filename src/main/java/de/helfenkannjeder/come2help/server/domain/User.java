@@ -36,6 +36,8 @@ public class User extends AbstractVersionedAuditable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", optional = true)
     private Volunteer volunteer;
 
+    //TODO: save adult info?
+
     public User() {
     }
 

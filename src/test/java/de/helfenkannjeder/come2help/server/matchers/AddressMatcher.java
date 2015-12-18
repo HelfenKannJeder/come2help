@@ -1,6 +1,6 @@
 package de.helfenkannjeder.come2help.server.matchers;
 
-import de.helfenkannjeder.come2help.server.rest.dto.AddressDto;
+import de.helfenkannjeder.come2help.server.domain.Address;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -8,7 +8,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import static org.hamcrest.Matchers.equalTo;
 
-public class AddressDtoMatcher extends TypeSafeDiagnosingMatcher<AddressDto> {
+public class AddressMatcher extends TypeSafeDiagnosingMatcher<Address> {
 
     private Matcher<? super String> zipCode = Matchers.anything();
 
@@ -18,39 +18,39 @@ public class AddressDtoMatcher extends TypeSafeDiagnosingMatcher<AddressDto> {
 
     private Matcher<? super String> streetNumber = Matchers.anything();
 
-    public static AddressDtoMatcher matchesAddressDto() {
-        return new AddressDtoMatcher();
+    public static AddressMatcher matchesAddress() {
+        return new AddressMatcher();
     }
 
-    public static AddressDtoMatcher matchesAddressDto(AddressDto addressDto) {
-        return new AddressDtoMatcher().withZipCode(addressDto.getZipCode())
-                .withCity(addressDto.getCity())
-                .withStreet(addressDto.getStreet())
-                .withStreetNumber(addressDto.getStreetNumber());
+    public static AddressMatcher matchesAddress(Address address) {
+        return new AddressMatcher().withZipCode(address.getZipCode())
+                .withCity(address.getCity())
+                .withStreet(address.getStreet())
+                .withStreetNumber(address.getStreetNumber());
     }
 
-    public AddressDtoMatcher withZipCode(String zipCode) {
+    public AddressMatcher withZipCode(String zipCode) {
         this.zipCode = equalTo(zipCode);
         return this;
     }
 
-    public AddressDtoMatcher withCity(String city) {
+    public AddressMatcher withCity(String city) {
         this.city = equalTo(city);
         return this;
     }
 
-    public AddressDtoMatcher withStreet(String street) {
+    public AddressMatcher withStreet(String street) {
         this.street = equalTo(street);
         return this;
     }
 
-    public AddressDtoMatcher withStreetNumber(String streetNumber) {
+    public AddressMatcher withStreetNumber(String streetNumber) {
         this.streetNumber = equalTo(streetNumber);
         return this;
     }
 
     @Override
-    protected boolean matchesSafely(AddressDto item, final Description mismatchDescription) {
+    protected boolean matchesSafely(Address item, final Description mismatchDescription) {
         boolean matches = true;
         mismatchDescription.appendText("was AddressDto");
 

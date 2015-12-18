@@ -23,13 +23,6 @@ public class Address {
     public Address() {
     }
 
-    /**
-     *
-     * @param zipCode
-     * @param city
-     * @param street
-     * @param streetNumber
-     */
     public Address(String zipCode, String city, String street, String streetNumber) {
         this.zipCode = zipCode;
         this.city = city;
@@ -48,40 +41,45 @@ public class Address {
         return street;
     }
 
-    public void setStreet(String street) {
+    public Address setStreet(String street) {
         this.street = street;
+        return this;
     }
 
     public String getStreetNumber() {
         return streetNumber;
     }
 
-    public void setStreetNumber(String streetNumber) {
+    public Address setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
+        return this;
     }
 
     public String getZipCode() {
         return zipCode;
     }
 
-    public void setZipCode(String zipCode) {
+    public Address setZipCode(String zipCode) {
         this.zipCode = zipCode;
+        return this;
     }
 
     public String getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public Address setCity(String city) {
         this.city = city;
+        return this;
     }
 
     public Coordinate getCoordinate() {
         return coordinate;
     }
 
-    public void setCoordinate(Coordinate coordinate) {
+    public Address setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
+        return this;
     }
 
     public void updateCoordinates() {
