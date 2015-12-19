@@ -17,7 +17,7 @@ public class AbilityDtoMatcher extends TypeSafeDiagnosingMatcher<AbilityDto> {
 
     private Matcher<? super String> description = Matchers.anything();
 
-    private Matcher<? super Ability> parentAbility = Matchers.anything();
+    private Matcher<? super Long> parentAbilityId = Matchers.anything();
 
     private Matcher<? super Boolean> isSelectable = Matchers.anything();
 
@@ -31,7 +31,7 @@ public class AbilityDtoMatcher extends TypeSafeDiagnosingMatcher<AbilityDto> {
         return new AbilityDtoMatcher().withId(abilityDto.getId())
                 .withName(abilityDto.getName())
                 .withDescription(abilityDto.getDescription())
-                .withParentAbility(abilityDto.getParentAbility())
+                .withParentAbilityId(abilityDto.getParentAbilityId())
                 .withIsSelectable(abilityDto.isSelectable())
                 .withIsCategory(abilityDto.isCategory());
     }
@@ -51,8 +51,8 @@ public class AbilityDtoMatcher extends TypeSafeDiagnosingMatcher<AbilityDto> {
         return this;
     }
 
-    public AbilityDtoMatcher withParentAbility(Ability parentAbility) {
-        this.parentAbility = equalTo(parentAbility);
+    public AbilityDtoMatcher withParentAbilityId(Long parentAbilityId) {
+        this.parentAbilityId = equalTo(parentAbilityId);
         return this;
     }
 
@@ -93,7 +93,7 @@ public class AbilityDtoMatcher extends TypeSafeDiagnosingMatcher<AbilityDto> {
                 .appendText(", with id=").appendDescriptionOf(id)
                 .appendText(", with name=").appendDescriptionOf(name)
                 .appendText(", with description=").appendDescriptionOf(description)
-                .appendText(", with parentAbility=").appendDescriptionOf(parentAbility)
+                .appendText(", with parentAbility=").appendDescriptionOf(parentAbilityId)
                 .appendText(", with isSelectable=").appendDescriptionOf(isSelectable)
                 .appendText(", with isCategory=").appendDescriptionOf(isCategory);
     }

@@ -19,11 +19,14 @@ public class AbilityDtoTest {
         assertEquals(ability.getId(), dto.getId());
         assertEquals(ability.getName(), dto.getName());
         assertEquals(ability.getDescription(), dto.getDescription());
+        assertEquals(ability.getParentAbilityId(), dto.getParentAbilityId());
+        assertEquals(ability.isCategory(), dto.isCategory());
+        assertEquals(ability.isSelectable(), dto.isSelectable());
     }
 
     @Test
     public void testAddressDtoToAddress() {
-        AbilityDto dto = new AbilityDto(1234L, "name", "description", new Ability(2L, "test", "desc", null, true, true), true, true);
+        AbilityDto dto = new AbilityDto(1234L, "name", "description", null, true, true);
         Ability ability = AbilityDto.createAbility(dto);
 
         assertEqual(dto, ability);
@@ -33,5 +36,9 @@ public class AbilityDtoTest {
         assertEquals(dto.getId(), ability.getId());
         assertEquals(dto.getName(), ability.getName());
         assertEquals(dto.getDescription(), ability.getDescription());
+        assertEquals(dto.getParentAbilityId(), ability.getParentAbilityId());
+        assertEquals(dto.isCategory(), ability.isCategory());
+        assertEquals(dto.isSelectable(), ability.isSelectable());
+
     }
 }

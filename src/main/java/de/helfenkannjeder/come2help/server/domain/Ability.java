@@ -3,6 +3,7 @@ package de.helfenkannjeder.come2help.server.domain;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -29,7 +30,7 @@ public class Ability extends AbstractVersionedAuditable {
     @JoinColumn(name = "PARENT_ABILITY_ID")
     private Ability parentAbility;
 
-    @OneToMany(mappedBy = "parentAbility")
+    @OneToMany(mappedBy = "parentAbility", cascade = CascadeType.ALL)
     private List<Ability> childAbilities = Collections.emptyList();
 
     private boolean isSelectable = true;
@@ -91,6 +92,13 @@ public class Ability extends AbstractVersionedAuditable {
 
     public Ability getParentAbility() {
         return parentAbility;
+    }
+
+    public Long getParentAbilityId() {
+        if (parentAbility != null) {
+            return parentAbility.getId();
+        }
+        return null;
     }
 
     public void setParentAbility(Ability parentAbility) {
