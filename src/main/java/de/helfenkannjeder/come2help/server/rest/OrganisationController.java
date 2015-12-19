@@ -19,6 +19,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/organisations")
 @Transactional
+@ApiErrors(apierrors = @ApiError(code = "500", description = "Internal Server Error"))
 public class OrganisationController {
 
     private final OrganisationService organisationService;
@@ -31,23 +32,18 @@ public class OrganisationController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public Organisation getOrganisationById(@PathVariable(value = "id") Long id) {
-        Organisation organisation = organisationService.findById(id);
-        return organisation;
+        return organisationService.findById(id);
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public Organisation createOrganisation(@Valid @RequestBody Organisation organisation) {
-        Organisation createdOrganisation = organisationService.createOrganisation(organisation);
-
-        return createdOrganisation;
+        return organisationService.createOrganisation(organisation);
     }
 
     @RequestMapping(method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public Organisation updateOrganisation(@Valid @RequestBody Organisation organisation) {
-        Organisation updatedOrganisation = organisationService.updateOrganisation(organisation);
-
-        return updatedOrganisation;
+        return organisationService.updateOrganisation(organisation);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/abilities")
 @Transactional
+@ApiErrors(apierrors = @ApiError(code = "500", description = "Internal Server Error"))
 public class AbilitiesController {
 
     private final AbilitiesService abilitiesService;
@@ -31,7 +32,7 @@ public class AbilitiesController {
     @ResponseStatus(HttpStatus.OK)
     public List<AbilityDto> getAbilities() {
         List<Ability> abilities = abilitiesService.findAll();
-        return abilities.stream().map(v -> AbilityDto.createFullDto(v)).collect(Collectors.toList());
+        return abilities.stream().map(AbilityDto::createFullDto).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.POST)
