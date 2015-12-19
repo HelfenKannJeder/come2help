@@ -38,7 +38,6 @@ public class VolunteersController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ApiErrors(apierrors = {@ApiError(code = "500", description = "Internal Server Error")})
     public List<VolunteerDto> getVolunteers(@RequestParam(value = "latitude") @NotNull Double latitude, @RequestParam(value = "longitude") @NotNull Double longitude, @RequestParam(value = "distance") @NotNull Double distance) {
         List<Volunteer> volunteers = volunteersService.findAllInDistance(new Coordinate(latitude, longitude), distance);
         return volunteers.stream().map(VolunteerDto::createFullDto).collect(Collectors.toList());
@@ -46,7 +45,6 @@ public class VolunteersController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiErrors(apierrors = {@ApiError(code = "400", description = "Bad Request"), @ApiError(code = "500", description = "Internal Server Error")})
     public VolunteerResponseDto createVolunteer(@Valid @RequestBody VolunteerDto volunteerDto) {
         Volunteer volunteer = VolunteerDto.createVolunteer(volunteerDto);
         Volunteer createdVolunteer = volunteersService.createVolunteer(volunteer);
@@ -55,7 +53,6 @@ public class VolunteersController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ApiErrors(apierrors = @ApiError(code = "500", description = "Internal Server Error"))
     public VolunteerResponseDto getVolunteerById(@PathVariable(value="id") Long id) {
         Volunteer volunteer = volunteersService.findById(id);
         return VolunteerResponseDto.createFullDto(volunteer);
@@ -63,7 +60,6 @@ public class VolunteersController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    @ApiErrors(apierrors = {@ApiError(code = "400", description = "Bad Request"), @ApiError(code = "500", description = "Internal Server Error")})
     public VolunteerResponseDto updateVolunteer(@NotNull @PathVariable(value="id") Long id, @Valid @RequestBody VolunteerDto volunteerDto) {
         volunteerDto.setId(id);
         Volunteer volunteer = VolunteerDto.createVolunteer(volunteerDto);
@@ -73,7 +69,6 @@ public class VolunteersController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiErrors(apierrors = {@ApiError(code = "500", description = "Internal Server Error")})
     public void deleteVolunteer(@NotNull @PathVariable(value="id") Long id) {
         volunteersService.deleteVolunteer(id);
     }

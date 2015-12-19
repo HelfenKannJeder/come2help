@@ -36,7 +36,6 @@ public class AbilitiesController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    @ApiErrors(apierrors = {@ApiError(code = "400", description = "Bad Request"), @ApiError(code = "500", description = "Internal Server Error")})
     public AbilityDto createAbility(@Valid @RequestBody AbilityDto abilityDto) {
         Ability ability = AbilityDto.createAbility(abilityDto);
         Ability createdAbility = abilitiesService.createAbility(ability);
@@ -45,7 +44,6 @@ public class AbilitiesController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    @ApiErrors(apierrors = {@ApiError(code = "500", description = "Internal Server Error")})
     public AbilityDto getAbilityById(@PathVariable(value = "id") Long id) {
         Ability ability = abilitiesService.findById(id);
         return AbilityDto.createFullDto(ability);
@@ -62,7 +60,6 @@ public class AbilitiesController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiErrors(apierrors = {@ApiError(code = "500", description = "Internal Server Error")})
     public void deleteAbility(@NotNull @PathVariable(value = "id") Long id) {
         abilitiesService.deleteAbility(id);
     }
