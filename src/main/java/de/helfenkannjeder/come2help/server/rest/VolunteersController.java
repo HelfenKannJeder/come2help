@@ -35,7 +35,7 @@ public class VolunteersController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<VolunteerDto> getVolunteers(@RequestParam @NotNull Double latitude, @RequestParam @NotNull Double longitude, @RequestParam @NotNull Double distance) {
+    public List<VolunteerDto> getVolunteers(@RequestParam(value = "latitude") @NotNull Double latitude, @RequestParam(value = "longitude") @NotNull Double longitude, @RequestParam(value = "distance") @NotNull Double distance) {
         List<Volunteer> volunteers = volunteersService.findAllInDistance(new Coordinate(latitude, longitude), distance);
         return volunteers.stream().map(VolunteerDto::createFullDto).collect(Collectors.toList());
     }
@@ -50,14 +50,14 @@ public class VolunteersController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public VolunteerResponseDto getVolunteerById(@PathVariable Long id) {
+    public VolunteerResponseDto getVolunteerById(@PathVariable(value="id") Long id) {
         Volunteer volunteer = volunteersService.findById(id);
         return VolunteerResponseDto.createFullDto(volunteer);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public VolunteerResponseDto updateVolunteer(@NotNull @PathVariable Long id, @Valid @RequestBody VolunteerDto volunteerDto) {
+    public VolunteerResponseDto updateVolunteer(@NotNull @PathVariable(value="id") Long id, @Valid @RequestBody VolunteerDto volunteerDto) {
         volunteerDto.setId(id);
         Volunteer volunteer = VolunteerDto.createVolunteer(volunteerDto);
         Volunteer updatedVolunteer = volunteersService.updateVolunteer(volunteer);
@@ -66,7 +66,7 @@ public class VolunteersController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteVolunteer(@NotNull @PathVariable Long id) {
+    public void deleteVolunteer(@NotNull @PathVariable(value="id") Long id) {
         volunteersService.deleteVolunteer(id);
     }
 }
