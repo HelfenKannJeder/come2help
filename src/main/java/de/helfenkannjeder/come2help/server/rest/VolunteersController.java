@@ -11,8 +11,6 @@ import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerResponseDto;
 import de.helfenkannjeder.come2help.server.service.VolunteersService;
-import org.jsondoc.core.annotation.ApiError;
-import org.jsondoc.core.annotation.ApiErrors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/volunteers")
 @Transactional
-@ApiErrors(apierrors = @ApiError(code = "500", description = "Internal Server Error"))
 public class VolunteersController {
 
     private final VolunteersService volunteersService;

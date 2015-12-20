@@ -1,24 +1,26 @@
 package de.helfenkannjeder.come2help.server.rest;
 
-import de.helfenkannjeder.come2help.server.domain.Ability;
-import de.helfenkannjeder.come2help.server.rest.dto.AbilityDto;
-import de.helfenkannjeder.come2help.server.service.AbilitiesService;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.jsondoc.core.annotation.ApiError;
-import org.jsondoc.core.annotation.ApiErrors;
+import de.helfenkannjeder.come2help.server.domain.Ability;
+import de.helfenkannjeder.come2help.server.rest.dto.AbilityDto;
+import de.helfenkannjeder.come2help.server.service.AbilitiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/abilities")
 @Transactional
-@ApiErrors(apierrors = @ApiError(code = "500", description = "Internal Server Error"))
 public class AbilitiesController {
 
     private final AbilitiesService abilitiesService;
