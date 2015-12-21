@@ -42,8 +42,8 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .csrf().disable().headers().frameOptions().disable().and()
                 .antMatcher("/**").authorizeRequests()
-                /**/.antMatchers("/abilities", "/login/**").permitAll()
-                /**/.anyRequest().authenticated().and()
+                .antMatchers("/abilities", "/login/**", "/jsondoc/**", "/jsondoc-ui.html", "/webjars/jsondoc-ui-webjar/**").permitAll()
+                .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and();
 
         httpSecurity.addFilterBefore(statelessJwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
