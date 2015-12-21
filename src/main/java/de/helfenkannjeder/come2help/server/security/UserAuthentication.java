@@ -1,11 +1,14 @@
 package de.helfenkannjeder.come2help.server.security;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class UserAuthentication implements Authentication {
 
@@ -20,21 +23,18 @@ public class UserAuthentication implements Authentication {
     public UserAuthentication() {
     }
 
-    public UserAuthentication(Long internalId, String authProvider, String externalId, String givenName, String surname, String email) {
+    public UserAuthentication(Long internalId, String authProvider, String externalId, String givenName, String surname, String email, List<String> grantedAuthorities) {
         this.internalId = internalId;
         this.authProvider = authProvider;
         this.externalId = externalId;
         this.givenName = givenName;
         this.surname = surname;
         this.email = email;
+        this.grantedAuthorities = grantedAuthorities.stream().map(a -> new SimpleGrantedAuthority(a)).collect(Collectors.toList());
     }
 
-    public UserAuthentication(String authProvider, String externalId, String givenName, String surname, String email) {
-        this.authProvider = authProvider;
-        this.externalId = externalId;
-        this.givenName = givenName;
-        this.surname = surname;
-        this.email = email;
+    public UserAuthentication(String authProvider, String externalId, String givenName, String surname, String email, String... authorities) {
+        this(null, authProvider, externalId, givenName, surname, email, Arrays.asList(authorities));
     }
 
     @Override
@@ -118,14 +118,6 @@ public class UserAuthentication implements Authentication {
 
     public void setAuthProvider(String authProvider) {
         this.authProvider = authProvider;
-    }
-
-    public List<GrantedAuthority> getGrantedAuthorities() {
-        return grantedAuthorities;
-    }
-
-    public void setGrantedAuthorities(List<GrantedAuthority> grantedAuthorities) {
-        this.grantedAuthorities = grantedAuthorities;
     }
 
     @Override

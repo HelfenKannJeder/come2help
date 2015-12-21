@@ -1,5 +1,8 @@
 package de.helfenkannjeder.come2help.server.domain;
 
+import de.helfenkannjeder.come2help.server.security.Authorities;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -37,7 +40,6 @@ public class User extends AbstractVersionedAuditable {
     private Volunteer volunteer;
 
     //TODO: save adult info?
-
     public User() {
     }
 
@@ -151,5 +153,16 @@ public class User extends AbstractVersionedAuditable {
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", authProvider=" + authProvider + ", externalId=" + externalId + ", email=" + email + ", emailVerified=" + emailVerified + ", givenName=" + givenName + ", surname=" + surname + ", phone=" + phone + ", address=" + address + ", volunteer=" + volunteer + '}';
+    }
+
+    public List<String> getGrantedAuthorities() {
+        LinkedList<String> authorities = new LinkedList<>();
+        authorities.add(Authorities.GUEST);
+
+        if (this.volunteer != null) {
+            authorities.add(Authorities.VOLUNTEER);
+        }
+
+        return authorities;
     }
 }
