@@ -9,8 +9,9 @@ import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public class UserAuthentication implements Authentication {
+public class UserAuthentication implements Authentication, UserDetails {
 
     private Long internalId;
     private String authProvider;
@@ -23,6 +24,10 @@ public class UserAuthentication implements Authentication {
     public UserAuthentication() {
     }
 
+    public UserAuthentication(String grantedAuthority) {
+        this.grantedAuthorities.add(new SimpleGrantedAuthority(grantedAuthority));
+    }
+
     public UserAuthentication(Long internalId, String authProvider, String externalId, String givenName, String surname, String email, List<String> grantedAuthorities) {
         this.internalId = internalId;
         this.authProvider = authProvider;
@@ -30,7 +35,7 @@ public class UserAuthentication implements Authentication {
         this.givenName = givenName;
         this.surname = surname;
         this.email = email;
-        this.grantedAuthorities = grantedAuthorities.stream().map(a -> new SimpleGrantedAuthority(a)).collect(Collectors.toList());
+        this.grantedAuthorities = grantedAuthorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     public UserAuthentication(String authProvider, String externalId, String givenName, String surname, String email, String... authorities) {
@@ -48,13 +53,13 @@ public class UserAuthentication implements Authentication {
     }
 
     @Override
-    public Object getDetails() {
-        return null;
+    public UserDetails getDetails() {
+        return this;
     }
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return this;
     }
 
     @Override
@@ -166,4 +171,33 @@ public class UserAuthentication implements Authentication {
         return "UserAuthentication{" + "internalId=" + internalId + ", externalId=" + externalId + ", givenName=" + givenName + ", surname=" + surname + ", email=" + email + '}';
     }
 
+    @Override
+    public String getPassword() {
+        return "N/A";
+    }
+
+    @Override
+    public String getUsername() {
+        return this.getName();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

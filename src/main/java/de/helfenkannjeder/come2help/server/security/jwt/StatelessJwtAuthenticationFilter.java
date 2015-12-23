@@ -1,6 +1,8 @@
 package de.helfenkannjeder.come2help.server.security.jwt;
 
 import de.helfenkannjeder.come2help.server.rest.exceptionhandling.RestExceptionResolver;
+import de.helfenkannjeder.come2help.server.security.Authorities;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -32,6 +34,9 @@ public class StatelessJwtAuthenticationFilter extends GenericFilterBean {
         try {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             Authentication authentication = authenticationService.getAuthentication(httpRequest);
+            if (authentication == null) {
+                authentication = new UserAuthentication(Authorities.ANONYMOUS);
+            }
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
 

@@ -42,7 +42,8 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .csrf().disable().headers().frameOptions().disable().and()
                 .antMatcher("/**").authorizeRequests()
-                /**/.antMatchers("/abilities", "/login/**").permitAll()
+                /**/.antMatchers("/login/**").permitAll()
+                /**/.antMatchers("/abilities/**").permitAll()
                 /**/.anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and();
 

@@ -27,9 +27,8 @@ public class JwtAuthenticationService {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             final String token = authHeader.substring(7);
             final UserAuthentication user = tokenHandler.parseUserFromToken(token);
-            if (user != null) {
-                return user;
-            }
+
+            return user;
         }
         return null;
     }

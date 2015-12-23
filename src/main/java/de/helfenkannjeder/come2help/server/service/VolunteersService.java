@@ -6,6 +6,7 @@ import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.domain.repository.AbilityRepository;
 import de.helfenkannjeder.come2help.server.domain.repository.VolunteerRepository;
 import de.helfenkannjeder.come2help.server.security.AuthenticationFacade;
+import de.helfenkannjeder.come2help.server.security.Authorities;
 import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
@@ -13,6 +14,7 @@ import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundExc
 import de.helfenkannjeder.come2help.server.util.DistanceCalculator;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,16 +35,14 @@ public class VolunteersService {
         this.userService = userService;
     }
 
-    public List<Volunteer> findAll() {
-        return volunteerRepository.findAll();
-    }
-
+    @RolesAllowed(Authorities.ORGANISATION_ADMIN)
     public List<Volunteer> findAllInDistance(final Coordinate coordinate, Double distance) {
-        List<Volunteer> all = findAll();
+        List<Volunteer> all = volunteerRepository.findAll();
 
         return all.parallelStream().filter(v -> DistanceCalculator.getDistanceFor(v.getUser().getAddress().getCoordinate(), coordinate) <= distance).collect(Collectors.toList());
     }
 
+    @RolesAllowed(Authorities.ORGANISATION_ADMIN)
     public Volunteer findById(Long id) {
         Volunteer volunteer = volunteerRepository.findOne(id);
         if (volunteer == null) {
@@ -51,6 +51,7 @@ public class VolunteersService {
         return volunteer;
     }
 
+    @RolesAllowed(Authorities.ANONYMOUS)
     public Volunteer createVolunteer(Volunteer volunteer) {
         if (volunteer == null) {
             throw InvalidDataException.forSingleError("volunteer.not.null", null);
@@ -87,6 +88,7 @@ public class VolunteersService {
         return volunteerRepository.save(volunteer);
     }
 
+    @RolesAllowed(Authorities.VOLUNTEER)
     public Volunteer updateVolunteer(Volunteer volunteer) {
         if (volunteer == null) {
             throw InvalidDataException.forSingleError("volunteer.not.null", null);
@@ -105,6 +107,7 @@ public class VolunteersService {
         return volunteerRepository.save(dbVolunteer);
     }
 
+    @RolesAllowed(Authorities.VOLUNTEER)
     public void deleteVolunteer(Long id) {
         if (id == null) {
             throw InvalidDataException.forSingleError("volunteer.id.not.null", null);

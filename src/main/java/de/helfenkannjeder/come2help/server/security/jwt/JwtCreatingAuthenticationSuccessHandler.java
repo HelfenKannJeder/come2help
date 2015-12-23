@@ -51,7 +51,7 @@ public abstract class JwtCreatingAuthenticationSuccessHandler implements Authent
         String givenName = userDetailsMap.get(givenNameField());
         String surname = userDetailsMap.get(surnameField());
 
-        return new UserAuthentication(providerIdentifier(), externalId, givenName, surname, email, Authorities.GUEST);
+        return new UserAuthentication(providerIdentifier(), externalId, givenName, surname, email, Authorities.ANONYMOUS, Authorities.GUEST);
     }
 
     private UserAuthentication getUserAuthentication(User user) {
