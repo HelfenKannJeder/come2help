@@ -51,7 +51,7 @@ public class VolunteersService {
         return volunteer;
     }
 
-    @RolesAllowed(Authorities.ANONYMOUS)
+    @RolesAllowed(Authorities.GUEST)
     public Volunteer createVolunteer(Volunteer volunteer) {
         if (volunteer == null) {
             throw InvalidDataException.forSingleError("volunteer.not.null", null);

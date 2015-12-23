@@ -157,8 +157,7 @@ public class User extends AbstractVersionedAuditable {
 
     public List<String> getGrantedAuthorities() {
         LinkedList<String> authorities = new LinkedList<>();
-        authorities.add(Authorities.ANONYMOUS);
-        authorities.add(Authorities.GUEST);
+        authorities.add(Authorities.USER);
 
         if (this.volunteer != null) {
             authorities.add(Authorities.VOLUNTEER);

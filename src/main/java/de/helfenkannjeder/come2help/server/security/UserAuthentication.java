@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -24,8 +25,10 @@ public class UserAuthentication implements Authentication, UserDetails {
     public UserAuthentication() {
     }
 
-    public UserAuthentication(String grantedAuthority) {
-        this.grantedAuthorities.add(new SimpleGrantedAuthority(grantedAuthority));
+    public static UserAuthentication createDummyAuthentication(String... grantedAuthorities) {
+        UserAuthentication user = new UserAuthentication();
+        user.grantedAuthorities = AuthorityUtils.createAuthorityList(grantedAuthorities);
+        return user;
     }
 
     public UserAuthentication(Long internalId, String authProvider, String externalId, String givenName, String surname, String email, List<String> grantedAuthorities) {

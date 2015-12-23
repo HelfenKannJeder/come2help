@@ -20,12 +20,12 @@ public class AbilitiesService {
         this.abilityRepository = abilityRepository;
     }
 
-    @RolesAllowed(Authorities.ANONYMOUS)
+    @RolesAllowed(Authorities.USER)
     public List<Ability> findAll() {
         return abilityRepository.findAll();
     }
 
-    @RolesAllowed(Authorities.ANONYMOUS)
+    @RolesAllowed(Authorities.USER)
     public Ability findById(Long id) {
         Ability ability = abilityRepository.findOne(id);
         if (ability == null) {

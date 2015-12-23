@@ -35,13 +35,15 @@ public class StatelessJwtAuthenticationFilter extends GenericFilterBean {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             Authentication authentication = authenticationService.getAuthentication(httpRequest);
             if (authentication == null) {
-                authentication = new UserAuthentication(Authorities.ANONYMOUS);
+                authentication = UserAuthentication.createDummyAuthentication(Authorities.GUEST, Authorities.USER);
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
 
-        } catch (ExpiredJwtException | SignatureException | MalformedJwtException ex) {
+        } catch (ExpiredJwtException | SignatureException ex) {
             exceptionResolver.resolveException(ex, HttpStatus.UNAUTHORIZED, (HttpServletResponse) response);
+        } catch (MalformedJwtException ex) {
+            exceptionResolver.resolveException(ex, HttpStatus.BAD_REQUEST, (HttpServletResponse) response);
         }
     }
 }
