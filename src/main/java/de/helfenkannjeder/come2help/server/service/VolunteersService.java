@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -100,6 +101,10 @@ public class VolunteersService {
         Volunteer dbVolunteer = findById(volunteer.getId());
         if (dbVolunteer == null) {
             throw new ResourceNotFoundException(volunteer.getId());
+        }
+        UserAuthentication authentication = authenticationFacade.getAuthentication();
+        if (authentication.getInternalId() == null || !authentication.getInternalId().equals(dbVolunteer.getUser().getId())) {
+            throw new AccessDeniedException("no access to this volunteer");
         }
 
         loadAbilities(volunteer);

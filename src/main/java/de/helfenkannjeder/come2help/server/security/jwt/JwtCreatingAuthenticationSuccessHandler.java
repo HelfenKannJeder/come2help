@@ -32,7 +32,7 @@ public abstract class JwtCreatingAuthenticationSuccessHandler implements Authent
         if (dbUser == null) {
             user = getUserAuthentication(userDetailsMap);
         } else {
-            user = getUserAuthentication(dbUser);
+            user = dbUser.createUserAuthentication();
         }
 
         String jwtToken = tokenService.getAuthenticationToken(user);
@@ -52,10 +52,6 @@ public abstract class JwtCreatingAuthenticationSuccessHandler implements Authent
         String surname = userDetailsMap.get(surnameField());
 
         return new UserAuthentication(providerIdentifier(), externalId, givenName, surname, email, Authorities.USER, Authorities.GUEST);
-    }
-
-    private UserAuthentication getUserAuthentication(User user) {
-        return new UserAuthentication(user.getId(), user.getAuthProvider(), user.getExternalId(), user.getGivenName(), user.getSurname(), user.getEmail(), user.getGrantedAuthorities());
     }
 
     protected abstract String providerIdentifier();

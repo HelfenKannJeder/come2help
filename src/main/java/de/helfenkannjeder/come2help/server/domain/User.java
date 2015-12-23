@@ -1,6 +1,7 @@
 package de.helfenkannjeder.come2help.server.domain;
 
 import de.helfenkannjeder.come2help.server.security.Authorities;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
 import java.util.LinkedList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -57,7 +58,6 @@ public class User extends AbstractVersionedAuditable {
         this.surname = user.getSurname();
         this.phone = user.getPhone();
         this.address = user.getAddress();
-        this.volunteer = user.getVolunteer();
     }
 
     public Long getId() {
@@ -164,5 +164,9 @@ public class User extends AbstractVersionedAuditable {
         }
 
         return authorities;
+    }
+
+    public UserAuthentication createUserAuthentication() {
+        return new UserAuthentication(getId(), getAuthProvider(), getExternalId(), getGivenName(), getSurname(), getEmail(), getGrantedAuthorities());
     }
 }

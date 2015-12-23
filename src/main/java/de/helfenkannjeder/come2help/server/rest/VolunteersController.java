@@ -4,9 +4,11 @@ import de.helfenkannjeder.come2help.server.domain.Coordinate;
 import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerResponseDto;
+import de.helfenkannjeder.come2help.server.security.jwt.JwtAuthenticationService;
 import de.helfenkannjeder.come2help.server.service.VolunteersService;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -26,10 +28,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class VolunteersController {
 
     private final VolunteersService volunteersService;
+    private final JwtAuthenticationService jwtAuthenticationService;
 
     @Autowired
-    public VolunteersController(VolunteersService volunteersService) {
+    public VolunteersController(VolunteersService volunteersService, JwtAuthenticationService jwtAuthenticationService) {
         this.volunteersService = volunteersService;
+        this.jwtAuthenticationService = jwtAuthenticationService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -41,9 +45,10 @@ public class VolunteersController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public VolunteerResponseDto createVolunteer(@Valid @RequestBody VolunteerDto volunteerDto) {
+    public VolunteerResponseDto createVolunteer(@Valid @RequestBody VolunteerDto volunteerDto, HttpServletResponse response) {
         Volunteer volunteer = VolunteerDto.createVolunteer(volunteerDto);
         Volunteer createdVolunteer = volunteersService.createVolunteer(volunteer);
+        jwtAuthenticationService.addTokenHeaderForUser(response, createdVolunteer.getUser());
         return VolunteerResponseDto.createFullDto(createdVolunteer);
     }
 
@@ -56,10 +61,11 @@ public class VolunteersController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public VolunteerResponseDto updateVolunteer(@NotNull @PathVariable Long id, @Valid @RequestBody VolunteerDto volunteerDto) {
+    public VolunteerResponseDto updateVolunteer(@NotNull @PathVariable Long id, @Valid @RequestBody VolunteerDto volunteerDto, HttpServletResponse response) {
         volunteerDto.setId(id);
         Volunteer volunteer = VolunteerDto.createVolunteer(volunteerDto);
         Volunteer updatedVolunteer = volunteersService.updateVolunteer(volunteer);
+        jwtAuthenticationService.addTokenHeaderForUser(response, updatedVolunteer.getUser());
         return VolunteerResponseDto.createFullDto(updatedVolunteer);
     }
 
