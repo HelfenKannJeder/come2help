@@ -1,16 +1,16 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
+import de.helfenkannjeder.come2help.server.domain.Address;
+import de.helfenkannjeder.come2help.server.domain.User;
 import javax.validation.Valid;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
-
-import de.helfenkannjeder.come2help.server.domain.Address;
-import de.helfenkannjeder.come2help.server.domain.User;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 public class UserDto {
 
+    @NotEmpty(message = "not.empty")
     @Email(message = "not.invalid")
     private String email;
 
