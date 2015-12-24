@@ -56,7 +56,7 @@ public class User extends AbstractVersionedAuditable {
         this.givenName = givenName;
         this.surname = surname;
         this.phone = phone;
-        this.address = address;
+        setAddress(address);
     }
 
     public void update(User user) {
@@ -64,7 +64,7 @@ public class User extends AbstractVersionedAuditable {
         this.givenName = user.getGivenName();
         this.surname = user.getSurname();
         this.phone = user.getPhone();
-        this.address = user.getAddress();
+        setAddress(user.getAddress());
     }
 
     public Long getId() {
@@ -145,6 +145,9 @@ public class User extends AbstractVersionedAuditable {
 
     public User setAddress(Address address) {
         this.address = address;
+        if (address != null) {
+            address.updateCoordinates();
+        }
         return this;
     }
 
