@@ -2,7 +2,6 @@ package de.helfenkannjeder.come2help.server.rest.dto;
 
 import de.helfenkannjeder.come2help.server.domain.Ability;
 import de.helfenkannjeder.come2help.server.domain.repository.AbilityRepository;
-import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,7 +18,7 @@ public class AbilityDto {
 
     private String description;
 
-    private Long parentAbilityId;
+    private Ability parentAbility;
 
     private boolean isSelectable = true;
 
@@ -28,28 +27,21 @@ public class AbilityDto {
     public AbilityDto() {
     }
 
-    public AbilityDto(Long id, String name, String description, Long parentAbilityId, boolean isSelectable, boolean isCategory) {
+    public AbilityDto(Long id, String name, String description, Ability parentAbility, boolean isSelectable, boolean isCategory) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.parentAbilityId = parentAbilityId;
+        this.parentAbility = parentAbility;
         this.isSelectable = isSelectable;
         this.isCategory = isCategory;
     }
 
     public static AbilityDto createFullDto(Ability ability) {
-        return new AbilityDto(ability.getId(), ability.getName(), ability.getDescription(), ability.getParentAbilityId(), ability.isSelectable(), ability.isCategory());
+        return new AbilityDto(ability.getId(), ability.getName(), ability.getDescription(), ability.getParentAbility(), ability.isSelectable(), ability.isCategory());
     }
 
     public static Ability createAbility(AbilityDto dto) {
-        Ability parentAbility = null;
-        if (dto.getParentAbilityId() != null) {
-            parentAbility = abilityRepository.findOne(dto.getParentAbilityId());
-            if (parentAbility == null) {
-                throw new ResourceNotFoundException(dto.getParentAbilityId());
-            }
-        }
-        return new Ability(dto.id, dto.name, dto.description, parentAbility, dto.isSelectable, dto.isCategory); //TODO match parent
+        return new Ability(dto.id, dto.name, dto.description, dto.getParentAbility(), dto.isSelectable, dto.isCategory);
     }
 
     public Long getId() {
@@ -79,12 +71,12 @@ public class AbilityDto {
         return this;
     }
 
-    public Long getParentAbilityId() {
-        return parentAbilityId;
+    public Ability getParentAbility() {
+        return parentAbility;
     }
 
-    public AbilityDto setParentAbilityId(Long parentAbilityId) {
-        this.parentAbilityId = parentAbilityId;
+    public AbilityDto setParentAbility(Ability parentAbility) {
+        this.parentAbility = parentAbility;
         return this;
     }
 

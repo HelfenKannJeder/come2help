@@ -2,12 +2,10 @@ package de.helfenkannjeder.come2help.server.rest;
 
 import de.helfenkannjeder.come2help.server.domain.Ability;
 import de.helfenkannjeder.come2help.server.rest.dto.AbilityDto;
-import de.helfenkannjeder.come2help.server.rest.dto.AbilityHierarchyResponseDto;
-import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
+import de.helfenkannjeder.come2help.server.rest.dto.AbilityResponseDto;
 import de.helfenkannjeder.come2help.server.service.AbilitiesService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -34,7 +32,7 @@ public class AbilitiesController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<AbilityHierarchyResponseDto> getAbilities() {
+    public List<AbilityResponseDto> getAbilities() {
         List<Ability> abilities = abilitiesService.findAll();
         List<Ability> parentAbilities = new ArrayList<>();
         //TODO replace findAll by findByParentAbility where parent ability is null
@@ -44,33 +42,32 @@ public class AbilitiesController {
             }
         }
 
-        return parentAbilities.stream().map(v -> AbilityHierarchyResponseDto.createFullDto(v)).collect(Collectors.toList());
+        return parentAbilities.stream().map(v -> AbilityResponseDto.createFullDto(v)).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ApiErrors(apierrors = {@ApiError(code = "400", description = "Bad Request"), @ApiError(code = "500", description = "Internal Server Error")})
-    public AbilityDto createAbility(@Valid @RequestBody AbilityDto abilityDto) {
+    public AbilityResponseDto createAbility(@Valid @RequestBody AbilityDto abilityDto) {
         Ability ability = AbilityDto.createAbility(abilityDto);
         Ability createdAbility = abilitiesService.createAbility(ability);
-        return AbilityDto.createFullDto(createdAbility);
+        return AbilityResponseDto.createFullDto(createdAbility);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiErrors(apierrors = {@ApiError(code = "500", description = "Internal Server Error")})
-    public AbilityDto getAbilityById(@PathVariable(value = "id") Long id) {
+    public AbilityResponseDto getAbilityById(@PathVariable(value = "id") Long id) {
         Ability ability = abilitiesService.findById(id);
-        return AbilityDto.createFullDto(ability);
+        return AbilityResponseDto.createFullDto(ability);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public AbilityDto updateAbility(@NotNull @PathVariable(value = "id") Long id, @Valid @RequestBody AbilityDto abilityDto) {
-        abilityDto.setId(id);
+    public AbilityResponseDto updateAbility(@Valid @RequestBody AbilityDto abilityDto) {
         Ability ability = AbilityDto.createAbility(abilityDto);
         Ability updatedAbility = abilitiesService.updateAbility(ability);
-        return AbilityDto.createFullDto(updatedAbility);
+        return AbilityResponseDto.createFullDto(updatedAbility);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
