@@ -35,7 +35,7 @@ public class AbilitiesController {
     public List<AbilityResponseDto> getAbilities() {
         List<Ability> abilities = abilitiesService.findAll();
         List<Ability> parentAbilities = new ArrayList<>();
-        //TODO replace findAll by findByParentAbility where parent ability is null
+        // TODO replace findAll by findByParentAbility where parent ability is null
         for (Ability ability: abilities) {
             if (ability.getParentAbility() == null) {
                 parentAbilities.add(ability);
