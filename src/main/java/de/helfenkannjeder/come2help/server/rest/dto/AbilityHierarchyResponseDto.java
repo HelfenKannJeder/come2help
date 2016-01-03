@@ -3,6 +3,7 @@ package de.helfenkannjeder.come2help.server.rest.dto;
 import de.helfenkannjeder.come2help.server.domain.Ability;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class AbilityHierarchyResponseDto {
     }
 
     public static AbilityHierarchyResponseDto createFullDto(Ability ability) {
-        List<AbilityHierarchyResponseDto> childAbilities = Collections.emptyList();
+        List<AbilityHierarchyResponseDto> childAbilities = new ArrayList<>();
         ability.getChildAbilities().forEach(childAbility -> childAbilities.add(createFullDto(childAbility)));
         return new AbilityHierarchyResponseDto(ability.getId(), ability.getName(), ability.getDescription(), childAbilities, ability.isSelectable(), ability.isCategory());
     }

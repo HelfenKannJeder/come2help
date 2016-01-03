@@ -1,9 +1,16 @@
 package de.helfenkannjeder.come2help.server.rest.dto;
 
 import de.helfenkannjeder.come2help.server.domain.Ability;
+import de.helfenkannjeder.come2help.server.domain.repository.AbilityRepository;
+import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AbilityDto {
+
+
+    @Autowired
+    private static AbilityRepository abilityRepository;
 
     private Long id;
 
@@ -35,7 +42,14 @@ public class AbilityDto {
     }
 
     public static Ability createAbility(AbilityDto dto) {
-        return new Ability(dto.id, dto.name, dto.description, null, dto.isSelectable, dto.isCategory); //TODO match parent
+        Ability parentAbility = null;
+        if (dto.getParentAbilityId() != null) {
+            parentAbility = abilityRepository.findOne(dto.getParentAbilityId());
+            if (parentAbility == null) {
+                throw new ResourceNotFoundException(dto.getParentAbilityId());
+            }
+        }
+        return new Ability(dto.id, dto.name, dto.description, parentAbility, dto.isSelectable, dto.isCategory); //TODO match parent
     }
 
     public Long getId() {

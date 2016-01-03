@@ -25,7 +25,7 @@ public class AbilityDtoTest {
     }
 
     @Test
-    public void testAddressDtoToAddress() {
+    public void testAbilityDtoToAbility() {
         AbilityDto dto = new AbilityDto(1234L, "name", "description", null, true, true);
         Ability ability = AbilityDto.createAbility(dto);
 

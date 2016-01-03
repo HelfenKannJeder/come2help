@@ -3,7 +3,11 @@ package de.helfenkannjeder.come2help.server.rest;
 import de.helfenkannjeder.come2help.server.domain.Ability;
 import de.helfenkannjeder.come2help.server.rest.dto.AbilityDto;
 import de.helfenkannjeder.come2help.server.rest.dto.AbilityHierarchyResponseDto;
+import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import de.helfenkannjeder.come2help.server.service.AbilitiesService;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.transaction.Transactional;
@@ -32,7 +36,15 @@ public class AbilitiesController {
     @ResponseStatus(HttpStatus.OK)
     public List<AbilityHierarchyResponseDto> getAbilities() {
         List<Ability> abilities = abilitiesService.findAll();
-        return abilities.stream().map(v -> AbilityHierarchyResponseDto.createFullDto(v)).collect(Collectors.toList());
+        List<Ability> parentAbilities = new ArrayList<>();
+        //TODO replace findAll by findByParentAbility where parent ability is null
+        for (Ability ability: abilities) {
+            if (ability.getParentAbility() == null) {
+                parentAbilities.add(ability);
+            }
+        }
+
+        return parentAbilities.stream().map(v -> AbilityHierarchyResponseDto.createFullDto(v)).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.POST)

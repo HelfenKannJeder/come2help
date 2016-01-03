@@ -54,8 +54,8 @@ public class Ability extends AbstractVersionedAuditable {
         this.description = ability.description;
         this.parentAbility = ability.parentAbility;
         this.childAbilities = ability.childAbilities;
-        this.isCategory = ability.isCategory();
-        this.isSelectable = ability.isSelectable();
+        this.isCategory = ability.isCategory;
+        this.isSelectable = ability.isSelectable;
     }
 
     public Long getId() {
@@ -178,7 +178,7 @@ public class Ability extends AbstractVersionedAuditable {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", volunteers=" + volunteers +
-                ", parentAbility=" + parentAbility +
+                ", parentAbility=" + ((parentAbility != null) ? parentAbility.getId() : null)+
                 ", childAbilities=" + childAbilities +
                 ", isSelectable=" + isSelectable +
                 ", isCategory=" + isCategory +
