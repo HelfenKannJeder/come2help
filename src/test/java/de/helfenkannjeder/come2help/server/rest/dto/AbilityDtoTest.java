@@ -19,7 +19,7 @@ public class AbilityDtoTest {
         assertEquals(ability.getId(), dto.getId());
         assertEquals(ability.getName(), dto.getName());
         assertEquals(ability.getDescription(), dto.getDescription());
-        assertEquals(ability.getParentAbilityId(), dto.getParentAbility());
+        assertEquals(ability.getParentAbility(), dto.getParentAbility());
         assertEquals(ability.isCategory(), dto.isCategory());
         assertEquals(ability.isSelectable(), dto.isSelectable());
     }
