@@ -1,11 +1,19 @@
 package de.helfenkannjeder.come2help.server.domain;
 
+import de.helfenkannjeder.come2help.server.security.Authorities;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -36,8 +44,10 @@ public class User extends AbstractVersionedAuditable {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", optional = true)
     private Volunteer volunteer;
 
-    //TODO: save adult info?
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "admins", fetch = FetchType.EAGER)
+    private Set<Organisation> organisations = new HashSet<>();
 
+    //TODO: save adult info?
     public User() {
     }
 
@@ -46,7 +56,7 @@ public class User extends AbstractVersionedAuditable {
         this.givenName = givenName;
         this.surname = surname;
         this.phone = phone;
-        this.address = address;
+        setAddress(address);
     }
 
     public void update(User user) {
@@ -54,8 +64,7 @@ public class User extends AbstractVersionedAuditable {
         this.givenName = user.getGivenName();
         this.surname = user.getSurname();
         this.phone = user.getPhone();
-        this.address = user.getAddress();
-        this.volunteer = user.getVolunteer();
+        setAddress(user.getAddress());
     }
 
     public Long getId() {
@@ -136,6 +145,9 @@ public class User extends AbstractVersionedAuditable {
 
     public User setAddress(Address address) {
         this.address = address;
+        if (address != null) {
+            address.updateCoordinates();
+        }
         return this;
     }
 
@@ -148,8 +160,43 @@ public class User extends AbstractVersionedAuditable {
         return this;
     }
 
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public Set<Organisation> getOrganisations() {
+        return organisations;
+    }
+
+    public void setOrganisations(Set<Organisation> organisations) {
+        this.organisations = organisations;
+    }
+
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", authProvider=" + authProvider + ", externalId=" + externalId + ", email=" + email + ", emailVerified=" + emailVerified + ", givenName=" + givenName + ", surname=" + surname + ", phone=" + phone + ", address=" + address + ", volunteer=" + volunteer + '}';
+    }
+
+    public List<String> getGrantedAuthorities() {
+        LinkedList<String> authorities = new LinkedList<>();
+        authorities.add(Authorities.USER);
+
+        if (this.volunteer != null) {
+            authorities.add(Authorities.VOLUNTEER);
+        }
+
+        if (this.organisations != null && this.organisations.size() > 0) {
+            authorities.add(Authorities.ORGANISATION_ADMIN);
+        }
+
+        return authorities;
+    }
+
+    public UserAuthentication createUserAuthentication() {
+        return new UserAuthentication(getId(), getAuthProvider(), getExternalId(), getGivenName(), getSurname(), getEmail(), getGrantedAuthorities());
     }
 }

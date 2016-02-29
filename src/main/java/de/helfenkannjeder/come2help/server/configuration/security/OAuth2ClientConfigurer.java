@@ -42,7 +42,11 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .csrf().disable().headers().frameOptions().disable().and()
                 .antMatcher("/**").authorizeRequests()
-                .antMatchers("/abilities", "/login/**", "/jsondoc/**", "/jsondoc-ui.html", "/webjars/jsondoc-ui-webjar/**").permitAll()
+                .antMatchers("/login/**").permitAll()
+                .antMatchers("/abilities/**").permitAll()
+                .antMatchers("/jsondoc/**").permitAll()
+                .antMatchers("/jsondoc-ui.html").permitAll()
+                .antMatchers("/webjars/jsondoc-ui-webjar/**").permitAll()
                 .anyRequest().authenticated().and()
                 .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint()).and();
 

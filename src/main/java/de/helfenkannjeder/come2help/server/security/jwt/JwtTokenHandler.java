@@ -6,6 +6,8 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,7 @@ public class JwtTokenHandler {
     private static final String CLAIM_GIVEN_NAME = "name";
     private static final String CLAIM_SURNAME = "surname";
     private static final String CLAIM_EMAIL = "email";
+    private static final String CLAIM_AUTHORITIES = "authorities";
 
     @Value("${api.jwt.secretKey}")
     private String secretKey;
@@ -34,8 +37,9 @@ public class JwtTokenHandler {
         String givenName = (String) claims.get(CLAIM_GIVEN_NAME);
         String surname = (String) claims.get(CLAIM_SURNAME);
         String email = (String) claims.get(CLAIM_EMAIL);
+        List<String> authorities = (List<String>) claims.get(CLAIM_AUTHORITIES);
 
-        return new UserAuthentication(internalId != null ? Long.valueOf(internalId) : null, authProvider, externalId, givenName, surname, email);
+        return new UserAuthentication(internalId != null ? Long.valueOf(internalId) : null, authProvider, externalId, givenName, surname, email, authorities);
     }
 
     public String createTokenForUser(UserAuthentication user) {
@@ -47,6 +51,7 @@ public class JwtTokenHandler {
                 .claim(CLAIM_GIVEN_NAME, user.getGivenName())
                 .claim(CLAIM_SURNAME, user.getSurname())
                 .claim(CLAIM_EMAIL, user.getEmail())
+                .claim(CLAIM_AUTHORITIES, user.getAuthorities().stream().map(a -> a.getAuthority()).collect(Collectors.toList()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + DAY_DURATION))
                 .signWith(SignatureAlgorithm.HS256, secretKey)

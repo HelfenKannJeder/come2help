@@ -35,6 +35,7 @@ public class Volunteer extends AbstractVersionedAuditable {
     }
 
     public void update(Volunteer v) {
+        this.user.update(v.user);
         this.abilities = v.abilities;
     }
 
