@@ -6,14 +6,10 @@ import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerResponseDto;
 import de.helfenkannjeder.come2help.server.security.jwt.JwtAuthenticationService;
 import de.helfenkannjeder.come2help.server.service.VolunteersService;
-import java.util.List;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/volunteers")
@@ -44,12 +45,12 @@ public class VolunteersController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    public VolunteerResponseDto createVolunteer(@Valid @RequestBody VolunteerDto volunteerDto, HttpServletResponse response) {
+    public ResponseEntity<VolunteerResponseDto> createVolunteer(@Valid @RequestBody VolunteerDto volunteerDto) {
         Volunteer volunteer = VolunteerDto.createVolunteer(volunteerDto);
         Volunteer createdVolunteer = volunteersService.createVolunteer(volunteer);
-        jwtAuthenticationService.addTokenHeaderForUser(response, createdVolunteer.getUser());
-        return VolunteerResponseDto.createFullDto(createdVolunteer);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        jwtAuthenticationService.addTokenHeaderForUser(responseHeaders, createdVolunteer.getUser());
+        return new ResponseEntity<>(VolunteerResponseDto.createFullDto(createdVolunteer), responseHeaders, HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -60,13 +61,13 @@ public class VolunteersController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.OK)
-    public VolunteerResponseDto updateVolunteer(@NotNull @PathVariable(value="id") Long id, @Valid @RequestBody VolunteerDto volunteerDto, HttpServletResponse response) {
+    public ResponseEntity<VolunteerResponseDto> updateVolunteer(@NotNull @PathVariable(value="id") Long id, @Valid @RequestBody VolunteerDto volunteerDto) {
         volunteerDto.setId(id);
         Volunteer volunteer = VolunteerDto.createVolunteer(volunteerDto);
         Volunteer updatedVolunteer = volunteersService.updateVolunteer(volunteer);
-        jwtAuthenticationService.addTokenHeaderForUser(response, updatedVolunteer.getUser());
-        return VolunteerResponseDto.createFullDto(updatedVolunteer);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        jwtAuthenticationService.addTokenHeaderForUser(responseHeaders, updatedVolunteer.getUser());
+        return new ResponseEntity<>(VolunteerResponseDto.createFullDto(updatedVolunteer), responseHeaders, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
