@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @ComponentScan(basePackages = "de.helfenkannjeder.come2help.server.cucumber")
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yml")
 public class TestApplicationConfiguration {
 
     @Bean
