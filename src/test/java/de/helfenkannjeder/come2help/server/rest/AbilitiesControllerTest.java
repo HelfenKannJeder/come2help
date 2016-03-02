@@ -5,6 +5,7 @@ import de.helfenkannjeder.come2help.server.security.Authorities;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -19,12 +20,25 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
     public void getAbilities_withAbilitiesFromDatabase_returnsSerializedAbilities() throws Exception {
         authenticate(Authorities.USER);
 
-        mockMvc.perform(get("/abilities").accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        getAbilitiesExpectOkStatusAndJsonMediaType()
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(2)));
-        // TODO: Check sort order
+    }
+
+    @Test
+    public void getAbilities_withAbilitiesFromDatabase_returnsAbilitiesInAlphabeticalOrder() throws Exception {
+        authenticate(Authorities.USER);
+
+        getAbilitiesExpectOkStatusAndJsonMediaType()
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].name", is("Care for people")))
+                .andExpect(jsonPath("$[1].name", is("Translate documents")));
+    }
+
+    private ResultActions getAbilitiesExpectOkStatusAndJsonMediaType() throws Exception {
+        return mockMvc.perform(get("/abilities").accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
     }
 
     @Test
@@ -46,9 +60,7 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.description", is(description)));
 
         // Assert
-        mockMvc.perform(get("/abilities").accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        getAbilitiesExpectOkStatusAndJsonMediaType()
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(3)));
     }
@@ -106,9 +118,7 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
 
 
         // Assert
-        mockMvc.perform(get("/abilities").accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        getAbilitiesExpectOkStatusAndJsonMediaType()
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(1)));
     }
@@ -125,9 +135,7 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
 
 
         // Assert
-        mockMvc.perform(get("/abilities").accept(MediaType.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        getAbilitiesExpectOkStatusAndJsonMediaType()
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
