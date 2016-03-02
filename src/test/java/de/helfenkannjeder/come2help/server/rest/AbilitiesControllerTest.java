@@ -2,6 +2,7 @@ package de.helfenkannjeder.come2help.server.rest;
 
 import de.helfenkannjeder.come2help.server.configuration.Come2HelpApplication;
 import de.helfenkannjeder.come2help.server.security.Authorities;
+import de.helfenkannjeder.come2help.server.util.TestDataInitializer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +24,9 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author Valentin Zickner
@@ -35,6 +38,9 @@ public class AbilitiesControllerTest {
 
     @Autowired
     private WebApplicationContext wac;
+
+    @Autowired
+    private TestDataInitializer testDataInitializer;
 
     private MockMvc mockMvc;
 
@@ -59,12 +65,22 @@ public class AbilitiesControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
+    @Before
+    public void initDatabase() {
+        testDataInitializer.initDatabase();
+    }
+
+    @After
+    public void cleanupDatabase() {
+        testDataInitializer.cleanupDatabase();
+    }
+
     @Test
     public void getAbilities_withAbilitiesFromDatabase_returnsSerializedAbilities() throws Exception {
         mockMvc.perform(get("/abilities").accept(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 }
