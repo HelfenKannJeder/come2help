@@ -1,5 +1,7 @@
 package de.helfenkannjeder.come2help.server.rest;
 
+import java.util.Collections;
+
 import de.helfenkannjeder.come2help.server.rest.dto.AddressDto;
 import de.helfenkannjeder.come2help.server.rest.dto.UserDto;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
@@ -9,8 +11,6 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.Collections;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,6 +29,16 @@ public class VolunteersControllerTest extends AbstractControllerTest {
 
         // Distance in Meter
         checkNumOfVolunteers(2);
+    }
+
+    @Test
+    public void getVolunteers_withGivenPositionAndDistance_returnsListOfVolunteers_abilitiesHaveNameValues() throws Exception {
+        authenticate(Authorities.ORGANISATION_ADMIN);
+
+        mockMvc.perform(get("/volunteers?latitude=48.9988277&longitude=8.4017813&distance=20000")
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].abilities[0].name").isString());
     }
 
     private void checkNumOfVolunteers(int size) throws Exception {

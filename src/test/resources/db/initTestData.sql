@@ -9,3 +9,8 @@ VALUES
 INSERT INTO volunteer (id, created, updated, version, user_id) VALUES
   (1, NOW(), NOW(), 1, 1),
   (2, NOW(), NOW(), 1, 2);
+
+INSERT INTO volunteer_abilities (volunteers, abilities) VALUES
+  (1, 1),
+  (1, 2),
+  (2, 1);
