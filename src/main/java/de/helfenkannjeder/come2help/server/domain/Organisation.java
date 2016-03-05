@@ -2,12 +2,12 @@ package de.helfenkannjeder.come2help.server.domain;
 
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Organisation extends AbstractVersionedAuditable {
@@ -18,14 +18,7 @@ public class Organisation extends AbstractVersionedAuditable {
 
     private String name;
 
-    @OneToMany
-    @JoinTable(
-            name = "ORGANISATION_ADMIN",
-            joinColumns = {
-                @JoinColumn(name = "ORGANISATION_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "USER_ID", referencedColumnName = "ID", unique = true)}
-    )
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
     private Set<User> admins;
 
     public Long getId() {

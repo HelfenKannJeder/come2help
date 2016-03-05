@@ -1,7 +1,7 @@
 package de.helfenkannjeder.come2help.server.matchers;
 
-import de.helfenkannjeder.come2help.server.rest.dto.UserDto;
-import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
+import de.helfenkannjeder.come2help.server.domain.User;
+import de.helfenkannjeder.come2help.server.domain.Volunteer;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -9,37 +9,37 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import static org.hamcrest.Matchers.equalTo;
 
-public class VolunteerDtoMatcher extends TypeSafeDiagnosingMatcher<VolunteerDto> {
+public class VolunteerMatcher extends TypeSafeDiagnosingMatcher<Volunteer> {
 
     private Matcher<? super Long> id = Matchers.anything();
 
-    private Matcher<? super UserDto> user = Matchers.anything();
+    private Matcher<? super User> user = Matchers.anything();
 
     //TODO: match abilities
 
-    public static VolunteerDtoMatcher matchesVolunteerDto() {
-        return new VolunteerDtoMatcher();
+    public static VolunteerMatcher matchesVolunteer() {
+        return new VolunteerMatcher();
     }
 
-    public static VolunteerDtoMatcher matchesVolunteerDto(VolunteerDto volunteerDto) {
-        return new VolunteerDtoMatcher().withId(volunteerDto.getId())
-                .withUser(volunteerDto.getUser());
+    public static VolunteerMatcher matchesVolunteer(Volunteer volunteer) {
+        return new VolunteerMatcher().withId(volunteer.getId())
+                .withUser(volunteer.getUser());
     }
 
-    public VolunteerDtoMatcher withId(Long id) {
+    public VolunteerMatcher withId(Long id) {
         this.id = equalTo(id);
         return this;
     }
 
-    public VolunteerDtoMatcher withUser(UserDto user) {
-        this.user = UserDtoMatcher.matchesUser(user);
+    public VolunteerMatcher withUser(User user) {
+        this.user = UserMatcher.matchesUser(user);
         return this;
     }
 
     @Override
-    protected boolean matchesSafely(VolunteerDto item, final Description mismatchDescription) {
+    protected boolean matchesSafely(Volunteer item, final Description mismatchDescription) {
         boolean matches = true;
-        mismatchDescription.appendText("was VolunteerDto");
+        mismatchDescription.appendText("was Volunteer");
 
         if (!id.matches(item.getId())) {
             mismatchDescription.appendText(" with id=").appendValue(item.getId());

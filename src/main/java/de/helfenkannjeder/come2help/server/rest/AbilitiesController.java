@@ -33,7 +33,7 @@ public class AbilitiesController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<AbilityDto> getAbilities() {
-        List<Ability> abilities = abilitiesService.findAll();
+        List<Ability> abilities = abilitiesService.findAllOrderByName();
         return abilities.stream().map(AbilityDto::createFullDto).collect(Collectors.toList());
     }
 

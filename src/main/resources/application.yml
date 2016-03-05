@@ -1,0 +1,73 @@
+# ===============================
+# = DATA SOURCE
+# ===============================
+spring:
+    datasource:
+        url: jdbc:mysql://localhost:3306/come2help
+        username: come2help
+        password: ZouNjsMYoll7eGHVWm4xHp75nabi4tqdvQTrUQTD6PVjodXy8UlgIXkpA2G2
+
+        testWhileIdle: true
+        validationQuery: SELECT 1
+
+
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+            naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL5Dialect
+
+
+# ===============================
+# = JSON DOCUMENTATION
+# ===============================
+# mandatory configuration
+jsondoc:
+    version: 1.0
+    basePath: http://localhost:8080
+    packages[0]: de.helfenkannjeder.come2help.server.rest
+    packages[1]: de.helfenkannjeder.come2help.server.rest.dto
+# optional configuration
+    playgroundEnabled: true
+    displayMethodAs: URI
+
+
+# ===============================
+# = SPRING SECURITY OAUTH2 CONFIG
+# ===============================
+facebook:
+    client:
+        clientId: 233668646673605
+        clientSecret: 33b17e044ee6a4fa383f46ec6e28ea1d
+        accessTokenUri: https://graph.facebook.com/oauth/access_token
+        userAuthorizationUri: https://www.facebook.com/dialog/oauth
+        tokenName: oauth_token
+        authenticationScheme: query
+        clientAuthenticationScheme: form
+        scope: email
+    resource:
+        userInfoUri: https://graph.facebook.com/me
+        
+
+
+google:
+    client:
+        clientId: XXXXXXXXXXXXXXXXXXXX
+        clientSecret: YYYYYYYYYYYYYYYYYYYYYY
+        accessTokenUri: https://accounts.google.com/o/oauth2/token
+        userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+        clientAuthenticationScheme: query
+        scope: email
+    resource:
+        userInfoUri: https://www.googleapis.com/oauth2/v2/userinfo
+        preferTokenInfo: false
+        
+        
+        
+        
+api:
+    jwt:
+        secretKey: secretKey
