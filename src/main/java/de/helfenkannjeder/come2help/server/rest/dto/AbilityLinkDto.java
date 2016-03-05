@@ -13,6 +13,10 @@ public class AbilityLinkDto {
 
     private String description;
 
+    private boolean isSelectable = true;
+
+    private boolean isCategory = false;
+
     public AbilityLinkDto() {
     }
 
@@ -25,7 +29,7 @@ public class AbilityLinkDto {
     }
 
     public static Ability createAbility(AbilityLinkDto dto) {
-        return new Ability(dto.getId(), dto.getName(), dto.getDescription());
+        return new Ability(dto.getId(), dto.getName(), dto.getDescription(), null, dto.isSelectable(), dto.isCategory());
     }
 
     public Long getId() {
@@ -53,5 +57,21 @@ public class AbilityLinkDto {
     public AbilityLinkDto setDescription(String description) {
         this.description = description;
         return this;
+    }
+
+    public boolean isSelectable() {
+        return isSelectable;
+    }
+
+    public void setSelectable(boolean selectable) {
+        isSelectable = selectable;
+    }
+
+    public boolean isCategory() {
+        return isCategory;
+    }
+
+    public void setCategory(boolean category) {
+        isCategory = category;
     }
 }
