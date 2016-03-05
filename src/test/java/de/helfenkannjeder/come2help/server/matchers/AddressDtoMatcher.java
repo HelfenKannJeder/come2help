@@ -18,11 +18,11 @@ public class AddressDtoMatcher extends TypeSafeDiagnosingMatcher<AddressDto> {
 
     private Matcher<? super String> streetNumber = Matchers.anything();
 
-    public static AddressDtoMatcher matchesAddress() {
+    public static AddressDtoMatcher matchesAddressDto() {
         return new AddressDtoMatcher();
     }
 
-    public static AddressDtoMatcher matchesAddress(AddressDto addressDto) {
+    public static AddressDtoMatcher matchesAddressDto(AddressDto addressDto) {
         return new AddressDtoMatcher().withZipCode(addressDto.getZipCode())
                 .withCity(addressDto.getCity())
                 .withStreet(addressDto.getStreet())

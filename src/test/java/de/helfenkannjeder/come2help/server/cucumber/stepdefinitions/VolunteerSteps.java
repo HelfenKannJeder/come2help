@@ -1,6 +1,7 @@
 package de.helfenkannjeder.come2help.server.cucumber.stepdefinitions;
 
-import cucumber.api.PendingException;
+import java.util.Collections;
+
 import cucumber.api.Transform;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
@@ -9,19 +10,19 @@ import cucumber.api.java.en.When;
 import de.helfenkannjeder.come2help.server.cucumber.Come2helpApiTestFacade;
 import de.helfenkannjeder.come2help.server.cucumber.configuration.TestApplicationConfiguration;
 import de.helfenkannjeder.come2help.server.cucumber.transformers.HTTPStatusTransformer;
+import de.helfenkannjeder.come2help.server.cucumber.util.VolunteerDtoObjectMother;
 import de.helfenkannjeder.come2help.server.cucumber.util.VolunteerObjectMother;
 import de.helfenkannjeder.come2help.server.matchers.VolunteerDtoMatcher;
+import de.helfenkannjeder.come2help.server.rest.dto.AbilityLinkDto;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import org.hamcrest.CoreMatchers;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 @ContextConfiguration(classes = TestApplicationConfiguration.class)
 public class VolunteerSteps {
@@ -38,12 +39,12 @@ public class VolunteerSteps {
 
     @Given("^any valid volunteer$")
     public void any_valid_volunteer() throws Throwable {
-        volunteerDto = VolunteerObjectMother.anyValidVolunteer();
+        volunteerDto = VolunteerDtoObjectMother.anyValidVolunteerDto();
     }
 
     @Given("^any invalid volunteer$")
     public void any_invalid_volunteer() throws Throwable {
-        volunteerDto = VolunteerObjectMother.anyInvalidVolunteer();
+        volunteerDto = VolunteerDtoObjectMother.anyInvalidVolunteerDto();
     }
 
     @When("^the volunteer is created$")
@@ -60,7 +61,7 @@ public class VolunteerSteps {
 
     @Then("^the response contains the created volunteer$")
     public void the_response_contains_the_created_volunteer() throws Throwable {
-        assertThat(createVolunteerResponseEntity.getBody(), CoreMatchers.is(VolunteerDtoMatcher.matchesVolunteer(facade.getLastCreatedVolunteer())));
+        assertThat(createVolunteerResponseEntity.getBody(), CoreMatchers.is(VolunteerDtoMatcher.matchesVolunteerDto(facade.getLastCreatedVolunteer())));
     }
 
     @Given("^an existing volunteer$")
@@ -72,7 +73,7 @@ public class VolunteerSteps {
     @Given("^the user changes a property of the volunteer")
     public void the_user_changes_a_property_of_the_volunteer() throws Throwable {
         volunteerDto = createVolunteerResponseEntity.getBody();
-        volunteerDto.setSurname("ChangedName");
+        volunteerDto.setAbilities(Collections.singletonList(new AbilityLinkDto().setId(1L)));
     }
 
     @When("^the volunteer is updated$")
@@ -88,7 +89,7 @@ public class VolunteerSteps {
 
     @Then("^the updated volunteer is returned$")
     public void the_updated_volunteer_is_returned() throws Throwable {
-        assertThat(updateVolunteerResponseEntity.getBody(), CoreMatchers.is(VolunteerDtoMatcher.matchesVolunteer(volunteerDto)));
+        assertThat(updateVolunteerResponseEntity.getBody(), CoreMatchers.is(VolunteerDtoMatcher.matchesVolunteerDto(volunteerDto)));
     }
 
     @Given("^a non existing volunteer$")
@@ -105,14 +106,13 @@ public class VolunteerSteps {
     @When("^the volunteer id is re-used$")
     public void theVolunteerIdIsReUsed() throws Throwable {
         volunteerDto = createVolunteerResponseEntity.getBody();
-        volunteerDto.setSurname("Testname");
-        volunteerDto.setEmail("test@test.come2.help");
+        volunteerDto.setAbilities(Collections.singletonList(new AbilityLinkDto(-2L)));
         the_volunteer_creation_request_is_send();
     }
 
     @And("^the user modifies the volunteer with invalid data$")
     public void theUserModifiesTheVolunteerWithInvalidData() throws Throwable {
         volunteerDto = createVolunteerResponseEntity.getBody();
-        volunteerDto.setEmail("invalidEmail");
+        volunteerDto.setAbilities(Collections.singletonList(new AbilityLinkDto()));
     }
 }

@@ -1,220 +1,202 @@
 package de.helfenkannjeder.come2help.server.domain;
 
-import java.util.Date;
+import de.helfenkannjeder.come2help.server.security.Authorities;
+import de.helfenkannjeder.come2help.server.security.UserAuthentication;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
+@Table(
+        uniqueConstraints = @UniqueConstraint(columnNames = {"authProvider", "externalId"})
+)
 public class User extends AbstractVersionedAuditable {
 
     @Id
     @GeneratedValue
     private Long id = null;
 
+    private String authProvider;
+    private String externalId;
+
+    @Column(unique = true)
     private String email;
+    private Boolean emailVerified;
 
     private String givenName;
-
     private String surname;
-
     private String phone;
+    @Embedded
+    private Address address;
 
-    @Temporal(TemporalType.DATE)
-    private Date dateOfBirth;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", optional = true)
+    private Volunteer volunteer;
 
-    private boolean isAdult = false;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "admins", fetch = FetchType.EAGER)
+    private Set<Organisation> organisations = new HashSet<>();
 
-    private boolean isBonusProgramAccepted = false;
+    //TODO: save adult info?
+    public User() {
+    }
 
-    private String password;
+    public User(String email, String givenName, String surname, String phone, Address address) {
+        this.email = email;
+        this.givenName = givenName;
+        this.surname = surname;
+        this.phone = phone;
+        setAddress(address);
+    }
 
-    private String insurance;
-
-    @ManyToMany
-    @JoinTable(name = "USER_ABILITY",
-            joinColumns = {
-                @JoinColumn(name = "ABILITY_ID", referencedColumnName = "ID")},
-            inverseJoinColumns = {
-                @JoinColumn(name = "USER_ID", referencedColumnName = "ID")})
-    private List<Ability> abilities;
-
-    private int maxRadiusOfAction;
+    public void update(User user) {
+        this.email = user.getEmail();
+        this.givenName = user.getGivenName();
+        this.surname = user.getSurname();
+        this.phone = user.getPhone();
+        setAddress(user.getAddress());
+    }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public User setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public User setEmail(String email) {
         this.email = email;
+        return this;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public User setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+        return this;
     }
 
     public String getGivenName() {
         return givenName;
     }
 
-    public void setGivenName(String givenName) {
+    public User setGivenName(String givenName) {
         this.givenName = givenName;
+        return this;
     }
 
     public String getSurname() {
         return surname;
     }
 
-    public void setSurname(String surname) {
+    public User setSurname(String surname) {
         this.surname = surname;
+        return this;
     }
 
     public String getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public User setPhone(String phone) {
         this.phone = phone;
+        return this;
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    public String getAuthProvider() {
+        return authProvider;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
+    public User setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
+        return this;
     }
 
-    public boolean isAdult() {
-        return isAdult;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setIsAdult(boolean isAdult) {
-        this.isAdult = isAdult;
+    public User setExternalId(String externalId) {
+        this.externalId = externalId;
+        return this;
     }
 
-    public boolean isBonusProgramAccepted() {
-        return isBonusProgramAccepted;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setIsBonusProgramAccepted(boolean isBonusProgramAccepted) {
-        this.isBonusProgramAccepted = isBonusProgramAccepted;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getInsurance() {
-        return insurance;
-    }
-
-    public void setInsurance(String insurance) {
-        this.insurance = insurance;
-    }
-
-    public int getMaxRadiusOfAction() {
-        return maxRadiusOfAction;
-    }
-
-    public void setMaxRadiusOfAction(int maxRadiusOfAction) {
-        this.maxRadiusOfAction = maxRadiusOfAction;
-    }
-
-    public List<Ability> getAbilities() {
-        return abilities;
-    }
-
-    public void setAbilities(List<Ability> abilities) {
-        this.abilities = abilities;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 5;
-        hash = 97 * hash + Objects.hashCode(this.id);
-        hash = 97 * hash + Objects.hashCode(this.email);
-        hash = 97 * hash + Objects.hashCode(this.givenName);
-        hash = 97 * hash + Objects.hashCode(this.surname);
-        hash = 97 * hash + Objects.hashCode(this.phone);
-        hash = 97 * hash + Objects.hashCode(this.dateOfBirth);
-        hash = 97 * hash + (this.isAdult ? 1 : 0);
-        hash = 97 * hash + (this.isBonusProgramAccepted ? 1 : 0);
-        hash = 97 * hash + Objects.hashCode(this.password);
-        hash = 97 * hash + Objects.hashCode(this.insurance);
-        hash = 97 * hash + Objects.hashCode(this.abilities);
-        hash = 97 * hash + this.maxRadiusOfAction;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
+    public User setAddress(Address address) {
+        this.address = address;
+        if (address != null) {
+            address.updateCoordinates();
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final User other = (User) obj;
-        if (this.isAdult != other.isAdult) {
-            return false;
-        }
-        if (this.isBonusProgramAccepted != other.isBonusProgramAccepted) {
-            return false;
-        }
-        if (this.maxRadiusOfAction != other.maxRadiusOfAction) {
-            return false;
-        }
-        if (!Objects.equals(this.email, other.email)) {
-            return false;
-        }
-        if (!Objects.equals(this.givenName, other.givenName)) {
-            return false;
-        }
-        if (!Objects.equals(this.surname, other.surname)) {
-            return false;
-        }
-        if (!Objects.equals(this.phone, other.phone)) {
-            return false;
-        }
-        if (!Objects.equals(this.password, other.password)) {
-            return false;
-        }
-        if (!Objects.equals(this.insurance, other.insurance)) {
-            return false;
-        }
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.dateOfBirth, other.dateOfBirth)) {
-            return false;
-        }
-        if (!Objects.equals(this.abilities, other.abilities)) {
-            return false;
-        }
-        return true;
+        return this;
+    }
+
+    public Volunteer getVolunteer() {
+        return volunteer;
+    }
+
+    public User setVolunteer(Volunteer volunteer) {
+        this.volunteer = volunteer;
+        return this;
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public Set<Organisation> getOrganisations() {
+        return organisations;
+    }
+
+    public void setOrganisations(Set<Organisation> organisations) {
+        this.organisations = organisations;
     }
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", email=" + email + ", givenName=" + givenName + ", surname=" + surname + ", phone=" + phone + ", dateOfBirth=" + dateOfBirth + ", isAdult=" + isAdult + ", isBonusProgramAccepted=" + isBonusProgramAccepted + ", password=" + password + ", insurance=" + insurance + ", abilities=" + abilities + ", maxRadiusOfAction=" + maxRadiusOfAction + '}';
+        return "User{" + "id=" + id + ", authProvider=" + authProvider + ", externalId=" + externalId + ", email=" + email + ", emailVerified=" + emailVerified + ", givenName=" + givenName + ", surname=" + surname + ", phone=" + phone + ", address=" + address + ", volunteer=" + volunteer + '}';
+    }
+
+    public List<String> getGrantedAuthorities() {
+        LinkedList<String> authorities = new LinkedList<>();
+        authorities.add(Authorities.USER);
+
+        if (this.volunteer != null) {
+            authorities.add(Authorities.VOLUNTEER);
+        }
+
+        if (this.organisations != null && this.organisations.size() > 0) {
+            authorities.add(Authorities.ORGANISATION_ADMIN);
+        }
+
+        return authorities;
+    }
+
+    public UserAuthentication createUserAuthentication() {
+        return new UserAuthentication(getId(), getAuthProvider(), getExternalId(), getGivenName(), getSurname(), getEmail(), getGrantedAuthorities());
     }
 }
