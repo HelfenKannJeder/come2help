@@ -7,7 +7,7 @@ public class DistanceCalculator {
     private final static int R = 6371000; //metres
 
     /**
-     * Calculates the distance between two addresses based on latitude and
+     * Calculates the distance in meters between two addresses based on latitude and
      * longitude.
      *
      * @param coordinate1
