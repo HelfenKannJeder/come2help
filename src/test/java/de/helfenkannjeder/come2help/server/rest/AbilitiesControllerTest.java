@@ -5,6 +5,7 @@ import de.helfenkannjeder.come2help.server.security.Authorities;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.*;
@@ -48,7 +49,7 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
 
         String name = "Test Ability";
         String description = "Test Description";
-        AbilityDto abilityDto = new AbilityDto(null, name, description);
+        AbilityDto abilityDto = new AbilityDto(null, name, description, null, true, false);
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(post("/abilities").accept(MediaType.APPLICATION_JSON_UTF8)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -86,7 +87,7 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
 
         String name = "Updated Ability";
         String description = "Updated Description";
-        AbilityDto abilityDto = new AbilityDto(null, name, description);
+        AbilityDto abilityDto = new AbilityDto(null, name, description, null, true, false);
         ObjectMapper objectMapper = new ObjectMapper();
 
         // Act

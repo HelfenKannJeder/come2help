@@ -9,7 +9,6 @@ import cucumber.api.java.Before;
 import de.helfenkannjeder.come2help.server.cucumber.configuration.TestApplicationConfiguration;
 import de.helfenkannjeder.come2help.server.cucumber.util.AbilityApiRestClient;
 import de.helfenkannjeder.come2help.server.cucumber.util.VolunteerApiRestClient;
-import de.helfenkannjeder.come2help.server.domain.Ability;
 import de.helfenkannjeder.come2help.server.rest.dto.AbilityDto;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
 import org.springframework.beans.factory.annotation.Autowired;

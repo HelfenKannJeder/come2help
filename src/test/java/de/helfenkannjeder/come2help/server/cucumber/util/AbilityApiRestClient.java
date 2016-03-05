@@ -33,7 +33,7 @@ public class AbilityApiRestClient {
     }
 
     public ResponseEntity<AbilityDto> updateAbility(AbilityDto abilityDto) {
-        return restTemplate.exchange(getAbilityUrl(), HttpMethod.PUT, createHttpEntity(abilityDto), AbilityDto.class, abilityDto.getId());
+        return restTemplate.exchange(getAbilitiesUrl(), HttpMethod.PUT, createHttpEntity(abilityDto), AbilityDto.class);
     }
 
     public HttpStatus deleteAbility(Long id) {

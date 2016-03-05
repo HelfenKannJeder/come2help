@@ -1,12 +1,8 @@
 package de.helfenkannjeder.come2help.server.domain;
 
+import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 
 @Entity
 public class Ability extends AbstractVersionedAuditable {
@@ -22,18 +18,36 @@ public class Ability extends AbstractVersionedAuditable {
     @ManyToMany(mappedBy = "abilities")
     private List<Volunteer> volunteers = Collections.emptyList();
 
+    @ManyToOne
+    @JoinColumn(name = "PARENT_ABILITY_ID")
+    private Ability parentAbility;
+
+    @OneToMany(mappedBy = "parentAbility", cascade = CascadeType.ALL)
+    private List<Ability> childAbilities = Collections.emptyList();
+
+    private boolean isSelectable = true;
+
+    private boolean isCategory = false;
+
     public Ability() {
     }
 
-    public Ability(Long id, String name, String description) {
+    public Ability(Long id, String name, String description, Ability parentAbility, boolean isSelectable, boolean isCategory) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.parentAbility = parentAbility;
+        this.isSelectable = isSelectable;
+        this.isCategory = isCategory;
     }
 
     public void update(Ability ability) {
         this.name = ability.name;
         this.description = ability.description;
+        this.parentAbility = ability.parentAbility;
+        this.childAbilities = ability.childAbilities;
+        this.isCategory = ability.isCategory;
+        this.isSelectable = ability.isSelectable;
     }
 
     public Long getId() {
@@ -68,46 +82,98 @@ public class Ability extends AbstractVersionedAuditable {
         this.volunteers = volunteers;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 31 * hash + Objects.hashCode(this.id);
-        hash = 31 * hash + Objects.hashCode(this.name);
-        hash = 31 * hash + Objects.hashCode(this.description);
-        hash = 31 * hash + Objects.hashCode(this.volunteers);
-        return hash;
+    public Ability getParentAbility() {
+        return parentAbility;
+    }
+
+    public Long getParentAbilityId() {
+        if (parentAbility != null) {
+            return parentAbility.getId();
+        }
+        return null;
+    }
+
+    public void setParentAbility(Ability parentAbility) {
+        this.parentAbility = parentAbility;
+    }
+
+    public List<Ability> getChildAbilities() {
+        return childAbilities;
+    }
+
+    public void setChildAbilities(List<Ability> childAbilities) {
+        this.childAbilities = childAbilities;
+        checkCategoryAndChildrenConsistency();
+    }
+
+    public boolean isSelectable() {
+        return isSelectable;
+    }
+
+    public void setSelectable(boolean selectable) {
+        isSelectable = selectable;
+    }
+
+    public boolean isCategory() {
+        return isCategory;
+    }
+
+    public void setCategory(boolean category) {
+        isCategory = category;
+        checkCategoryAndChildrenConsistency();
+    }
+
+    /**
+     * it should not be possible to have children abilities when this ability is not a category
+     */
+    private void checkCategoryAndChildrenConsistency() {
+        if (isCategory == false && childAbilities.size() > 0 ) {
+            throw new RuntimeException("An ability has childAbilities but is not a category");
+        }
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Ability other = (Ability) obj;
-        if (!Objects.equals(this.name, other.name)) {
-            return false;
-        }
-        if (!Objects.equals(this.description, other.description)) {
-            return false;
-        }
-        if (!Objects.equals(this.id, other.id)) {
-            return false;
-        }
-        if (!Objects.equals(this.volunteers, other.volunteers)) {
-            return false;
-        }
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Ability ability = (Ability) o;
+
+        if (isSelectable != ability.isSelectable) return false;
+        if (isCategory != ability.isCategory) return false;
+        if (!id.equals(ability.id)) return false;
+        if (!name.equals(ability.name)) return false;
+        if (!description.equals(ability.description)) return false;
+        if (!volunteers.equals(ability.volunteers)) return false;
+        if (!parentAbility.equals(ability.parentAbility)) return false;
+        return childAbilities.equals(ability.childAbilities);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        result = 31 * result + description.hashCode();
+        result = 31 * result + volunteers.hashCode();
+        result = 31 * result + parentAbility.hashCode();
+        result = 31 * result + childAbilities.hashCode();
+        result = 31 * result + (isSelectable ? 1 : 0);
+        result = 31 * result + (isCategory ? 1 : 0);
+        return result;
     }
 
     @Override
     public String toString() {
-        return "Ability{" + "id=" + id + ", name=" + name + ", description=" + description + ", volunteers=" + volunteers + '}';
+        return "Ability{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", volunteers=" + volunteers +
+                ", parentAbility=" + ((parentAbility != null) ? parentAbility.getId() : null)+
+                ", childAbilities=" + childAbilities +
+                ", isSelectable=" + isSelectable +
+                ", isCategory=" + isCategory +
+                '}';
     }
-
 }

@@ -1,5 +1,6 @@
 package de.helfenkannjeder.come2help.server.domain;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,12 +22,12 @@ public class VolunteerTest {
     @Test
     public void testUpdate() {
         final Long testId1 = 2L;
-        final List<Ability> testAbilities1 = Collections.singletonList(new Ability(1L, null, null));
+        final List<Ability> testAbilities1 = Collections.singletonList(new Ability(1L, null, null, null, true, true));
 
         Volunteer volunteer1 = new Volunteer().setId(testId1).setAbilities(testAbilities1).setUser(user1);
 
         final Long testId2 = 42L;
-        final List<Ability> testAbilities2 = Collections.singletonList(new Ability(5L, null, null));
+        final List<Ability> testAbilities2 = Collections.singletonList(new Ability(5L, null, null, null, true, true));
 
         Volunteer volunteer2 = new Volunteer().setId(testId2).setAbilities(testAbilities2).setUser(user1);
 
