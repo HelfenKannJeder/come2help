@@ -1,7 +1,5 @@
 package de.helfenkannjeder.come2help.server.rest;
 
-import java.util.Collections;
-
 import de.helfenkannjeder.come2help.server.rest.dto.AddressDto;
 import de.helfenkannjeder.come2help.server.rest.dto.UserDto;
 import de.helfenkannjeder.come2help.server.rest.dto.VolunteerDto;
@@ -12,9 +10,10 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Collections;
+
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -74,4 +73,87 @@ public class VolunteersControllerTest extends AbstractControllerTest {
         authenticate(Authorities.ORGANISATION_ADMIN);
         checkNumOfVolunteers(3);
     }
+
+    @Test
+    public void getVolunteerById_withVolunteerId_returnsVolunteer() throws Exception {
+        authenticate(Authorities.ORGANISATION_ADMIN);
+
+        mockMvc.perform(get("/volunteers/1")
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isMap())
+                .andExpect(jsonPath("$.user").isMap())
+                .andExpect(jsonPath("$.user.surname").value("Surname"))
+                .andExpect(jsonPath("$.user.givenName").value("Given Name"))
+                .andExpect(jsonPath("$.user.email").value("test@helfenkannjeder.de"))
+                .andExpect(jsonPath("$.user.address").isMap())
+                .andExpect(jsonPath("$.user.address.zipCode").value("76133"))
+                .andExpect(jsonPath("$.abilities").isArray());
+    }
+
+    @Test
+    public void getVolunteerById_withVolunteerIdAndVolunteerAuthority_returnsError() throws Exception {
+        authenticate(Authorities.VOLUNTEER);
+
+        mockMvc.perform(get("/volunteers/1")
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void updateVolunteer_withVolunteerId_returnsNewVolunteer() throws Exception {
+        dummyAuthentication(1L, Authorities.VOLUNTEER);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        VolunteerDto volunteerDto = new VolunteerDto(1L,
+                new UserDto(
+                        "testMail@helfenkannjeder.de",
+                        "New given name",
+                        "new surname",
+                        new AddressDto("76228", null, null, null),
+                        null,
+                        true),
+                Collections.emptyList());
+
+
+        String content = objectMapper.writeValueAsString(volunteerDto);
+        mockMvc.perform(put("/volunteers/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(content)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isMap())
+                .andExpect(jsonPath("$.user").isMap())
+                .andExpect(jsonPath("$.user.surname").value("new surname"))
+                .andExpect(jsonPath("$.user.givenName").value("New given name"))
+                .andExpect(jsonPath("$.user.email").value("testMail@helfenkannjeder.de"))
+                .andExpect(jsonPath("$.user.address").isMap())
+                .andExpect(jsonPath("$.user.address.zipCode").value("76228"))
+                .andExpect(jsonPath("$.abilities").isArray());
+    }
+
+    @Test
+    public void updateVolunteer_withWrongVolunteerId_returnsForbidden() throws Exception {
+        dummyAuthentication(2L, Authorities.VOLUNTEER);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        VolunteerDto volunteerDto = new VolunteerDto(1L,
+                new UserDto(
+                        "testMail@helfenkannjeder.de",
+                        "New given name",
+                        "new surname",
+                        new AddressDto("76228", null, null, null),
+                        null,
+                        true),
+                Collections.emptyList());
+
+
+        String content = objectMapper.writeValueAsString(volunteerDto);
+        mockMvc.perform(put("/volunteers/1")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(content)
+                .accept(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isForbidden());
+    }
+
 }

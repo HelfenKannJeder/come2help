@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.Arrays;
+
 /**
  * @author Valentin Zickner <valentin.zickner@helfenkannjeder.de>
  */
@@ -50,8 +52,16 @@ public abstract class AbstractControllerTest {
     }
 
     void dummyAuthentication(String... authorities) {
+        dummyAuthentication(UserAuthentication.createDummyAuthentication(authorities));
+    }
+
+    void dummyAuthentication(long id, String... authorities) {
+        dummyAuthentication(new UserAuthentication(id, null, null, null, null, null, Arrays.asList(authorities)));
+    }
+
+    private void dummyAuthentication(UserAuthentication userAuthentication) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(UserAuthentication.createDummyAuthentication(authorities));
+        context.setAuthentication(userAuthentication);
         SecurityContextHolder.setContext(context);
     }
 

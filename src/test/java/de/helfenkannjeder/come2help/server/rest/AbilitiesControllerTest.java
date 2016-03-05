@@ -22,7 +22,7 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
 
         getAbilitiesExpectOkStatusAndJsonMediaType()
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$", hasSize(3)));
     }
 
     @Test
@@ -32,7 +32,8 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
         getAbilitiesExpectOkStatusAndJsonMediaType()
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].name", is("Care for people")))
-                .andExpect(jsonPath("$[1].name", is("Translate documents")));
+                .andExpect(jsonPath("$[1].name", is("Sandbag carrier")))
+                .andExpect(jsonPath("$[2].name", is("Translate documents")));
     }
 
     private ResultActions getAbilitiesExpectOkStatusAndJsonMediaType() throws Exception {
@@ -62,7 +63,7 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
         // Assert
         getAbilitiesExpectOkStatusAndJsonMediaType()
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(3)));
+                .andExpect(jsonPath("$", hasSize(4)));
     }
 
     @Test
@@ -113,14 +114,14 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
         authenticate(Authorities.USER, Authorities.C2H_ADMIN);
 
         // Act
-        mockMvc.perform(delete("/abilities/2"))
+        mockMvc.perform(delete("/abilities/3"))
                 .andExpect(status().isNoContent());
 
 
         // Assert
         getAbilitiesExpectOkStatusAndJsonMediaType()
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(1)));
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 
 
@@ -137,6 +138,6 @@ public class AbilitiesControllerTest extends AbstractControllerTest {
         // Assert
         getAbilitiesExpectOkStatusAndJsonMediaType()
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$", hasSize(2)));
+                .andExpect(jsonPath("$", hasSize(3)));
     }
 }

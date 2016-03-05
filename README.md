@@ -8,6 +8,10 @@ Possible scenarios are flooding or coordinating support for political refugees.
 This is only a REST API for the server. The frontend is not part of this repository. For usage please care about the
 LICENSE file.
 
+## Preconditions
+
+* Java 8
+
 ## Setup
 
 1. Fork the repository for development. Implementations can be submitted by a Pull-Request.
