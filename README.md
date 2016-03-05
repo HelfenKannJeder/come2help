@@ -16,8 +16,8 @@ LICENSE file.
 
 3. Import it to a IDE (e.g. IntelliJ) of your choice (or use vim).
 
-4. Add a local mysql user and database, the default data can be found in application.properties. Do not use this
-authentication data for production use.
+4. Add a local mysql user and database, the default data can be found in src/main/resources/application.yml.
+Do not use this authentication data for production use.
 
 5. First build a jar file, this can be done with:
 <pre>mvn package</pre>
