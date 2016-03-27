@@ -1,6 +1,5 @@
 package de.helfenkannjeder.come2help.server.configuration;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsondoc.spring.boot.starter.EnableJSONDoc;
 import org.springframework.boot.SpringApplication;
@@ -25,9 +24,7 @@ public class Come2HelpApplication {
 
     @Bean
     public ObjectMapper jacksonObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        return objectMapper;
+        return ObjectMapperFactory.objectMapperForRestEndpoint();
     }
 }
