@@ -1,11 +1,11 @@
 package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
-import java.util.UUID;
 
 public class LoggableErrorResponseCreator {
 
@@ -40,7 +40,7 @@ public class LoggableErrorResponseCreator {
     }
 
     public LoggableErrorResponseCreator logException(Logger logger, Exception ex) {
-        logger.error(ex.toString());
+        logger.error(ex.toString(), ex);
         return this;
     }
 
