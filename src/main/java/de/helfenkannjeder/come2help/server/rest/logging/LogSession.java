@@ -5,25 +5,35 @@ import java.util.Map;
 
 import com.google.common.base.Joiner;
 
-class LogSession {
+public class LogSession {
     private static ThreadLocal<Map<String, String>> logMessages = new ThreadLocal<>();
+    private static ThreadLocal<Throwable> exceptionToLog = new ThreadLocal<>();
 
-    static void start() {
+    public static void start() {
         logMessages.set(new LinkedHashMap<>());
     }
 
-    static void close() {
+    public static void close() {
         logMessages.remove();
+        exceptionToLog.remove();
     }
 
-    static void log(String key, String message) {
+    public static void log(String key, String message) {
         Map<String, String> messages = logMessages.get();
         if(messages != null) {
             messages.put(key, message);
         }
     }
 
-    static String getLogMessage() {
+    public static void setExceptionToLog(Throwable exception) {
+        exceptionToLog.set(exception);
+    }
+
+    public static Throwable getExceptionToLog() {
+        return exceptionToLog.get();
+    }
+
+    public static String getLogMessage() {
         Map<String, String> messages = logMessages.get();
         if(messages != null) {
             return  Joiner.on(" ").withKeyValueSeparator("=").join(messages);

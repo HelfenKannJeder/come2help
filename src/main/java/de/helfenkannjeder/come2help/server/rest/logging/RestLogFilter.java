@@ -36,8 +36,14 @@ public class RestLogFilter implements Filter {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
             LogSession.log("HTTP-Status-Code", String.valueOf(response.getStatus()));
 
-            if(HttpStatus.valueOf(response.getStatus()).is5xxServerError()) {
-                logger.error(LogSession.getLogMessage());
+            Throwable exceptionToLog = LogSession.getExceptionToLog();
+            if(HttpStatus.valueOf(response.getStatus()).is5xxServerError() || exceptionToLog != null) {
+                if(exceptionToLog != null) {
+                    logger.error(LogSession.getLogMessage(), exceptionToLog);
+                }
+                else {
+                    logger.error(LogSession.getLogMessage());
+                }
             }
             else {
                 logger.info(LogSession.getLogMessage());
