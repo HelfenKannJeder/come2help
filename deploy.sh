@@ -5,6 +5,11 @@ if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
 	exit 0
 fi
 
+if [ $TRAVIS_BRANCH != "master" ]; then
+    echo "We won't deploy because we are not on the master branch."
+    exit 0
+fi
+
 # If GH_TOKEN is not set, we'll exit gracefully
 if [ -z ${GH_TOKEN:+1} ]; then
 	echo "The GH_TOKEN ENV is not set. Thus, we'll won't deploy to gh-pages."
