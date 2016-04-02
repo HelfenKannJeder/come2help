@@ -1,13 +1,15 @@
 package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
-import java.io.IOException;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class RestExceptionResolver {
@@ -45,6 +48,15 @@ public class RestExceptionResolver {
     public ResponseEntity<ErrorResponse> resolveMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
                 .withClientErrors(ex.getBindingResult().getFieldErrors().stream().map(ClientError::fromFieldError).collect(Collectors.toList()))
+                .createErrorResponse();
+    }
+
+
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> resolveMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
+                .withClientErrors(Collections.singletonList(ClientError.fromMethodArgumentTypeMismatch(ex)))
                 .createErrorResponse();
     }
 

@@ -10,6 +10,7 @@ import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceEx
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
 import org.junit.Test;
+import org.mockito.stubbing.Answer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,6 +19,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -83,6 +85,24 @@ public class RestExceptionResolverTest {
         assertThat(response.clientErrors.get(0).path, is("fieldName"));
         assertThat(response.clientErrors.get(0).value, is("rejectedValue"));
         assertThat(response.clientErrors.get(0).code, is("invalid.value"));
+    }
+
+    @Test
+    public void methodArgumentTypeMismatchExceptionShouldBeAnsweredWithBadRequest() {
+        ResponseEntity<ErrorResponse> response = getResponseEntityForMethodArgumentTypeMismatchException();
+
+        assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
+    public void methodArgumentTypeMismatchExceptionResponseBodyShouldContainClientError() {
+        ErrorResponse response = getResponseEntityForMethodArgumentTypeMismatchException().getBody();
+
+        assertThat(response.clientErrors, notNullValue());
+        assertThat(response.clientErrors.size(), is(1));
+        assertThat(response.clientErrors.get(0).path, is("paramName"));
+        assertThat(response.clientErrors.get(0).value, is("invalidValue"));
+        assertThat(response.clientErrors.get(0).code, is("Type mismatch of parameter. Should be Long"));
     }
 
     @Test
@@ -158,6 +178,15 @@ public class RestExceptionResolverTest {
         when(bindingResult.getFieldErrors()).thenReturn(Lists.newArrayList(new FieldError("objName", "fieldName", "rejectedValue", false, null, null, "invalid.value")));
 
         return restExceptionResolver.resolveMethodArgumentNotValidException(exception);
+    }
+
+    private ResponseEntity<ErrorResponse> getResponseEntityForMethodArgumentTypeMismatchException() {
+        MethodArgumentTypeMismatchException exception = mock(MethodArgumentTypeMismatchException.class);
+        when(exception.getName()).thenReturn("paramName");
+        when(exception.getValue()).thenReturn("invalidValue");
+        when(exception.getRequiredType()).thenAnswer((Answer<Object>) invocationOnMock -> Long.class);
+
+        return restExceptionResolver.resolveMethodArgumentTypeMismatchException(exception);
     }
 
     private ResponseEntity<ErrorResponse> getResponseEntityForInvalidDataException() {
