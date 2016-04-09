@@ -1,10 +1,11 @@
 package de.helfenkannjeder.come2help.server.configuration;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.helfenkannjeder.come2help.server.rest.logging.RestLogFilter;
 import org.jsondoc.spring.boot.starter.EnableJSONDoc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -25,9 +26,15 @@ public class Come2HelpApplication {
 
     @Bean
     public ObjectMapper jacksonObjectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        return objectMapper;
+        return ObjectMapperFactory.objectMapperForRestEndpoint();
+    }
+
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean() {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(new RestLogFilter());
+        filterRegistrationBean.setOrder(1);
+        return filterRegistrationBean;
     }
 }

@@ -1,15 +1,15 @@
 package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.fasterxml.jackson.core.JsonParseException;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
-import java.io.IOException;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,11 +24,10 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @ControllerAdvice
 public class RestExceptionResolver {
-
-    private final Logger logger = LoggerFactory.getLogger(RestExceptionResolver.class);
 
     @Autowired
     private MappingJackson2HttpMessageConverter jsonMessageConverter;
@@ -37,7 +36,7 @@ public class RestExceptionResolver {
     public ResponseEntity<ErrorResponse> resolveException(Exception ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.INTERNAL_SERVER_ERROR)
                 .withDescription(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                .logException(logger, ex)
+                .log(ex)
                 .createErrorResponse();
     }
 
@@ -45,6 +44,15 @@ public class RestExceptionResolver {
     public ResponseEntity<ErrorResponse> resolveMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
                 .withClientErrors(ex.getBindingResult().getFieldErrors().stream().map(ClientError::fromFieldError).collect(Collectors.toList()))
+                .log()
+                .createErrorResponse();
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorResponse> resolveMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
+                .withClientErrors(Collections.singletonList(ClientError.fromMethodArgumentTypeMismatch(ex)))
+                .log()
                 .createErrorResponse();
     }
 
@@ -52,6 +60,7 @@ public class RestExceptionResolver {
     public ResponseEntity<ErrorResponse> resolveInvalidDataException(InvalidDataException ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
                 .withClientErrors(ex.getErrors().stream().map(ClientError::fromDataError).collect(Collectors.toList()))
+                .log()
                 .createErrorResponse();
     }
 
@@ -64,6 +73,7 @@ public class RestExceptionResolver {
     public ResponseEntity<ErrorResponse> resolveResourceNotFoundException(HttpServletRequest request, ResourceNotFoundException ex) {
         return LoggableErrorResponseCreator.create(HttpStatus.NOT_FOUND)
                 .withDescription(ex.getMessage())
+                .log()
                 .createErrorResponse();
     }
 
@@ -83,6 +93,7 @@ public class RestExceptionResolver {
         }
         return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
                 .withDescription(description.toString())
+                .log()
                 .createErrorResponse();
     }
 
@@ -101,9 +112,10 @@ public class RestExceptionResolver {
         return resolveException(ex, HttpStatus.FORBIDDEN);
     }
 
-    public ResponseEntity<ErrorResponse> resolveException(Exception ex, HttpStatus status) {
+    private ResponseEntity<ErrorResponse> resolveException(Exception ex, HttpStatus status) {
         return LoggableErrorResponseCreator.create(status)
                 .withDescription(ex.getMessage())
+                .log()
                 .createErrorResponse();
     }
 

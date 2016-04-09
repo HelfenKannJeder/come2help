@@ -1,13 +1,17 @@
 package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
-import org.slf4j.Logger;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.helfenkannjeder.come2help.server.configuration.ObjectMapperFactory;
+import de.helfenkannjeder.come2help.server.rest.logging.LogSession;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 public class LoggableErrorResponseCreator {
+
+    private final ObjectMapper objectMapper = ObjectMapperFactory.objectMapperForRestEndpoint();
 
     public static LoggableErrorResponseCreator create(HttpStatus httpStatus) {
         return new LoggableErrorResponseCreator(httpStatus);
@@ -16,7 +20,7 @@ public class LoggableErrorResponseCreator {
     private ErrorResponse errorResponse;
     private HttpStatus httpStatus;
 
-    public LoggableErrorResponseCreator(HttpStatus httpStatus) {
+    private LoggableErrorResponseCreator(HttpStatus httpStatus) {
         this.httpStatus = httpStatus;
         errorResponse = new ErrorResponse();
         errorResponse.incidentId = generateIncidentId();
@@ -34,14 +38,33 @@ public class LoggableErrorResponseCreator {
         return this;
     }
 
-    public LoggableErrorResponseCreator logClientError(Logger logger) {
+    public LoggableErrorResponseCreator log() {
+        LogSession.log("incident-id", errorResponse.incidentId);
+        if(errorResponse.description != null) {
+            LogSession.log("error-description", errorResponse.description);
+        }
+        if(errorResponse.clientErrors != null) {
+            LogSession.log("client-errors", serializeClientErrors());
+        }
 
         return this;
     }
 
-    public LoggableErrorResponseCreator logException(Logger logger, Exception ex) {
-        logger.error(ex.toString());
+    public LoggableErrorResponseCreator log(Exception ex) {
+        log();
+        LogSession.setExceptionToLog(ex);
+
         return this;
+    }
+
+    private String serializeClientErrors() {
+        try {
+            return objectMapper.writeValueAsString(errorResponse.clientErrors);
+        }
+        catch (Exception ex) {
+            LogSession.log("log-serialisation-error", ex.getMessage());
+            return "";
+        }
     }
 
     public ResponseEntity<ErrorResponse> createErrorResponse() {

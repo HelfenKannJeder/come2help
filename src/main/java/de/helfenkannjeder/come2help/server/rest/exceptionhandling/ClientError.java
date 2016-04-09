@@ -2,6 +2,7 @@ package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
 import de.helfenkannjeder.come2help.server.service.exception.DataError;
 import org.springframework.validation.FieldError;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 public class ClientError {
 
@@ -10,6 +11,15 @@ public class ClientError {
         clientError.path = fieldError.getField();
         clientError.code = fieldError.getDefaultMessage();
         clientError.value = fieldError.getRejectedValue();
+
+        return clientError;
+    }
+
+    public static ClientError fromMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException mismatchException) {
+        ClientError clientError = new ClientError();
+        clientError.path = mismatchException.getName();
+        clientError.code = "Type mismatch of parameter. Should be " + mismatchException.getRequiredType().getSimpleName();
+        clientError.value = mismatchException.getValue();
 
         return clientError;
     }
