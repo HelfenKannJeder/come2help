@@ -35,7 +35,7 @@ public class StatelessJwtAuthenticationFilter extends GenericFilterBean {
             HttpServletRequest httpRequest = (HttpServletRequest) request;
             Authentication authentication = authenticationService.getAuthentication(httpRequest);
             if (authentication == null) {
-                authentication = UserAuthentication.createDummyAuthentication(Authorities.GUEST, Authorities.USER);
+                authentication = UserAuthentication.createDummyAuthentication(Authorities.GUEST);
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
