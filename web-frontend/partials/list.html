@@ -1,0 +1,12 @@
+<table class="table">
+    <tr>
+        <th>{{ 'Name' | translate }}</th>
+        <th>{{ 'Location' | translate }}</th>
+        <th>&nbsp;</th>
+    </tr>
+    <tr ng-repeat="location in ctrl.locations">
+        <td>{{location.name}}</td>
+        <td>{{location.location}}</td>
+        <td><a href="#/detail/{{location.id}}" class="btn btn-primary"><i class="icon-show"></i> {{ 'Show' | translate }}</a></td>
+    </tr>
+</table>
