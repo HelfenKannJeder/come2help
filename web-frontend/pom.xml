@@ -12,36 +12,45 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.0</version>
+
 				<executions>
 					<execution>
-						<id>exec-npm-install</id>
-						<phase>generate-sources</phase>
-						<configuration>
-							<executable>npm</executable>
-							<arguments>
-								<argument>install</argument>
-							</arguments>
-						</configuration>
+						<id>install node and npm</id>
 						<goals>
-							<goal>exec</goal>
+							<goal>install-node-and-npm</goal>
 						</goals>
 					</execution>
+
 					<execution>
-						<id>exec-npm-test</id>
-						<phase>test</phase>
-						<configuration>
-							<executable>npm</executable>
-							<arguments>
-								<argument>test</argument>
-							</arguments>
-						</configuration>
+						<id>npm install</id>
 						<goals>
-							<goal>exec</goal>
+							<goal>npm</goal>
 						</goals>
+					</execution>
+
+					<execution>
+						<id>npm test</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+
+						<phase>test</phase>
+
+						<configuration>
+							<arguments>test</arguments>
+						</configuration>
 					</execution>
 				</executions>
+
+				<configuration>
+					<nodeVersion>v0.12.2</nodeVersion>
+					<npmVersion>2.7.4</npmVersion>
+					<installDirectory>target</installDirectory>
+				</configuration>
+
 			</plugin>
 		</plugins>
 	</build>
