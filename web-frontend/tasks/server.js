@@ -3,6 +3,7 @@
  */
 
 var express = require('express');
+var proxy = require('express-http-proxy');
 var bodyParser = require('body-parser');
 var path = require('path');
 var fs = require('fs');
@@ -89,7 +90,11 @@ function Server() {
 	this.listen = function(port) {
 		server.use(getWebserver());
 		// Serve the API on post requests, too
-		server.post('/api/*', apiServer);
+		server.use('/api', proxy('localhost:8080', {
+			forwardPath: function (req, res) {
+				return require('url').parse(req.url).path;
+			}
+		}));
 		// Write errors to the log and return 500
 		server.use(errorHandler);
 		server.listen(port);
