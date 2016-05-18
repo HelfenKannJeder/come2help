@@ -1,12 +1,11 @@
-# come2help Server
+# come2help
 
 <a href="http://come2.help">come2.help</a> is a project for recruiting and coordinating volunteer people.
 Possible scenarios are flooding or coordinating support for political refugees.
 
 ## Content and Usage
 
-This is only a REST API for the server. The frontend is not part of this repository. For usage please care about the
-LICENSE file.
+For usage please care about the LICENSE file.
 
 ## Preconditions
 
@@ -20,14 +19,14 @@ LICENSE file.
 
 3. Import it to a IDE (e.g. IntelliJ) of your choice (or use vim).
 
-4. Add a local mysql user and database, the default data can be found in src/main/resources/application.yml.
+4. Add a local mysql user and database, the default data can be found in server/src/main/resources/application.yml.
 Do not use this authentication data for production use.
 
 5. First build a jar file, this can be done with:
 <pre>mvn package</pre>
 
 6. Execute the binary:
-<pre>java -jar target/come2help-server-0.0.1-SNAPSHOT.jar</pre>
+<pre>java -jar server/target/come2help-server-0.0.1-SNAPSHOT.jar</pre>
 
 7. Execute a request against the REST-API. For example use a REST-Client extension for your browser. For testing you can
 use the following curl command line:

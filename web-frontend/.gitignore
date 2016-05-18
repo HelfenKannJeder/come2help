@@ -1,0 +1,9 @@
+.idea
+*.iml
+bower_components
+npm-debug.log
+node_modules
+/phantomjsdriver.log
+test/behaviour/.browserstackrc
+build
+/nbproject

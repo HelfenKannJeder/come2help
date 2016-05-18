@@ -1,0 +1,32 @@
+<h1>{{ 'Volunteers' | translate }}</h1>
+<form class="navbar-form navbar-left" role="search" ng-submit="ctrl.search()">
+	<div class="form-group">
+		<input class="form-control" ng-model="ctrl.zipCode" placeholder="{{ 'Zip Code' | translate }}"/>
+		<div class="input-group">
+			<input class="form-control" ng-model="ctrl.distance" placeholder="{{ 'Distance' | translate }}"/>
+			<span class="input-group-addon">{{ 'km' | translate }}</span>
+		</div>
+	</div>
+	<button type="submit" class="btn btn-default">{{ 'Search' | translate }}</button>
+</form>
+
+<table class="table table-striped" st-table="ctrl.displayedVolunteers" st-safe-src="ctrl.volunteers">
+	<tr>
+		<th st-sort="givenName">{{ 'Given Name' | translate }}</th>
+		<th st-sort="surname">{{ 'Surname' | translate }}</th>
+		<th st-sort="address.zipCode">{{ 'Zip Code' | translate }}</th>
+		<th st-sort="phone">{{ 'Phone' | translate }}</th>
+		<th st-sort="email">{{ 'E-Mail' | translate }}</th>
+		<th>{{ 'Abilities' | translate }}</th>
+	</tr>
+	<tr ng-repeat="volunteer in ctrl.displayedVolunteers">
+		<td>{{volunteer.user.givenName}}</td>
+		<td>{{volunteer.user.surname}}</td>
+		<td>{{volunteer.user.address.zipCode}}</td>
+		<td>{{volunteer.user.phone}}</td>
+		<td>{{volunteer.user.email}}</td>
+		<td><ul>
+			<li ng-repeat="ability in volunteer.abilities">{{ability.name}}</li>
+		</ul></td>
+	</tr>
+</table>

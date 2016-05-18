@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>de.helfenkannjeder.come2help</groupId>
+	<artifactId>web-frontend</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<packaging>pom</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.0</version>
+
+				<executions>
+					<execution>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>npm test</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+
+						<phase>test</phase>
+
+						<configuration>
+							<arguments>test</arguments>
+						</configuration>
+					</execution>
+				</executions>
+
+				<configuration>
+					<nodeVersion>v0.12.2</nodeVersion>
+					<npmVersion>2.7.4</npmVersion>
+					<installDirectory>target</installDirectory>
+				</configuration>
+
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>run</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<version>1.0</version>
+
+						<executions>
+							<execution>
+								<id>npm run</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+
+								<phase>compile</phase>
+
+								<configuration>
+									<arguments>start</arguments>
+								</configuration>
+							</execution>
+						</executions>
+
+						<configuration>
+							<nodeVersion>v0.12.2</nodeVersion>
+							<npmVersion>2.7.4</npmVersion>
+							<installDirectory>target</installDirectory>
+						</configuration>
+
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

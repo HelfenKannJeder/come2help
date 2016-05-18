@@ -16,3 +16,5 @@ target/
 .idea
 *.iml
 /nbactions.xml
+logs
+server/logs
