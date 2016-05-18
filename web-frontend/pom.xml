@@ -54,4 +54,41 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>run</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<version>1.0</version>
+
+						<executions>
+							<execution>
+								<id>npm run</id>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+
+								<phase>compile</phase>
+
+								<configuration>
+									<arguments>start</arguments>
+								</configuration>
+							</execution>
+						</executions>
+
+						<configuration>
+							<nodeVersion>v0.12.2</nodeVersion>
+							<npmVersion>2.7.4</npmVersion>
+							<installDirectory>target</installDirectory>
+						</configuration>
+
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
