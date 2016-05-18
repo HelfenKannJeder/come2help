@@ -1,8 +1,5 @@
 package de.helfenkannjeder.come2help.server.service;
 
-import java.util.List;
-import javax.annotation.security.RolesAllowed;
-
 import de.helfenkannjeder.come2help.server.domain.Ability;
 import de.helfenkannjeder.come2help.server.domain.repository.AbilityRepository;
 import de.helfenkannjeder.come2help.server.security.Authorities;
@@ -10,6 +7,9 @@ import de.helfenkannjeder.come2help.server.service.exception.InvalidDataExceptio
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.security.RolesAllowed;
+import java.util.List;
 
 @Service
 public class AbilitiesService {
@@ -21,12 +21,12 @@ public class AbilitiesService {
         this.abilityRepository = abilityRepository;
     }
 
-    @RolesAllowed(Authorities.USER)
+    @RolesAllowed({Authorities.USER, Authorities.GUEST})
     public List<Ability> findAllOrderByName() {
         return abilityRepository.findAllByOrderByName();
     }
 
-    @RolesAllowed(Authorities.USER)
+    @RolesAllowed({Authorities.USER, Authorities.GUEST})
     public Ability findById(Long id) {
         Ability ability = abilityRepository.findOne(id);
         if (ability == null) {
