@@ -2,6 +2,7 @@ package de.helfenkannjeder.come2help.server.configuration.security;
 
 import de.helfenkannjeder.come2help.server.security.jwt.FacebookSuccessHandler;
 import de.helfenkannjeder.come2help.server.security.jwt.GoogleSuccessHandler;
+import de.helfenkannjeder.come2help.server.security.jwt.HelfenkannjederSuccessHandler;
 import de.helfenkannjeder.come2help.server.security.jwt.StatelessJwtAuthenticationFilter;
 import java.util.Arrays;
 import javax.servlet.Filter;
@@ -58,7 +59,8 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
         CompositeFilter filter = new CompositeFilter();
         filter.setFilters(Arrays.asList(
                 createOAuth2Filter(facebook(), facebookSuccessHandler(), "/login/facebook"),
-                createOAuth2Filter(google(), googleSuccessHandler(), "/login/google"))
+                createOAuth2Filter(google(), googleSuccessHandler(), "/login/google"),
+                createOAuth2Filter(helfenkannjeder(), helfenkannjederSuccessHandler(), "/login/helfenkannjeder"))
         );
         return filter;
     }
@@ -87,6 +89,12 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    @ConfigurationProperties("helfenkannjeder")
+    protected ClientResourceDetails helfenkannjeder() {
+        return new ClientResourceDetails();
+    }
+
+    @Bean
     protected AuthenticationSuccessHandler facebookSuccessHandler() {
         return new FacebookSuccessHandler();
     }
@@ -94,5 +102,10 @@ public class OAuth2ClientConfigurer extends WebSecurityConfigurerAdapter {
     @Bean
     protected AuthenticationSuccessHandler googleSuccessHandler() {
         return new GoogleSuccessHandler();
+    }
+
+    @Bean
+    protected AuthenticationSuccessHandler helfenkannjederSuccessHandler() {
+        return new HelfenkannjederSuccessHandler();
     }
 }

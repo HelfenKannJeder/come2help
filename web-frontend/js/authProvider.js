@@ -12,6 +12,15 @@ angular.module('Come2HelpApp').config(['$authProvider', function ($authProvider)
 		clientId: '924036387059-anhuh3kr3b6cnopsjs5gfk2t7sq2u43o.apps.googleusercontent.com',
 		url: '/api/login/google'
 	});
+
+	$authProvider.oauth2({
+		name: 'helfenkannjeder',
+		url: '/api/login/helfenkannjeder',
+		clientId: 'come2help-web',
+		redirectUri: window.location.origin + '/',
+		requiredUrlParams: ['display', 'scope'],
+		authorizationEndpoint: 'http://localhost:8081/oauth/authorize'
+	});
 }]);
 
 angular.module('Come2HelpApp')
