@@ -37,7 +37,7 @@ public class CustomOAuthAuthenticationProcessingFilter extends AbstractAuthentic
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
         if (!"POST".equals(request.getMethod())) {
-            return null;
+            throw new BadCredentialsException("Only POST allowed.");
         }
 
         OAuth2AccessToken accessToken;
