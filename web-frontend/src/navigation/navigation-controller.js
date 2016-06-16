@@ -1,5 +1,6 @@
-angular.module('Come2HelpApp')
-.controller('NavigationController', ['jwtService', '$location', function(jwtService, $location) {
+var navigationModule = angular.module('navigation');
+
+function NavigationController(jwtService, $location) {
 	var vm = this;
 
 	vm.authenticated = jwtService.isAuthenticated.bind(jwtService);
@@ -11,7 +12,9 @@ angular.module('Come2HelpApp')
 		if ($location.path().substr(0, path.length) === path) {
 			return 'active';
 		} else {
-			return '';
-		}
-	};
-}]);
+            return '';
+        }
+    };
+}
+
+navigationModule.controller('NavigationController', ['jwtService', '$location', NavigationController]);

@@ -2,13 +2,13 @@ angular.module('Come2HelpApp').config(['$routeProvider', function ($routeProvide
 
 	$routeProvider.
 	when('/register/done', {
-		templateUrl: 'partials/registerDone.html',
+		templateUrl: 'src/register/registerDone.html',
 		resolve: {
 			loginRequired: loginRequired
 		}
 	}).
 	when('/register', {
-		templateUrl: 'partials/register.html',
+		templateUrl: 'src/register/register.html',
 		controller: 'RegisterController',
 		controllerAs: 'ctrl',
 		resolve: {
@@ -16,7 +16,7 @@ angular.module('Come2HelpApp').config(['$routeProvider', function ($routeProvide
 		}
 	}).
 	when('/organisation/volunteerList', {
-		templateUrl: 'partials/organisation/volunteerList.html',
+		templateUrl: 'src/organisation/volunteer-list/volunteerList.html',
 		controller: 'VolunteerListController',
 		controllerAs: 'ctrl',
 		//resolve: {
@@ -25,7 +25,7 @@ angular.module('Come2HelpApp').config(['$routeProvider', function ($routeProvide
 		//}
 	}).
 	when('/imprint', {
-		templateUrl: 'partials/imprint.html'
+		templateUrl: 'src/imprint/imprint.html'
 	}).
 	otherwise('/register');
 

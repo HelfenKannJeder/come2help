@@ -4,7 +4,8 @@ angular.module('Come2HelpApp', [
 	'uiGmapgoogle-maps',
 	'pascalprecht.translate',
 	'satellizer',
-	'smart-table'
+	'smart-table',
+	'navigation'
 ]);
 
 angular.module('Come2HelpController', ['ngResource']);
