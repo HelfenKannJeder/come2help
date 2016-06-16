@@ -1,4 +1,4 @@
-angular.module('Come2HelpApp')
+angular.module('authentication')
 	.factory('authentication', ['$route', '$auth', function($route, $auth) {
 
 		function login(email, password) {

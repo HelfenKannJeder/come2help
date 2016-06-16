@@ -1,4 +1,4 @@
-angular.module('Come2HelpApp').config(['$authProvider', function ($authProvider) {
+angular.module('authentication').config(['$authProvider', function ($authProvider) {
 
 	$authProvider.signupUrl = '/api/volunteers';
 	$authProvider.loginUrl = '/api/login/volunteer';
@@ -14,7 +14,7 @@ angular.module('Come2HelpApp').config(['$authProvider', function ($authProvider)
 	});
 }]);
 
-angular.module('Come2HelpApp')
+angular.module('authentication')
 	.constant('roles', {
 		USER: 'ROLE_USER',
 		GUEST: 'ROLE_GUEST',
@@ -23,7 +23,7 @@ angular.module('Come2HelpApp')
 		C2H_ADMIN: 'ROLE_C2H_ADMIN'
 	});
 
-angular.module('Come2HelpApp').provider('authService', [function () {
+angular.module('authentication').provider('authService', [function () {
 	var tokenObservers = [];
 
 	this.setToken = function (token) {
@@ -43,7 +43,7 @@ angular.module('Come2HelpApp').provider('authService', [function () {
 
 }]);
 
-angular.module('Come2HelpApp').service('jwtService', ['authService', '$window', '$auth', 'roles', '$route', function (authService, $window, $auth, roles, $route) {
+angular.module('authentication').service('jwtService', ['authService', '$window', '$auth', 'roles', '$route', function (authService, $window, $auth, roles, $route) {
 	var jwt = null;
 
 	this.isAuthenticated = function() {
@@ -88,7 +88,7 @@ angular.module('Come2HelpApp').service('jwtService', ['authService', '$window', 
 	authService.addTokenObserver(this.parseJWT);
 }]);
 
-angular.module('Come2HelpApp').config(['$httpProvider', 'authServiceProvider', function ($httpProvider, authServiceProvider) {
+angular.module('authentication').config(['$httpProvider', 'authServiceProvider', function ($httpProvider, authServiceProvider) {
 	$httpProvider.interceptors.push(function ($q) {
 		return {
 			response: function (config) {

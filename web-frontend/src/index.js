@@ -5,7 +5,11 @@ angular.module('Come2HelpApp', [
 	'pascalprecht.translate',
 	'satellizer',
 	'smart-table',
-	'navigation'
+	// come2help modules
+	'authentication',
+	'navigation',
+	'register',
+	'organisation'
 ]);
 
 angular.module('Come2HelpController', ['ngResource']);
