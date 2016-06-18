@@ -75,7 +75,7 @@ helfenkannjeder:
         clientAuthenticationScheme: header
         scope: email
     resource:
-        userInfoUri: http://localhost:8081/userInformation
+        userInfoUri: http://localhost:8081/user/information
         preferTokenInfo: false
         
         
