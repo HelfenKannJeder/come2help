@@ -2,11 +2,14 @@ package de.helfenkannjeder.come2help.server.rest.exceptionhandling;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import com.google.common.collect.Lists;
 import de.helfenkannjeder.come2help.server.service.exception.DuplicateResourceException;
 import de.helfenkannjeder.come2help.server.service.exception.InvalidDataException;
 import de.helfenkannjeder.come2help.server.service.exception.ResourceNotFoundException;
@@ -85,14 +88,20 @@ public class RestExceptionResolver {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> resolveHttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException ex) {
         StringBuilder description = new StringBuilder();
+        List<ClientError> clientErrors = Lists.newArrayList();
         description.append("Could not read document.");
         if (ex.getRootCause() instanceof JsonParseException) {
             description.append(" Json parse not possible.").append(ex.getRootCause().getMessage());
         } else if (ex.getMessage().startsWith("Required request body is missing")) {
             description.append(" Missing request body.");
         }
+        else if (ex.getRootCause() instanceof UnrecognizedPropertyException) {
+            description.append(" Unrecognized property");
+            clientErrors.add(ClientError.fromUnrecognizedPropertyException((UnrecognizedPropertyException) ex.getCause()));
+        }
         return LoggableErrorResponseCreator.create(HttpStatus.BAD_REQUEST)
                 .withDescription(description.toString())
+                .withClientErrors(clientErrors)
                 .log()
                 .createErrorResponse();
     }
