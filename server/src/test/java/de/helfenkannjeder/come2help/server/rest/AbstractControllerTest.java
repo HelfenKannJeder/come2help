@@ -26,7 +26,7 @@ import java.util.Arrays;
  * @author Valentin Zickner <valentin.zickner@helfenkannjeder.de>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebIntegrationTest
+@WebIntegrationTest(randomPort = true)
 @SpringApplicationConfiguration(classes = Come2HelpApplication.class)
 public abstract class AbstractControllerTest {
 
