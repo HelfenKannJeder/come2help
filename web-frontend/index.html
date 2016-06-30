@@ -49,9 +49,24 @@
 				<ul class="nav navbar-nav">
 					<li ng-class="ctrl.getClass('/imprint')"><a href="#/imprint">{{ 'Imprint' | translate }}</a></li>
 				</ul>
-				<ul class="nav navbar-nav navbar-right" ng-show="ctrl.authenticated()">
-					<li><a href="" ng-click="ctrl.logout()">{{ 'Logout' | translate }}</a></li>
-				</ul>
+				<div class="navbar-right" data-ng-controller="NavigationController as ctrl">
+					<form class="navbar-form" data-ng-hide="ctrl.authenticated()" data-ng-submit="ctrl.login()">
+						<div class="form-group">
+							<label class="sr-only" for="login-email">{{ 'Email' | translate}}</label>
+							<input type="email" class="form-control" id="login-email" data-ng-model="ctrl.user.email"
+								   placeholder="{{ 'Email' | translate}}">
+						</div>
+						<div class="form-group">
+							<label class="sr-only" for="login-password">{{ 'Password' | translate}}</label>
+							<input type="password" class="form-control col-xs-4" id="login-password"
+								   data-ng-model="ctrl.user.password" placeholder="{{ 'Password' | translate }}">
+						</div>
+						<button type="submit" class="btn btn-default btn-success">{{ 'Log in' | translate }}</button>
+					</form>
+					<button type="button" href="" data-ng-click="ctrl.logout()" class="btn navbar-btn btn-link"
+							data-ng-show="ctrl.authenticated()">{{ 'Logout' | translate }}
+					</button>
+				</div>
 			</div>
 		</div>
 	</nav>

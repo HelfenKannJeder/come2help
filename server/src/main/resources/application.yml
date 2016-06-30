@@ -65,8 +65,15 @@ google:
         userInfoUri: https://www.googleapis.com/oauth2/v2/userinfo
         preferTokenInfo: false
         
-        
-        
+
+helfenkannjeder:
+    client:
+        clientId: come2help-web
+        clientSecret: secret
+        accessTokenUri: http://localhost:8081/oauth/token
+    resource:
+        userInfoUri: http://localhost:8081/user/information
+
         
 api:
     jwt:

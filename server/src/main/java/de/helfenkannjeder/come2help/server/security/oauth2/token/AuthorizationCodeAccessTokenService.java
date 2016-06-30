@@ -1,45 +1,40 @@
-package de.helfenkannjeder.come2help.server.configuration.security;
+package de.helfenkannjeder.come2help.server.security.oauth2.token;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+import de.helfenkannjeder.come2help.server.configuration.security.ClientResourceDetails;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.resource.UserRedirectRequiredException;
 import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.security.oauth2.client.token.DefaultAccessTokenRequest;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeAccessTokenProvider;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.exceptions.InvalidTokenException;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 
-public class CustomOAuthAuthenticationProcessingFilter extends AbstractAuthenticationProcessingFilter {
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
-    private final ClientResourceDetails clientResourceDetails;
-    private final UserInfoTokenServices tokenService;
-    private final AuthorizationCodeAccessTokenProvider accessTokenProvider = new AuthorizationCodeAccessTokenProvider();
+/**
+ * @author Valentin Zickner
+ */
+public class AuthorizationCodeAccessTokenService implements AccessTokenService {
+
+    private ClientResourceDetails clientResourceDetails;
     private final MappingJackson2HttpMessageConverter jsonMessageConverter;
+    private final AuthorizationCodeAccessTokenProvider accessTokenProvider = new AuthorizationCodeAccessTokenProvider();
 
-    public CustomOAuthAuthenticationProcessingFilter(String path, ClientResourceDetails clientResourceDetails, MappingJackson2HttpMessageConverter jsonMessageConverter) {
-        super(path);
-        this.clientResourceDetails = clientResourceDetails;
-        this.tokenService = new UserInfoTokenServices(clientResourceDetails.getResource().getUserInfoUri(), clientResourceDetails.getClient().getClientId());
-        this.accessTokenProvider.setStateMandatory(false);
+    public AuthorizationCodeAccessTokenService(MappingJackson2HttpMessageConverter jsonMessageConverter) {
         this.jsonMessageConverter = jsonMessageConverter;
+        this.accessTokenProvider.setStateMandatory(false);
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        if (!"POST".equals(request.getMethod())) {
-            throw new BadCredentialsException("Only POST allowed.");
-        }
+    public void setClientResourceDetails(ClientResourceDetails clientResourceDetails) {
+        this.clientResourceDetails = clientResourceDetails;
+    }
 
+    @Override
+    public OAuth2AccessToken getAccessToken(HttpServletRequest request) throws IOException {
         OAuth2AccessToken accessToken;
         try {
             AccessTokenRequest accessTokenRequest = createAccessTokenRequest(request);
@@ -48,11 +43,7 @@ public class CustomOAuthAuthenticationProcessingFilter extends AbstractAuthentic
             throw new BadCredentialsException("Could not obtain access token", e);
         }
 
-        try {
-            return tokenService.loadAuthentication(accessToken.getValue());
-        } catch (InvalidTokenException e) {
-            throw new BadCredentialsException("Could not obtain user details from token", e);
-        }
+        return accessToken;
     }
 
     private AccessTokenRequest createAccessTokenRequest(HttpServletRequest request) throws IOException {
@@ -81,4 +72,6 @@ public class CustomOAuthAuthenticationProcessingFilter extends AbstractAuthentic
             return code;
         }
     }
+
+
 }
