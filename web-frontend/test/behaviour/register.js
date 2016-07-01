@@ -45,7 +45,7 @@ function signupWith(data) {
 	}
 
 	// Submit
-	$('button[type="submit"]').click();
+	$('.panel-body button[type="submit"]').click();
 }
 
 /**
